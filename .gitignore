@@ -1,0 +1,7 @@
+**/**/.DS_Store
+**/**/.snakemake
+**/**/venv
+**/**/.venv
+**/**/results/out
+**/**/logs
+**/**/benchmark
