@@ -1,4 +1,5 @@
 configfile: "config/config.yaml"
+from snakemake.remote import AUTO
 import json
 
 indir = config["input_namespace"]
@@ -12,7 +13,7 @@ rule target:
             indir=indir,
             filename=params["Source"],
         ),
-        script=srcdir("../resources/scripts/aggregate.py"),
+        script=AUTO.remote(srcdir("../resources/scripts/aggregate.py")),
     output:
         expand(
             "results/{outdir}/{filename}",
