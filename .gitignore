@@ -5,3 +5,4 @@
 **/**/results/out
 **/**/logs
 **/**/benchmark
+**/**/__pycache__
