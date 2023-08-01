@@ -22,5 +22,5 @@ rule target:
         "envs/conda.yaml"
     shell:
         """
-        wget -c {input.url} -O {output}
+        mv {input} {output}
         """
