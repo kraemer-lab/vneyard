@@ -1,5 +1,7 @@
 configfile: "config/config.yaml"
-from snakemake.remote import AUTO
+from snakemake.remote.HTTP import RemoteProvider as HTTPRemoteProvider
+
+HTTP = HTTPRemoteProvider()
 
 indir=config["input_namespace"]
 outdir=config["output_namespace"]
@@ -7,7 +9,7 @@ params=config["params"]
 
 rule target:
     input:
-        url=AUTO.remote(params["url"])
+        url=HTTP.remote(params["url"])
     output:
         expand(
             "results/{outdir}/{filename}",
