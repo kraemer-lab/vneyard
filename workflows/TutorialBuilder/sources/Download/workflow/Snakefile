@@ -1,7 +1,7 @@
 configfile: "config/config.yaml"
-from snakemake.remote.HTTP import RemoteProvider as HTTPRemoteProvider
 
-HTTP = HTTPRemoteProvider()
+import shutil
+from snakemake.remote import AUTO
 
 indir=config["input_namespace"]
 outdir=config["output_namespace"]
@@ -9,7 +9,7 @@ params=config["params"]
 
 rule target:
     input:
-        url=HTTP.remote(params["url"])
+        url=AUTO.remote(params["url"])
     output:
         expand(
             "results/{outdir}/{filename}",
@@ -20,9 +20,5 @@ rule target:
         f"benchmark/{outdir}.txt"
     benchmark:
         f"benchmark/{outdir}"
-    conda:
-        "envs/conda.yaml"
-    shell:
-        """
-        mv {input} {output}
-        """
+    run:
+        shutil.move(input.url[0], output[0])
