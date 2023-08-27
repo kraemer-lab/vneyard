@@ -1,0 +1,14 @@
+configfile: "config/config.yaml"
+
+rule provide_seeds:
+    input:
+        srcdir("../resources/seeds.txt")
+    output:
+        expand(
+            "results/{outdir}/seeds.txt",
+            outdir=config["output_namespace"],
+        )
+    conda:
+        "envs/conda.yaml"
+    shell:
+        "cp {input} {output}"

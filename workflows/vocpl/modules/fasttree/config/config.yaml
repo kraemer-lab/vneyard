@@ -1,0 +1,11 @@
+input_namespace:
+  seeds: "seeds"
+  fasta: "fasta"
+output_namespace: "out"
+params:
+  method: "iqtree"
+  outgroup_fasta: ""
+  fasttree:
+    gtr: true
+    boot: 0
+    flags: ""
