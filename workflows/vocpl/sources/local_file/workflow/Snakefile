@@ -4,8 +4,6 @@ import shutil
 
 params = config["params"]
 filepath, filename = os.path.split(os.path.abspath(params["file"]))
-print(filename)
-print(filepath)
 
 rule provide_seeds:
     input:
