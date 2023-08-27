@@ -4,7 +4,7 @@ import os
 
 outdir = config["output_namespace"]
 
-if config["input_namespace"] != "seeds":
+if config["input_namespace"]["seeds"] != "seeds":
     checkpoint get_seeds:
         input:
             expand(
