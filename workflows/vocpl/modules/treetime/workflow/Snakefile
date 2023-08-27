@@ -1,4 +1,5 @@
 configfile: "config/config.yaml"
+from snakemake.remote import AUTO
 
 indir = config["input_namespace"]["ml_tree"]
 outdir = config["output_namespace"]
@@ -43,10 +44,10 @@ rule treetime_init:
             "results/{indir}/s{{key}}/ml_tree.treefile",
             indir=indir,
         ),
-        master_metadata = expand(
+        master_metadata = AUTO.remote(expand(
             srcdir("../{master_metadata}"),
             master_metadata=config["params"]["master_metadata"]
-        ),
+        )),
     output:
         outliers = expand(
             "results/{outdir}/s{{key}}/TreeTime_init/outliers.tsv",
@@ -90,10 +91,10 @@ rule treetime_iter:
             "results/{indir}/s{{key}}/aligned.outgroup_added.fasta",
             indir=indir,
         ),
-        master_metadata = expand(
+        master_metadata = AUTO.remote(expand(
             srcdir("../{master_metadata}"),
             master_metadata=config["params"]["master_metadata"]
-        ),
+        )),
         outliers = expand(
             "results/{outdir}/s{{key}}/TreeTime_init/outliers.tsv",
             outdir=outdir,

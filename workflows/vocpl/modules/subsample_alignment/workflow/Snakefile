@@ -1,13 +1,14 @@
 configfile: "config/config.yaml"
+from snakemake.remote import AUTO
 
 outdir = config["output_namespace"]
 
 rule random_subsample_ids_metadata:
     input:
-        master_metadata = expand(
+        master_metadata = AUTO.remote(expand(
             srcdir("../{master_metadata}"),
             master_metadata=config["params"]["master_metadata"],
-        ),
+        )),
     output:
         subsample_ids = expand(
             "results/{outdir}/s{{key}}/subsample_ids.tsv",

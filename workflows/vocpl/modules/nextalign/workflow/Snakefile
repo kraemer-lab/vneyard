@@ -1,4 +1,5 @@
 configfile: "config/config.yaml"
+from snakemake.remote import AUTO
 
 from pathlib import Path
 
@@ -41,14 +42,14 @@ rule nextalign:
             indir=config["input_namespace"]["fasta"],
             infile=config["params"]["subsample_prealign_fasta"],
         ),
-        reference = expand(
+        reference = AUTO.remote(expand(
             srcdir("../{ref}"),
             ref=config["params"]["reference"],
-        ),
-        genemap = expand(
+        )),
+        genemap = AUTO.remote(expand(
             srcdir("../{genemap}"),
             genemap=config["params"]["genemap"],
-        ),
+        )),
     output:
         expand(
             "results/{outdir}/s{{key}}/nextalign.aligned.fasta",

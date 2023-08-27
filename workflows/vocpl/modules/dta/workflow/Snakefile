@@ -1,4 +1,5 @@
 configfile: "config/config.yaml"
+from snakemake.remote import AUTO
 
 outdir = config["output_namespace"]
 
@@ -38,10 +39,10 @@ rule treetime_dta:
             "results/{indir}/s{{key}}/TreeTime_iter/ml_treetime.final.nwk",
             indir=config["input_namespace"]["treetime"],
         ),
-        master_metadata = expand(
+        master_metadata = AUTO.remote(expand(
             srcdir("../{master_metadata}"),
             master_metadata=config["params"]["master_metadata"]
-        ),
+        )),
     output:
         annotated_tree_nexus = expand(
             "results/{outdir}/s{{key}}/annotated_tree.nexus",
@@ -70,18 +71,18 @@ rule extract_states:
             "results/{outdir}/s{{key}}/annotated_tree.nexus",
             outdir=outdir,
         ),
-        master_metadata = expand(
+        master_metadata = AUTO.remote(expand(
             srcdir("../{master_metadata}"),
             master_metadata=config["params"]["master_metadata"]
-        ),
-        sort_dates_py = expand(
+        )),
+        sort_dates_py = AUTO.remote(expand(
             srcdir("../scripts/sort_dates.py"),
             outdir = outdir,
-        ),
-        extract_dta_py = expand(
+        )),
+        extract_dta_py = AUTO.remote(expand(
             srcdir("../scripts/extract_dta.py"),
             outdir = outdir,
-        ),
+        )),
     output:
         state_changes = expand(
             "results/{outdir}/s{{key}}/state_changes.tsv",
