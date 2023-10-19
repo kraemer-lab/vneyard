@@ -1,0 +1,59 @@
+input_namespace:
+  tutorialbuilder_filter$: in
+output_namespace: tutorialbuilder_select
+tutorialbuilder_aggregatebymonth:
+  config:
+    input_namespace: tutorialbuilder_filter
+    output_namespace: tutorialbuilder_aggregatebymonth
+    params:
+      Columns:
+      - New_cases
+      - Cumulative_cases
+      - New_deaths
+      - Cumulative_deaths
+      DateColumn: Date_reported
+      Source: data.csv
+  name: (TutorialBuilder) AggregateByMonth
+  snakefile:
+    args:
+    - kraemer-lab/vneyard
+    function: github
+    kwargs:
+      branch: main
+      path: workflows/TutorialBuilder/modules/AggregateByMonth/workflow/Snakefile
+  type: module
+tutorialbuilder_filter:
+  config:
+    input_namespace: in
+    output_namespace: tutorialbuilder_filter
+    params:
+      Filters:
+        Country_code: GB
+      Source: data.csv
+  name: (TutorialBuilder) Filter
+  snakefile:
+    args:
+    - kraemer-lab/vneyard
+    function: github
+    kwargs:
+      branch: main
+      path: workflows/TutorialBuilder/modules/Filter/workflow/Snakefile
+  type: module
+tutorialbuilder_select:
+  config:
+    input_namespace: tutorialbuilder_aggregatebymonth
+    output_namespace: tutorialbuilder_select
+    params:
+      Columns:
+      - Date_reported
+      - New_cases
+      Source: data.csv
+  name: (TutorialBuilder) Select
+  snakefile:
+    args:
+    - kraemer-lab/vneyard
+    function: github
+    kwargs:
+      branch: main
+      path: workflows/TutorialBuilder/modules/Select/workflow/Snakefile
+  type: module

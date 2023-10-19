@@ -1,0 +1,34 @@
+configfile: "config/config.yaml"
+
+module tutorialbuilder_filter:
+    snakefile:
+        eval(
+            f'{config["tutorialbuilder_filter"]["snakefile"]["function"]}'
+            '(*config["tutorialbuilder_filter"]["snakefile"]["args"],'
+            '**config["tutorialbuilder_filter"]["snakefile"]["kwargs"])'
+        )
+    config:
+        config["tutorialbuilder_filter"]["config"]
+use rule * from tutorialbuilder_filter as tutorialbuilder_filter_*
+
+module tutorialbuilder_aggregatebymonth:
+    snakefile:
+        eval(
+            f'{config["tutorialbuilder_aggregatebymonth"]["snakefile"]["function"]}'
+            '(*config["tutorialbuilder_aggregatebymonth"]["snakefile"]["args"],'
+            '**config["tutorialbuilder_aggregatebymonth"]["snakefile"]["kwargs"])'
+        )
+    config:
+        config["tutorialbuilder_aggregatebymonth"]["config"]
+use rule * from tutorialbuilder_aggregatebymonth as tutorialbuilder_aggregatebymonth_*
+
+module tutorialbuilder_select:
+    snakefile:
+        eval(
+            f'{config["tutorialbuilder_select"]["snakefile"]["function"]}'
+            '(*config["tutorialbuilder_select"]["snakefile"]["args"],'
+            '**config["tutorialbuilder_select"]["snakefile"]["kwargs"])'
+        )
+    config:
+        config["tutorialbuilder_select"]["config"]
+use rule * from tutorialbuilder_select as tutorialbuilder_select_*
