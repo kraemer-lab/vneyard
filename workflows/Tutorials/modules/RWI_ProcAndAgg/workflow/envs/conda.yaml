@@ -1,0 +1,13 @@
+channels:
+  - bioconda
+dependencies:
+  - python
+  - pip:
+    - pandas
+    - matplotlib
+    - descartes
+    - geopandas
+    - shapely
+    - contextily
+    - numpy
+    - pyquadkey2

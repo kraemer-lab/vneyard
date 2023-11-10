@@ -1,0 +1,56 @@
+"""Relative Wealth Index Preprocessing and aggregation
+
+This module provides relative welath index preprocessing and aggregation functions,
+producing a graphical plot which is also output as a png file.
+
+Tags: relative-wealth-index, plot
+
+Params:
+    Root shape file (string): Filename for the root shape [.shp] file
+    RWI file (string): Filename for the relative welath index [.csv] file
+    Population file (string): Filename for the population [.csv] file
+    Output image (string): Filename for the output map [.png] file
+"""
+configfile: "config/config.yaml"
+from snakemake.remote import AUTO
+params = config["params"]
+
+rule target:
+    input:
+        shpfile=expand(
+            "results/{indir}/{filename}",
+            indir=config["input_namespace"]["shape"],
+            filename=params["Root shape file"],
+        ),
+        rwifile=expand(
+            "results/{indir}/{filename}",
+            indir=config["input_namespace"]["rwi"],
+            filename=params["RWI file"],
+        ),
+        popfile=expand(
+            "results/{indir}/{filename}",
+            indir=config["input_namespace"]["pop"],
+            filename=params["Population file"],
+        ),
+        script=AUTO.remote(
+            srcdir("../resources/scripts/rwi_proc_and_agg.py")
+        ),
+    output:
+        expand(
+            "results/{outdir}/{filename}",
+            outdir=config["output_namespace"],
+            filename=params["Output image"]
+        ),
+    params:
+        gid_id=params["GID ID"],
+    conda:
+        "envs/conda.yaml"
+    shell:
+        """
+        python {input.script} \
+            --shpfile="{input.shpfile}" \
+            --rwifile="{input.rwifile}" \
+            --popfile="{input.popfile}" \
+            --gid_id="{params.gid_id}" \
+            --outfile="{output}"
+        """

@@ -1,0 +1,11 @@
+input_namespace:
+  shape: "shape_in"
+  rwi: "rwi_in"
+  pop: "pop_in"
+output_namespace: "out"
+params:
+  "Root shape file": "gadm41_VNM_2.shp"
+  "RWI file": "vnm_relative_wealth_index.csv"
+  "Population file": "vnm_general_2020.csv"
+  "GID ID": "GID_2"
+  "Output image": "rwi_weight_admin3.png"
