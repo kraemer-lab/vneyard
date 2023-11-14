@@ -1,0 +1,7 @@
+input_namespace: null
+output_namespace: out
+params:
+  "Database": "nucleotide"
+  "ID": "NC_001477"
+  "Return type": "fasta"
+  "Filename": "seq.fasta"

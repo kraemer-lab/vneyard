@@ -1,0 +1,43 @@
+"""Get sequence data from genbank
+
+Retrieve sequence data from 
+
+Tags: genbank, database
+
+Params:
+  Database (string): Database name ("nucleotide")
+  ID: Idenitfier ("NC_001477")
+  Return type (string): Return type ("fasta")
+  Filename (string): Output filename ("seq.fasta")
+"""
+configfile: "config/config.yaml"
+from snakemake.remote import AUTO
+params = config["params"]
+
+rule target:
+    input:
+        script=AUTO.remote(
+            srcdir('../resources/scripts/download_fasta.R')
+        )
+    output:
+        expand(
+            "results/{outdir}/{filename}",
+            outdir=config["output_namespace"],
+            filename=params["Filename"],
+        )
+    params:
+        db = params["Database"],
+        id = params["ID"],
+        rettype = params["Return type"],
+    log:
+        "logs/genbank.log"
+    conda:
+        "envs/conda.yaml"
+    shell:
+        """
+        RScript {input.script} \
+            --db {params.db} \
+            --id {params.id} \
+            --rettype {params.rettype} \
+            --output {output}
+        """
