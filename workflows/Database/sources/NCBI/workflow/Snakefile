@@ -1,8 +1,10 @@
-"""Get sequence data from genbank
+"""Get data from NCBI Sequence Database (genbank)
 
-Retrieve sequence data from 
+Retrieve sequence data from the National Centre for Biotechnology Information (NCBI)
+Sequence Database (genbank). See https://www.ncbi.nlm.nih.gov/genbank/ for database
+particulars.
 
-Tags: genbank, database
+Tags: genbank, database, ncbi, genbank
 
 Params:
   Database (string): Database name ("nucleotide")
