@@ -1,0 +1,20 @@
+"""Link to a local file
+
+The LocalFile module has been replaced with CopyLocalFile and LinkLocalFile, which
+provide more fine-grained control over file operations. It is recommended to use those
+modules where possible. This module exists for backwards-compatbility.
+"""
+configfile: "config/config.yaml"
+import configutil
+config = configutil.remap_params(config)
+
+module utility_linklocalfile:
+    snakefile:
+        eval(
+            f'{config["utility_linklocalfile"]["snakefile"]["function"]}'
+            '(*config["utility_linklocalfile"]["snakefile"]["args"],'
+            '**config["utility_linklocalfile"]["snakefile"]["kwargs"])'
+        )
+    config:
+        config["utility_linklocalfile"]["config"]
+use rule * from utility_linklocalfile as utility_linklocalfile_*

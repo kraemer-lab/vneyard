@@ -1,0 +1,18 @@
+input_namespace: null
+output_namespace: utility_linklocalfile
+utility_linklocalfile:
+  name: (Utility) LinkLocalFile
+  type: module
+  snakefile:
+    function: github
+    args:
+    - kraemer-lab/vneyard
+    kwargs:
+      path: workflows/Utility/sources/LinkLocalFile/workflow/Snakefile
+      commit: 756a388c95513710e850bb3f20d0a10872753a40
+  parameter_map: []
+  config:
+    input_namespace: null
+    output_namespace: utility_linklocalfile
+    params:
+      file: <Full path to local file>
