@@ -1,0 +1,34 @@
+"""Link a local file into the workflow
+
+Links a local file and provides it as output.
+
+Tags: utility, copy, files
+
+Params:
+    file (string): Path to file to copy
+"""
+configfile: "config/config.yaml"
+import os
+
+params = config["params"]
+filepath, filename = os.path.split(os.path.abspath(params["file"]))
+
+rule copy:
+    input:
+        # Requires an absolute path to form the symbolic link
+        expand(
+            "{fullfile}",
+            fullfile=params["file"],
+        )
+    output:
+        expand(
+            "results/{outdir}/{filename}",
+            outdir=config["output_namespace"],
+            filename=filename,
+        )
+    params:
+        filename=os.path.join(filepath, filename),
+    shell:
+        """
+        ln -s -f {params.filename} {output[0]}
+        """

@@ -1,0 +1,68 @@
+"""Create a link to a local folder, making that folder available to the workflow
+
+Link a local folder (and sub-folders) and provides the linked folder as output.
+
+Tags: utility, copy, files, folders
+
+Params:
+    folder (string): Path to folder to copy
+"""
+configfile: "config/config.yaml"
+params = config["params"]
+
+import os
+
+def parse_folder(path, targetpath):
+    """
+    Support function that walks a root folder, returning all files and subfolders
+    as they would appear after copy to targetpath (note that these must be relative path,
+    i.e. 'results/out/1', not os.path.abspath('results/out/1'), which snakemake does
+    not recognise as the same file during testing.
+    """
+    abs_root_path = os.path.abspath(path)
+    abs_file_paths = [os.path.abspath(os.path.join(root, name))
+                for root, dirs, files in os.walk(path)
+                for name in files]
+    target_file_paths = [
+        os.path.join(targetpath, os.path.relpath(path, abs_root_path))
+        for path in abs_file_paths]
+    return target_file_paths
+
+rule target:
+    output:
+        directory(
+            expand(
+                "results/{infile}",
+                infile=config["output_namespace"],
+            )
+        ),
+        # The file outputs are used to inform downstream modules of the generated files
+        parse_folder(
+            params["folder"],
+            os.path.join("results", config["output_namespace"]),
+        ),
+    params:
+        folder=os.path.abspath(
+            params["folder"]
+        ),
+        outdir=os.path.join(
+            "results",
+            config["output_namespace"]
+        ),
+    shell:
+        """
+        rm -rf {params.outdir}  # remove folder created by snakemake
+        ln -s -f {params.folder} {params.outdir}
+        """
+
+testing = False
+if testing:
+    rule test_target:
+        input:
+            "results/out/1"
+        output:
+            'results/out/done'
+        shell:
+            """
+            touch results/out/done
+            """
