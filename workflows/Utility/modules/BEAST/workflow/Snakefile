@@ -3,8 +3,8 @@
 BEAST is a cross-platform program for Bayesian analysis of molecular sequences
 using Markov-Chain Monte-Carlo sampling [https://beast.community/].
 
-This module can start and/or resume a BEAST analysis by saving a state file
-at regular intervals (this option can be disabled, see below).
+This module can start and/or resume a BEAST (v1.10.4) analysis by saving a state
+file at regular intervals (this option can be disabled, see below).
 
 Params:
     xml_file (string): Input XML file
