@@ -1,0 +1,156 @@
+"""Bayesian Evolutionary Analysis Sampling Trees (BEAST)
+
+BEAST is a cross-platform program for Bayesian analysis of molecular sequences
+using Markov-Chain Monte-Carlo sampling [https://beast.community/].
+
+This module can start and/or resume a BEAST (v1.10.4) analysis by saving a state
+file at regular intervals (this option can be disabled, see below).
+
+Params:
+    xml_file (string): Input XML file
+    save_every (number): Iterations between checkpoint saves, default 1000.
+        Set save_every=0 to disable checkpoint saves.
+    options (string): Additional command line options
+"""
+configfile: "config/config.yaml"
+
+indir = config["input_namespace"]
+outdir = config["output_namespace"]
+params = config["params"]
+
+checkpoint_file = expand(
+    "results/{outdir}/checkpoint.state",
+    outdir=config["output_namespace"]
+)
+
+rule target:
+    input:
+        expand(
+            "results/{outdir}/mark",
+            outdir=config["output_namespace"],
+        )
+
+if params['save_every']:
+
+    # Run and resume rules, if save_state is specified and is >0
+    rule resume_beast:
+        input:
+            xml=expand(
+                "results/{indir}/{xml}",
+                indir=indir,
+                xml=params["xml_file"],
+            ),
+            checkpoint=checkpoint_file,
+        output:
+            expand(
+                "results/{outdir}/mark",
+                outdir=config["output_namespace"],
+            )
+        params:
+            checkpoint=checkpoint_file,
+            save_every=params["save_every"],
+            opts=params["options"],
+        log:
+            "log/resume_beast.log"
+        benchmark:
+            "benchmark/resume_beast.txt"
+        conda:
+            "envs/conda.yml"
+        shell:
+            """
+            beast \
+                -overwrite \
+                -save_every {params.save_every} \
+                -save_state {params.checkpoint} \
+                -load_state {params.checkpoint} \
+                -force_resume \
+                {params.opts} \
+                {input.xml} \
+                > >(tee -a log/stdout.log) 2> >(tee -a log/stderr.log >&2) 
+            
+            # Move residual BEAST log files
+            mkdir -p log
+            mv *.txt log
+            
+            # Signal completion
+            touch {output}
+            """
+
+    rule run_beast:
+        input:
+            xml=expand(
+                "results/{indir}/{xml}",
+                indir=indir,
+                xml=params["xml_file"],
+            )
+        output:
+            expand(
+                "results/{outdir}/mark",
+                outdir=config["output_namespace"],
+            )
+        log:
+            "log/run_beast.log"
+        benchmark:
+            "benchmark/run_beast.txt"
+        params:
+            checkpoint=checkpoint_file,
+            save_every=params["save_every"],
+            opts=params["options"],
+        conda:
+            "envs/conda.yml"
+        shell:
+            """
+            beast \
+                -save_every {params.save_every} \
+                -save_state {params.checkpoint} \
+                {params.opts} \
+                {input.xml} \
+                > >(tee -a log/stdout.log) 2> >(tee -a log/stderr.log >&2) 
+
+            # Move residual BEAST log files
+            mkdir -p log
+            mv *.txt log
+
+            # Signal completion
+            touch {output}
+            """
+
+    ruleorder: resume_beast > run_beast
+
+else:
+
+    # Run BEAST without checkpoint saves
+    rule run_beast:
+        input:
+            xml=expand(
+                "results/{indir}/{xml}",
+                indir=indir,
+                xml=params["xml_file"],
+            )
+        output:
+            expand(
+                "results/{outdir}/mark",
+                outdir=config["output_namespace"],
+            )
+        log:
+            "log/run_beast.log"
+        benchmark:
+            "benchmark/run_beast.txt"
+        params:
+            opts=params["options"],
+        conda:
+            "envs/conda.yml"
+        shell:
+            """
+            beast \
+                {params.opts} \
+                {input.xml} \
+                > >(tee -a log/stdout.log) 2> >(tee -a log/stderr.log >&2) 
+
+            # Move residual BEAST log files
+            mkdir -p log
+            mv *.txt log
+
+            # Signal completion
+            touch {output}
+            """
