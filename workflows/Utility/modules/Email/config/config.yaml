@@ -1,0 +1,16 @@
+input_namespace:
+  credentials: "credentials"
+  trigger: "trigger"
+output_namespace: "out"
+params:
+  Credentials:
+    Filename: "credentials.json"
+  Trigger:
+    Filename: "touch"
+  Server:
+    "SMTP Server": "smtp.gmail.com"
+    "SMTP Port": 587
+  Message:
+    Subject: "[GRAPEVNE] Workflow Alert"
+    Body: "Your workflow triggered an email alert."
+    Recipients: "email1@example.com, email2@example.com"
