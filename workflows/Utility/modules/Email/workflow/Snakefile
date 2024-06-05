@@ -1,26 +1,19 @@
 """Send email
 
-This module sends an email to a list of recipients once the input folder contains the
-file 'touch', which indicates that the previous steps have been completed. Credentials
-should be stored and provided in a separate (local) file and connected to this module.
-Credentials should be provided as a JSON file containing the keys 'username' and
-'password' at the top level for SMTP server access, e.g. a file `credentials.json`:
+This module sends an email to a list of recipients once the input folder contains the file 'touch', which indicates that the previous steps have been completed. Credentials should be stored and provided in a separate (local) file and connected to this module. Credentials should be provided as a JSON file containing the keys 'username' and 'password' at the top level for SMTP server access, e.g. a file `credentials.json`:
 {
     "username": "myusername",
     "password": "mypassword"
 }
 
-It is recommended that you do not use your personal email account for this purpose.
-Consider creating a new email account. For Gmail, you will need to enable 2FA login and
-create an "app password". Use the app password in your credentials file.
+It is recommended that you do not use your personal email account for this purpose. Consider creating a new email account. For Gmail, you will need to enable 2FA login and create an "app password". Use the app password in your credentials file.
 
 Params:
     SMTP Server (str): The SMTP server to use.
     SMTP Port (int): The port to use for the SMTP server.
     Subject (str): The subject of the email.
     Body (str): The body of the email.
-    Recipients (list[str]): A comma separated list of email addresses to send the
-        email to.
+    Recipients (list[str]): A comma separated list of email addresses to send the email to.
 """
 configfile: "config/config.yaml"
 
