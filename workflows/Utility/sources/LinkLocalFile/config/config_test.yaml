@@ -1,0 +1,9 @@
+# Test configuration can be run with the following command:
+#  snakemake --cores 1 --use-conda --configfile config_test.yaml
+# Ensure that `results/in/test.file` exists before running the test.
+input_namespace: null
+output_namespace: "out"
+params:
+  File:
+    Name: "test.file"
+    Folder: "results/in"
