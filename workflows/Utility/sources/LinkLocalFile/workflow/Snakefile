@@ -10,25 +10,31 @@ Params:
 configfile: "config/config.yaml"
 import os
 
+# Extract params from config file
+outdir = config["output_namespace"]
 params = config["params"]
-filepath, filename = os.path.split(os.path.abspath(params["file"]))
+
+# Get the full path to the target file
+filename = params["File"]["Name"]
+filepath = params["File"]["Folder"]
+fullfile = os.path.abspath(os.path.join(filepath, filename))
+
+# Get the output directory and the relative path from that directory to the target
+output_dir = os.path.abspath(f"results/{outdir}")
+relpath = os.path.relpath(fullfile, output_dir)
 
 rule copy:
     input:
-        # Requires an absolute path to form the symbolic link
-        expand(
-            "{fullfile}",
-            fullfile=params["file"],
-        )
+        fullfile,
     output:
-        expand(
-            "results/{outdir}/{filename}",
-            outdir=config["output_namespace"],
-            filename=filename,
-        )
+        outfile = f"results/{outdir}/{filename}",
     params:
-        filename=os.path.join(filepath, filename),
+        relpath = relpath,
+    conda:
+        "envs/empty.yaml",
+    log:
+        f"logs/copy_{filename}.log",
     shell:
         """
-        ln -s -f {params.filename} {output[0]}
+        ln -s -f {params.relpath} {output.outfile}
         """
