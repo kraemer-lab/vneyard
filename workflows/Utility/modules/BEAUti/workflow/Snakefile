@@ -1,0 +1,58 @@
+"""Bayesian Evolutionary Analysis Utility (BEAUti)
+
+BEAUti is a graphical user-interface (GUI) application for generating BEAST XML files.
+
+Note: This is a graphical / interactive module that requires user interaction, so
+it is not suitable for running in a headless (non-interactive) environment.
+
+Params:
+    infile (str): The name of the input NEXUS (.nex) file.
+    outfile (str): The name of the output BEAST (.xml) file.
+"""
+configfile: "config/config.yaml"
+import os
+
+indir = config["input_namespace"]
+outdir = config["output_namespace"]
+params = config["params"]
+infile = params["infile"]
+outfile = params["outfile"]
+
+rule run_beauti:
+    input:
+        infile = f"results/{indir}/{infile}",
+    output:
+        outfile = f"results/{outdir}/{outfile}",
+    log:
+        "log/run_beauti.log"
+    benchmark:
+        "benchmark/run_beauti.txt"
+    params:
+        infile = infile,
+        outfile = outfile,
+        infolder = os.path.abspath(f"results/{indir}/"),
+        outfolder = os.path.abspath(f"results/{outdir}/")
+    conda:
+        "envs/beast.yml"
+    shell:
+        """
+        # Generate symbolic link to the input and output directories
+        mkdir -p ~/GRAPEVNE  # Create a temporary directory (may already exists)
+        unlink ~/GRAPEVNE/in || true  # Remove symbolic link if it already exists
+        unlink ~/GRAPEVNE/out || true  # Remove symbolic link if it already exists
+        ln -s {params.infolder} ~/GRAPEVNE/in
+        ln -s {params.outfolder} ~/GRAPEVNE/out
+
+        # Present MessageBox to inform the user about the interactive nature of this
+        # module. The user should load and save from the (temporary) symbolic link
+        # folders mapped to the workflow input and output directories.
+        python -c "from tkinter import messagebox as msg; msg.showinfo('GRAPEVNE Message', 'GRAPEVNE Message:\\n\\nYou are about to run BEAUti interactively.\\n\\nPlease Import the .nex file from ~/GRAPEVNE/in/{params.infile}.\\n\\nSave the generated BEAST file to ~/GRAPEVNE/out/{params.outfile}.\\n\\nClose BEAUti when you are finished.\\n\\nPress OK to continue.');"
+
+        # Launch BEAUti
+        beauti
+
+        # Remove symbolic links
+        unlink ~/GRAPEVNE/in
+        unlink ~/GRAPEVNE/out
+        rmdir ~/GRAPEVNE || true  # Ignore error if the directory is not empty
+        """
