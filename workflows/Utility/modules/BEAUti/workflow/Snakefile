@@ -2,8 +2,7 @@
 
 BEAUti is a graphical user-interface (GUI) application for generating BEAST XML files.
 
-Note: This is a graphical / interactive module that requires user interaction, so
-it is not suitable for running in a headless (non-interactive) environment.
+Note: This is a graphical / interactive module that requires user interaction, so it is not suitable for running in a headless (non-interactive) environment.
 
 Params:
     infile (str): The name of the input NEXUS (.nex) file.
