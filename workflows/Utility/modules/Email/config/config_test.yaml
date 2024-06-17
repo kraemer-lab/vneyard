@@ -1,6 +1,6 @@
 input_namespace:
   credentials: "credentials"
-  send: "trigger"
+  send: "send"
   shutdown: "shutdown"
   attachments: "attachments"
 output_namespace: "out"
@@ -15,11 +15,12 @@ params:
     Body: "Your workflow triggered an email alert."
     Recipients: "example@email.com"
     Attachments:
-      - "File_1.txt"
+      - "File_?.txt"
+      - "Filename.txt"
   Triggers:
     "Send email": "touch"
     "Shutdown": "touch"
   Behaviour:
-    "Check triggers interval (secs)": 5
+    "Check triggers interval (secs)": 2
     "Allow multiple emails": true
     "Shutdown timeout": 0
