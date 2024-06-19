@@ -1,0 +1,191 @@
+"""Send email
+
+This module sends an email to a list of recipients once the input folder contains the file 'touch', which indicates that the previous steps have been completed. Credentials should be stored and provided in a separate (local) file and connected to this module. Credentials should be provided as a JSON file containing the keys 'username' and 'password' at the top level for SMTP server access, e.g. a file `credentials.json`:
+{
+    "username": "myusername",
+    "password": "mypassword"
+}
+
+It is recommended that you do not use your personal email account for this purpose. Consider creating a new email account. For Gmail, you will need to enable 2FA login and create an "app password". Use the app password in your credentials file.
+
+Note that this module will wait until a 'shutdown' trigger is found before exiting (or a 'send' trigger if 'Allow multiple emails' is set to False). For this reason it is important to run the workflow in a multi-core environment to prevent blocking the workflow (i.e. run snakemake with '--cores n' with n>1).
+
+Inputs:
+    credentials: The path to the credentials file.
+    send: The path to the trigger file.
+    shutdown: The path to the shutdown trigger file.
+    attachments: The path to the attachments.
+
+Params:
+    Credentials:
+        Filename (str): The name of the credentials file.
+    Server:
+        SMTP Server (str): The SMTP server to use.
+        SMTP Port (int): The port to use for the SMTP server.
+    Message:
+        Subject (str): The subject of the email.
+        Body (str): The body of the email.
+        Recipients (str): A comma separated list of email addresses to send the email to.
+        Attachments (list[str]): A list of filenames to attach to the email.
+    Triggers:
+        Send email (str): The name of the trigger file.
+        Shutdown (str): The name of the shutdown trigger file.
+    Behaviour:
+        Check triggers interval (secs) (int): The interval at which to check for triggers.
+        Allow multiple emails (bool): Whether to monitor for subsequent send triggers.
+        Shutdown timeout (int): The maximum time to wait before shutting down the module. Set to 0 to disable.
+"""
+configfile: "config/config.yaml"
+
+import time
+import json
+import glob
+import importlib.util
+from pathlib import Path
+
+# Folder mappings
+indirs = config["input_namespace"]
+outdir = config["output_namespace"]
+params = config["params"]
+
+# Parameters
+delay_timer = params["Behaviour"]["Check triggers interval (secs)"]
+allow_multiple_emails = params["Behaviour"]["Allow multiple emails"]
+timeout = params["Behaviour"]["Shutdown timeout"]
+
+# Paths
+credentials = (
+    Path("results") / indirs["credentials"] / params["Credentials"]["Filename"]
+)
+send_trigger = Path("results") / indirs["send"] / params["Triggers"]["Send email"]
+shutdown_trigger = Path("results") / indirs["shutdown"] / params["Triggers"]["Shutdown"]
+
+# Developer settings
+test_send = False
+verbose = True
+
+
+def script(name=""):
+    """Return the path to a script (detects local or remote execution modes)"""
+    workflow_srcdir = srcdir("")
+    try:
+        from snakemake.remote import AUTO
+
+        return AUTO.remote("/".join([workflow_srcdir, "scripts", name]))
+    except TypeError:
+        return Path(workflow_srcdir) / "scripts" / name
+
+
+def import_module(name, module_file):
+    """Import a module from a file"""
+    spec = importlib.util.spec_from_file_location(name, module_file)
+    lib = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(lib)
+    return lib
+
+
+def get_credentials(filename):
+    with open(filename, "r") as f:
+        creds = json.load(f)
+        return (creds.get("username", ""), creds.get("password", ""))
+
+
+def timed_out(t0):
+    if timeout > 0:
+        return time.time() - t0 > timeout
+    return False
+
+
+rule email:
+    input:
+        credentials=credentials,
+        scriptfile=script("sendmail.py"),
+    output:
+        f"results/{outdir}/touch",
+    params:
+        SMTP_Server=params["Server"]["SMTP Server"],
+        SMTP_Port=params["Server"]["SMTP Port"],
+        Subject=params["Message"]["Subject"],
+        Body=params["Message"]["Body"],
+        Recipients=params["Message"]["Recipients"],
+        Attachments=params["Message"]["Attachments"],
+        AttachmentsFolder=f"results/{indirs['attachments']}",
+    run:
+        email_loop(
+            input,
+            output,
+            params,
+            send_trigger,
+            shutdown_trigger,
+            delay_timer,
+            allow_multiple_emails,
+            test_send,
+            verbose,
+        )
+
+
+def email_loop(
+    input,
+    output,
+    params,
+    send_trigger,
+    shutdown_trigger,
+    delay_timer,
+    allow_multiple_emails,
+    test_send,
+    verbose,
+):
+    # Load credentials
+    username, password = get_credentials(input.credentials)
+    sender = username
+    # Import module from script
+    sendmail = import_module("sendmail", input.scriptfile)
+    # Start timer
+    t0 = time.time()
+    # Looping permits the module to send multiple emails (e.g. for monitoring long jobs)
+    while True:
+        # Check for send-email trigger
+        if Path(send_trigger).exists():
+            if verbose:
+                print("Sending email.")
+            # Remove trigger to allow additional calls
+            Path(send_trigger).unlink()
+            # Collate attachments (files can change between triggers due to glob patterns)
+            attachments = []
+            for attachment in params.Attachments:
+                pattern = str(Path(params.AttachmentsFolder) / attachment)
+                attachments.extend(glob.glob(pattern))
+            # Send email
+            if test_send and verbose:
+                print("TEST email (simulating send):")
+                print(f" Subject: {params.Subject}")
+                print(f" Body: {params.Body}")
+                print(f" Recipients: {params.Recipients}")
+                print(f" Attachments: {attachments}")
+            else:
+                sendmail.send_email(
+                    params.SMTP_Server,
+                    params.SMTP_Port,
+                    params.Subject,
+                    params.Body,
+                    sender,
+                    params.Recipients,
+                    username,
+                    password,
+                    attachments,
+                )
+            if not allow_multiple_emails:
+                break
+        else:
+            if verbose:
+                print("Waiting for email trigger...")
+        # Check for shutdown conditions
+        if Path(shutdown_trigger).exists() or timed_out(t0):
+            try:
+                Path(shutdown_trigger).unlink()
+            except FileNotFoundError:
+                pass
+            Path(output[0]).touch()  # Permits snakemake to end the rule gracefully
+            break
+        # Inter-iteration delay
+        time.sleep(delay_timer)

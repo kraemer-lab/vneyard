@@ -1,0 +1,26 @@
+input_namespace:
+  credentials: "credentials"
+  send: "send"
+  shutdown: "shutdown"
+  attachments: "attachments"
+output_namespace: "out"
+params:
+  Credentials:
+    Filename: "credentials.json"
+  Server:
+    "SMTP Server": "smtp.gmail.com"
+    "SMTP Port": 587
+  Message:
+    Subject: "[GRAPEVNE] Workflow Alert"
+    Body: "Your workflow triggered an email alert."
+    Recipients: "example@email.com"
+    Attachments:
+      - "File_?.txt"
+      - "Filename.txt"
+  Triggers:
+    "Send email": "touch"
+    "Shutdown": "touch"
+  Behaviour:
+    "Check triggers interval (secs)": 2
+    "Allow multiple emails": true
+    "Shutdown timeout": 0
