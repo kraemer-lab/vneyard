@@ -1,0 +1,8 @@
+channels:
+  - bioconda
+dependencies:
+  - python==3.11
+  - pip
+  - pip:
+    - seaborn==0.13.2
+    - argparse==1.4.0
