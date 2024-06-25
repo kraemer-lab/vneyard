@@ -96,7 +96,7 @@ def timed_out(t0):
     return False
 
 
-rule email:
+rule email_rule:
     input:
         credentials=credentials,
         scriptfile=script("sendmail.py"),
@@ -107,7 +107,7 @@ rule email:
         SMTP_Port=params["Server"]["SMTP Port"],
         Subject=params["Message"]["Subject"],
         Body=params["Message"]["Body"],
-        Recipients=params["Message"]["Recipients"],
+        Recipients=params["Message"]["Recipients"].split(','),
         Attachments=params["Message"]["Attachments"],
         AttachmentsFolder=f"results/{indirs['attachments']}",
     run:
@@ -185,7 +185,7 @@ def email_loop(
                 Path(shutdown_trigger).unlink()
             except FileNotFoundError:
                 pass
-            Path(output[0]).touch()  # Permits snakemake to end the rule gracefully
             break
         # Inter-iteration delay
         time.sleep(delay_timer)
+    Path(output[0]).touch()  # Permits snakemake to end the rule gracefully

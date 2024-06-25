@@ -22,5 +22,5 @@ params:
     "Shutdown": "touch"
   Behaviour:
     "Check triggers interval (secs)": 2
-    "Allow multiple emails": true
+    "Allow multiple emails": false
     "Shutdown timeout": 0
