@@ -1,0 +1,23 @@
+"""Create an empty file
+
+Create an empty file in the results directory with the name specified in the config file. This is often useful for providing triggers to downstream modules.
+
+Params:
+    Filename (str): The name of the file to create.
+"""
+configfile: "config/config.yaml"
+
+from pathlib import Path
+
+outdir = config["output_namespace"]
+params = config["params"]
+filename = params["Filename"]
+
+rule touch:
+    output:
+        filename = f"results/{outdir}/{filename}",
+    params:
+        outdir = f"results/{outdir}"
+    run:
+        Path(params.outdir).mkdir(parents=True, exist_ok=True)
+        Path(output.filename).touch()
