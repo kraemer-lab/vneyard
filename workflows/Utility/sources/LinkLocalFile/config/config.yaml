@@ -2,5 +2,7 @@ input_namespace: null
 output_namespace: "out"
 params:
   File:
-    Name: "data.csv"
+    Filename: "data.csv"
     Folder: "/data"
+  ":File":
+    type: "File"
