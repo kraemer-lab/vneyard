@@ -21,7 +21,7 @@ def send_email(
     subject: str,
     body: str,
     sender: str,
-    recipients: list[str],
+    recipients: str | list[str],
     username: str,
     password: str,
     files: list[str] = [],
@@ -34,7 +34,7 @@ def send_email(
     # Header and body
     msg = MIMEMultipart()
     msg["From"] = sender
-    msg["To"] = ", ".join(recipients)
+    msg["To"] = ", ".join(recipients) if isinstance(recipients, list) else recipients
     msg["Date"] = formatdate(localtime=True)
     msg["Subject"] = subject
     msg.attach(MIMEText(body))
