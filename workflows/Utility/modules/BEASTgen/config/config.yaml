@@ -6,4 +6,13 @@ params:
   "Template filename": to_fasta.template
   "Input filename": dengue.nex
   "Output filename": dengue.fasta
-  Arguments: ""
+  Arguments: 
+      date_order: ""
+      date_prefix: ""
+      date_regex: ""
+      date_format: ""
+      date_precision: ""
+      tree: ""
+      traits: ""
+      Exchange: []
+      Extras: ""
