@@ -8,10 +8,19 @@ Params:
     Template filename (str): BEASTGen template file [concrete]
     Input filename (str): Input file [concrete]
     Output filename (str): Output file
-    Arguments (str): Command line arguments
-        See https://beast.community/beastgen for available options
+    Arguments: Command line arguments
+        date_order (str): The order of the date field (negative numbers from last)
+        date_prefix (str): A string that is the prefix to the date field
+        date_regex (str): A string that gives the regular expression to match the date
+        date_format (str): A string that gives the date format for parsing
+        date_precision (str): Specifies the date is a variable precision yyyy-MM-dd format
+        tree (str): Read a tree from a file
+        traits (str): Assign traits to each taxon from a tsv file with headers.
+        Exchange (list[str]): Properties for exchange in template file (the `-D` option). Provide a list of ("original=replacement") pairings.
+        Extras (str): Additional arguments to pass to BEASTGen
 """
 configfile: "config/config.yaml"
+from snakemake.remote import AUTO
 
 indir_template = config["input_namespace"]["template"]
 indir_file = config["input_namespace"]["file"]
@@ -23,14 +32,32 @@ in_file = params["Input filename"]
 out_file = params["Output filename"]
 arguments = params["Arguments"]
 
+# Form Excange ('-D') arguments string
+args_exchange = []
+for element in arguments["Exchange"]:
+    args_exchange.append(element)  # assumes string is formatted as "original=replacement"
+cli_exchange_list = ','.join(args_exchange)
+cli_exchange = f'-D "{cli_exchange_list}"' if cli_exchange_list else ""
+
+# Form command line arguments list
+args = []
+for k, v in arguments.items():
+    if k == "Exchange" or k == "Extras" or v is None:
+        continue
+    if len(v) > 0:
+        args.append(f"-{k} {v}")
+cli_args = ' '.join(args)
+cli = ' '.join([cli_args, cli_exchange, arguments['Extras']])
+
 rule beastgen:
     input:
         infile = f"results/{indir_file}/{in_file}",
         template = f"results/{indir_template}/{template_file}",
+        beastgen = AUTO.remote("https://github.com/beast-dev/beast-mcmc/releases/download/v1.10.5pre_thorney_v0.1.2/BEASTGen_v0.3pre_thorney.tgz"),
     output:
         outfile = f"results/{outdir}/{out_file}",
     params:
-        args = arguments,
+        args = cli,
     log:
         "logs/beastgen"
     conda:
@@ -40,7 +67,7 @@ rule beastgen:
         # Download BEASTGen if not already present
         if [ ! -d resources ]; then
             mkdir -p resources/beastgen
-            wget https://github.com/beast-dev/beast-mcmc/releases/download/v1.10.5pre_thorney_v0.1.2/BEASTGen_v0.3pre_thorney.tgz -O resources/beastgen.tgz
+            mv {input.beastgen} resources/beastgen.tgz
             tar -xzf resources/beastgen.tgz -C resources/beastgen --strip-components 1
             rm resources/beastgen.tgz
         fi
