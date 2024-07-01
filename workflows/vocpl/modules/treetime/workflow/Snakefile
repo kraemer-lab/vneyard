@@ -1,3 +1,22 @@
+"""TreeTime
+
+Perfors time-resolved phylogenetic analysis using TreeTime.
+
+Inputs:
+    seeds: "seeds"
+    ml_tree: "ml_tree"
+
+Params:
+    master_metadata (str): Filename of the master metadata file
+    treetime: TreeTime specific parameters
+        init: Initialisation parameters
+            clock_rate (real): Evolutionary clock rate
+            clock_std_dev (real): Evolutionary clock rate (std deviation)
+            reroot (str): Method to find the best root in the tree
+        iter: Iteration parameters
+            max_iter (int): Maximum number of iterations
+            max_outliers (int): Maximum number of outliers
+"""
 configfile: "config/config.yaml"
 from snakemake.remote import AUTO
 

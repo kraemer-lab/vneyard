@@ -3,7 +3,6 @@ input_namespace:
   fasta: "fasta"
 output_namespace: "out"
 params:
-  method: "iqtree"
   outgroup_fasta: ""
   fasttree:
     gtr: true

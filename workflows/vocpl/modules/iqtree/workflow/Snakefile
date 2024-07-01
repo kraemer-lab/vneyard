@@ -1,3 +1,21 @@
+"""IQ-Tree analysis
+
+Performs a maximum likelihood analysis using IQ-Tree.
+
+Inputs:
+    seeds : Seeds file
+    fasta : Fasta files
+
+Params:
+    outgroup_fasta (str): Filename of the outgroup fasta file
+    iqtree:
+        nt (str): Number of cores to use
+        m (str): Model of evolution
+        ninit (int): Number of initial parsimony trees
+        me (real): Log-likelihood epsilon for final model parameter estimation
+        b (int): Number of bootstrap replicates
+        flags (str): Additional flags to pass to iqtree
+"""
 configfile: "config/config.yaml"
 
 import os

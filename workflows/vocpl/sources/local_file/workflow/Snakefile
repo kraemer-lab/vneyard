@@ -1,3 +1,12 @@
+"""Copy a local file into the workflow
+
+Makes a copy of a local file and provides it as output.
+
+Tags: utility, copy, files
+
+Params:
+    file (string): Path to file to copy
+"""
 configfile: "config/config.yaml"
 import os
 import shutil
