@@ -1,3 +1,7 @@
+"""Passthrough module
+
+This module is used to copy the results of a previous run to the output directory.
+"""
 configfile: "config/config.yaml"
 import os
 

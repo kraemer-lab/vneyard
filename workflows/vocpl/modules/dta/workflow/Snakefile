@@ -1,3 +1,10 @@
+"""Discrete Trait Analysis (DTA)
+
+Perform DTA on the ML tree from TreeTime.
+
+Params:
+  master_metadata (str): Path to the master metadata file
+"""
 configfile: "config/config.yaml"
 from snakemake.remote import AUTO
 

@@ -1,3 +1,17 @@
+"""Nextalign
+
+Perform Nextalign on subsampled prealign fasta files.
+
+Inputs:
+  seeds : Seeds location
+  fasta : Fasta location
+
+Params:
+  reference (str): Filename of the reference sequence
+  genemap (str): Filename of the gene map
+  genes (str): Comma-separated list of gene names
+  subsample_prealign_fasta (str): Filename of the subsampled prealign fasta
+"""
 configfile: "config/config.yaml"
 from snakemake.remote import AUTO
 

@@ -1,3 +1,18 @@
+"""Perform FastTree analysis on multiple sequence alignments.
+
+Perform FastTree analysis on multiple sequence alignments.
+
+Inputs:
+    seeds : Seeds files
+    fasta : Multiple sequence alignments
+
+Params:
+    outgroup_fasta (str): Filename of the outgroup fasta file
+    fasttree:  FastTree-specific parameters
+        gtr (bool): Generalized time-reversible model
+        boot (int): Bootstrap samples
+        flags (str): Additional flags to pass to FastTree
+"""
 configfile: "config/config.yaml"
 
 import os

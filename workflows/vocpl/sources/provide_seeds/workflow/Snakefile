@@ -1,3 +1,7 @@
+"""Read a preconfigured seeds file
+
+For use in the `vocpl` (variants of concern) analysis available in the `kraemer-lab/vneyard` repository.
+"""
 configfile: "config/config.yaml"
 from snakemake.remote import AUTO
 

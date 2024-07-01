@@ -1,3 +1,12 @@
+"""Subsample alignment
+
+Performs subsampling of the master alignment and metadata files.
+
+Params:
+    n_random (int): Number of random samples to take
+    master_fasta (str): Filename of the master fasta file
+    master_metadata (str): Filename of the master metadata file
+"""
 configfile: "config/config.yaml"
 from snakemake.remote import AUTO
 

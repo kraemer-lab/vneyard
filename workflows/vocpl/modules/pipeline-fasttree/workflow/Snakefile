@@ -1,3 +1,9 @@
+"""Complete pipeline implementing the VOCPL pipeline.
+
+This pipeline is a complete implementation of the VOCPL pipeline. It utilises FastTree for tree building.
+
+See respective modules for parameter descriptions.
+"""
 configfile: "config/config.yaml"
 
 module vocpl_subsample_alignment:
