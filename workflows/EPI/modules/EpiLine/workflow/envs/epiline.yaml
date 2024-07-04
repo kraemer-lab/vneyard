@@ -1,0 +1,22 @@
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - r
+  - r-devtools
+  - r-bh
+  - r-rstan
+  - r-Rcpp
+  - r-rstantools
+  - r-StanHeaders
+  - r-data.table
+  - r-moments
+  - r-R6
+  - r-matrixStats
+  - r-plotly
+  - r-RcppParallel
+  - tbb
+  - tbb-devel
+  - sed
+  - git
+  - pandoc

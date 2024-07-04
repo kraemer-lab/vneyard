@@ -1,0 +1,41 @@
+configfile: "config/config.yaml"
+
+def script(filename):
+    return f"workflow/scripts/{filename}"
+
+rule epiline:
+    input:
+        script=script("epiline.R"),
+    output:
+    conda:
+        "envs/epiline.yaml"
+    shell:
+        """
+        # if [ $(Rscript -e "cat('EpiLine' %in% rownames(installed.packages()))") = "FALSE" ]; then
+            mkdir -p resources
+            git clone \
+                https://github.com/BDI-pathogens/EpiLine.git \
+                -b main \
+                resources/EpiLine
+            pushd resources/EpiLine
+            git checkout f4ba1872e2fe25e9d4ed4c6dd6c525ddfc26d493
+
+            # Patch Makevars to include RcppParallel headers
+            RCPP_PACKAGE_PATH=$(Rscript -e "cat(find.package('RcppParallel'))")
+            PKG_CPPFLAGS=$(sed -n 's/^PKG_CPPFLAGS = //p' src/Makevars)
+            PKG_CPPFLAGS="-D_REENTRANT -I"${{RCPP_PACKAGE_PATH}}/include" ${{PKG_CPPFLAGS}}"
+            sed -i "s@^PKG_CPPFLAGS = @&$PKG_CPPFLAGS @" src/Makevars
+
+            export R_LIBS_USER=$CONDA_PREFIX/lib/R/lib
+            Rscript -e "install.packages('RcppParallel', repos='https://cloud.r-project.org/')"
+
+            # Install package
+            Rscript -e "install.packages('.', repos=NULL, type='source')"
+            # Alternative installation:
+            # R CMD INSTALL --no-multiarch --with-keep.source $(pwd)
+            popd
+        # fi
+
+        # Run R script
+        Rscript {input.script}
+        """
