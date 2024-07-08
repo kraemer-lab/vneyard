@@ -67,8 +67,6 @@ rule epiline:
             --post-symptom {params.post_symptom} \
             --symptomatic {params.symptomatic} \
             --output \"{params.filestem}\"
-
-        tree results/*
         """
 
 rule _test:

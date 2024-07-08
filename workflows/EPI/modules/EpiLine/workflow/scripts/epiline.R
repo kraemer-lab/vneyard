@@ -1,6 +1,7 @@
 library(EpiLine)
 library(plotly)
 library(optparse)
+webshot::install_phantomjs()
 
 ########################################################################################
 ### Command line arguments
