@@ -43,7 +43,7 @@ rule epiline:
         symtoms=expand(f"{filestem}symptoms.{{ext}}", ext=["html", "png"]),
         r=expand(f"{filestem}r.{{ext}}", ext=["html", "png"]),
         symptom_report_dist=expand(f"{filestem}symptom_report_dist.{{ext}}", ext=["html", "png"]),
-        # symptom_report_quantiles=expand(f"{filestem}symptom_report_quantiles.{{ext}}", ext=["html", "png"]),
+        symptom_report_quantiles=expand(f"{filestem}symptom_report_quantiles.{{ext}}", ext=["html", "png"]),
     params:
         filestem=filestem,
         folder=folder,
@@ -63,3 +63,10 @@ rule epiline:
             --linelist-file "{input.linelist}" \
             --output "{params.filestem}"
         """
+
+rule _test:
+    input:
+        symptoms=expand(f"{filestem}symptoms.{{ext}}", ext=["html", "png"]),
+        r=expand(f"{filestem}r.{{ext}}", ext=["html", "png"]),
+        symptom_report_dist=expand(f"{filestem}symptom_report_dist.{{ext}}", ext=["html", "png"]),
+        symptom_report_quantiles=expand(f"{filestem}symptom_report_quantiles.{{ext}}", ext=["html", "png"]),

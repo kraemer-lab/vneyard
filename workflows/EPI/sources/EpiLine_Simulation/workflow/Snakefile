@@ -70,3 +70,8 @@ rule epiline:
 
         tree results/*
         """
+
+rule _test:
+    input:
+        reported=f"{filestem}reported.csv",
+        linelist= f"{filestem}linelist.csv",
