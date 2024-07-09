@@ -69,7 +69,7 @@ def run_tests(module_list):
 
 if __name__ == "__main__":
     if len(sys.argv) < 3:
-        print("Usage: script.py <first_argument> <second_argument>")
+        print("Usage: script.py <main_commit_hash> <pr_commit_hash>")
         sys.exit(1)
     main_commit_hash = sys.argv[1]
     fork_commit_hash = sys.argv[2]
