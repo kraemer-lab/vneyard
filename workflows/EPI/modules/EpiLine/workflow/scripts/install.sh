@@ -28,6 +28,9 @@ if [ $(Rscript -e "cat('EpiLine' %in% rownames(installed.packages()))") == "FALS
     PKG_CPPFLAGS="-D_REENTRANT -I"${RCPP_PACKAGE_PATH}/include" ${PKG_CPPFLAGS}"
     sed -i "s@^PKG_CPPFLAGS = @&${PKG_CPPFLAGS} @" src/Makevars
 
+    # Ensure clang++ is used for compilation (g++ fails on Linux)
+    sed -i 's@^CXX = @CXX = ${CONDA_PREFIX}/bin/clang++ --std=gnu++17@' $(R RHOME)/etc/Makeconf
+
     # Reinstall RcppParallel
     Rscript -e "install.packages('RcppParallel', repos='https://cloud.r-project.org/')"
 
