@@ -22,4 +22,4 @@ dependencies:
   - sed
   - git
   - pandoc
-  - clang
+  - clangxx
