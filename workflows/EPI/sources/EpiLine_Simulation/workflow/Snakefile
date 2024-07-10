@@ -1,0 +1,75 @@
+"""Generate EpiLine simulation data
+
+Generate simulated data for EpiLine, a tool for simulating and analyzing infectious disease outbreaks (https://github.com/BDI-pathogens/Epiline). This module generates a simulated outbreak and outputs a line list and a reported case file, in the format specified on the EpiLine website. The line list contains information on each individual in the simulation, while the reported case file contains information on each reported case.
+
+Params:
+    Prefix (string): Prefix for output files (e.g. "sim1" for "sim1_reported.csv"). If empty, no prefix is used (e.g. "reported.csv").
+    Reporting:
+        Start date (str): Start date of reporting (e.g. "2020-04-01")
+        Duration (int): Number of days for which data is reported
+        Pre-symptom (int): Days before reporting period to simulate
+        Post-symptom (int): Days after reporting period to simulate
+    Population:
+        Symptomatic (int): Initial number of symptomatic individuals
+"""
+configfile: "config/config.yaml"
+indir = config["input_namespace"]
+outdir = config["output_namespace"]
+params = config["params"]
+
+# Form filestem (can be empty)
+sep="_" if params["Prefix"] else ""
+out_folder = f"results/{outdir}"
+filestem = f"{out_folder}/{params['Prefix']}{sep}"
+
+
+def script(name=""):
+    """Return the path to a script (detects local or remote execution modes)"""
+    workflow_srcdir = srcdir("")
+    try:
+        from snakemake.remote import AUTO
+
+        return AUTO.remote("/".join([workflow_srcdir, "scripts", name]))
+    except TypeError:
+        return Path(workflow_srcdir) / "scripts" / name
+
+
+rule epiline:
+    input:
+        script=script("epiline_sim.R"),
+        install_script=script("install.sh")
+    output:
+        reported=f"{filestem}reported.csv",
+        linelist= f"{filestem}linelist.csv",
+    params:
+        start_date=params["Reporting"]["Start date"],
+        duration=params["Reporting"]["Duration"],
+        pre_symptom=params["Reporting"]["Pre-symptom"],
+        post_symptom=params["Reporting"]["Post-symptom"],
+        symptomatic=params["Population"]["Symptomatic"],
+        filestem=filestem,
+        out_folder=out_folder,
+    conda:
+        "envs/epiline.yaml"
+    shell:
+        """
+        set -eoux pipefail
+        mkdir -p {params.out_folder}
+
+        export R_LIBS_USER=$CONDA_PREFIX/lib/R/lib
+        bash {input.install_script}
+
+        # Run R script
+        Rscript {input.script} \
+            --start-date \"{params.start_date}\" \
+            --duration {params.duration} \
+            --pre-symptom {params.pre_symptom} \
+            --post-symptom {params.post_symptom} \
+            --symptomatic {params.symptomatic} \
+            --output \"{params.filestem}\"
+        """
+
+rule _test:
+    input:
+        reported=f"{filestem}reported.csv",
+        linelist= f"{filestem}linelist.csv",

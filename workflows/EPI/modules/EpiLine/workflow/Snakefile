@@ -1,0 +1,72 @@
+"""EpiLine - Estimating epi-curves and distributions from case line list data
+
+EpiLine is a tool for estimating epi-curves and distributions from case line list data. It is designed to be used in the early stages of an outbreak when the number of cases is small and the epidemic curve is not yet well defined. EpiLine uses a Bayesian approach to estimate the distribution of the time from symptom onset to reporting, and the distribution of the time from symptom onset to case report. These distributions can be used to estimate the epi-curve and the distribution of the time from symptom onset to case report. See the EpiLine GitHub repository for more information: https://github.com/BDI-pathogens/Epiline, including the original R code and documentation.
+
+Params:
+    Prefix (str): Prefix for output files (e.g. "prefix_"). Can be blank.
+    Reported symptoms file (str): Filename containing two columns (date, reported) providing the number of reported symptoms per day.
+    Linelist file (str): Filename containing two columns (report, symptom) providing the date of report and date of symptom onset.
+"""
+configfile: "config/config.yaml"
+indir = config["input_namespace"]
+outdir = config["output_namespace"]
+params = config["params"]
+
+# Form filestem (can be empty)
+sep="_" if params["Prefix"] else ""
+folder = f"results/{outdir}"
+filestem = f"{folder}/{params['Prefix']}{sep}"
+
+# Input data filenames
+reported_filename = f"{params['Reported symptoms file']}"
+linelist_filename = f"{params['Linelist file']}"
+
+
+def script(name=""):
+    """Return the path to a script (detects local or remote execution modes)"""
+    workflow_srcdir = srcdir("")
+    try:
+        from snakemake.remote import AUTO
+
+        return AUTO.remote("/".join([workflow_srcdir, "scripts", name]))
+    except TypeError:
+        return Path(workflow_srcdir) / "scripts" / name
+
+
+rule epiline:
+    input:
+        reported=f"results/{indir}/{reported_filename}",
+        linelist=f"results/{indir}/{linelist_filename}",
+        script=script("epiline.R"),
+        install_script=script("install.sh")
+    output:
+        symtoms=expand(f"{filestem}symptoms.{{ext}}", ext=["html", "png"]),
+        r=expand(f"{filestem}r.{{ext}}", ext=["html", "png"]),
+        symptom_report_dist=expand(f"{filestem}symptom_report_dist.{{ext}}", ext=["html", "png"]),
+        symptom_report_quantiles=expand(f"{filestem}symptom_report_quantiles.{{ext}}", ext=["html", "png"]),
+    params:
+        filestem=filestem,
+        folder=folder,
+    conda:
+        "envs/epiline.yaml"
+    shell:
+        """
+        set -eoux pipefail
+
+        mkdir -p {params.folder}
+        export R_LIBS_USER=$CONDA_PREFIX/lib/R/lib
+        bash {input.install_script}
+
+        # Run R script
+        Rscript {input.script} \
+            --reported-file "{input.reported}" \
+            --linelist-file "{input.linelist}" \
+            --output "{params.filestem}"
+        """
+
+rule _test:
+    input:
+        symptoms=expand(f"{filestem}symptoms.{{ext}}", ext=["html", "png"]),
+        r=expand(f"{filestem}r.{{ext}}", ext=["html", "png"]),
+        symptom_report_dist=expand(f"{filestem}symptom_report_dist.{{ext}}", ext=["html", "png"]),
+        symptom_report_quantiles=expand(f"{filestem}symptom_report_quantiles.{{ext}}", ext=["html", "png"]),

@@ -1,0 +1,11 @@
+input_namespace: null
+output_namespace: out
+params:
+  "Prefix": ""
+  Reporting:
+    "Start date": "2020-04-01"
+    "Duration": 50
+    "Pre-symptom": 30
+    "Post-symptom": 5
+  Population:
+    "Symptomatic": 2
