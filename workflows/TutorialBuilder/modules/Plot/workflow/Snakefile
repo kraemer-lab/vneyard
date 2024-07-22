@@ -50,7 +50,3 @@ rule target:
             --col_x="{params.col_x}" \
             --col_y="{params.col_y}" \
         """
-
-rule _test:
-    input:
-        f"results/{outdir}/mark"

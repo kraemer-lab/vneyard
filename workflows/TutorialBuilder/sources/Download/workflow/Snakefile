@@ -18,15 +18,15 @@ filename=params["Filename"]
 
 rule target:
     input:
-        url=AUTO.remote(params["url"])
+        url=AUTO.remote(params["url"]),
     output:
-        f"results/{outdir}/{filename}",
+        outfile=f"results/{outdir}/{filename}",
     log:
         f"benchmark/{outdir}.txt"
     benchmark:
         f"benchmark/{outdir}"
     run:
-        shutil.move(input.url[0], output[0])
+        shutil.move(input.url[0], output.outfile)
 
 rule _test:
     input:

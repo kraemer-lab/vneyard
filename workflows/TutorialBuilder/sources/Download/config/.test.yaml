@@ -1,5 +1,5 @@
 input_namespace: null
 output_namespace: out
 params:
-  url: "https://github.com/kraemer-lab/GRAPEVNE/blob/main/docs/images/banner.png?raw=true"
+  url: "https://raw.githubusercontent.com/jsbrittain/GRAPEVNE/main/docs/images/banner.png"
   Filename: "GRAPEVNE.png"
