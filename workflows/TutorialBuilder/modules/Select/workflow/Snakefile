@@ -1,3 +1,11 @@
+"""Select columns from a data file
+
+This module selects columns from a source file and writes them to a destination file.
+
+Params:
+    Source (str): The source file to read from
+    Columns (list): The columns to select from the source file, e.g. "['col1', 'col2']"
+"""
 configfile: "config/config.yaml"
 from snakemake.remote import AUTO
 import json
@@ -5,21 +13,26 @@ import json
 indir = config["input_namespace"]
 outdir = config["output_namespace"]
 params = config["params"]
+filename = params["Source"]
+
+
+def script(name=""):
+    """Return the path to a script (detects local or remote execution modes)"""
+    workflow_srcdir = srcdir("")
+    try:
+        from snakemake.remote import AUTO
+
+        return AUTO.remote("/".join([workflow_srcdir, "scripts", name]))
+    except TypeError:
+        return Path(workflow_srcdir) / "scripts" / name
+
 
 rule target:
     input:
-        source=expand(
-            "results/{indir}/{filename}",
-            indir=indir,
-            filename=params["Source"],
-        ),
-        script=AUTO.remote(srcdir("../resources/scripts/select_col.py")),
+        source=f"results/{indir}/{filename}",
+        script=script("select_col.py"),
     output:
-        expand(
-            "results/{outdir}/{filename}",
-            outdir=outdir,
-            filename=params["Source"],
-        ),
+        f"results/{outdir}/{filename}",
     log:
         "logs/test.log"
     params:
@@ -33,3 +46,22 @@ rule target:
             --dest="{output}" \
             --cols="{params.cols}" \
         """
+
+rule _test:
+    input:
+        infile = f"results/{indir}/{filename}",
+        outfile = f"results/{outdir}/{filename}"
+    params:
+        cols = params["Columns"]
+    run:
+        # Source file has multiple columns
+        with open(input.infile) as f:
+            lines = f.readlines()
+        assert len(lines[0].split(',')) > 2
+        # Output file has only selected columns
+        with open(input.outfile) as f:
+            lines = f.readlines()
+        header = lines[0].strip().split(',')
+        assert len(header) == 2
+        assert header[0] == params.cols[0]
+        assert header[1] == params.cols[1]

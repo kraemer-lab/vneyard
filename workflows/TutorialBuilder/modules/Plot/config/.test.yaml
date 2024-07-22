@@ -2,5 +2,5 @@ input_namespace: in
 output_namespace: out
 params:
   Source: "data.csv"
-  Filters:
-    Country_code: "GB"
+  Column_X: "Date_reported"
+  Column_Y: "New_cases"
