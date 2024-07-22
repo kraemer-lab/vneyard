@@ -1,3 +1,14 @@
+"""Plot a column from a data file (interactive)
+
+This module plots a column from a data file. The source file and columns to plot on the x-axis and y-axis are specified in the modules' parameters. The plot remains on-screen until the user closes the plot, at which point the workflow will proceed. Data should be provided as a Comma-Separated-Variable (.csv) file.
+
+Interactive: this module requires user interaction.
+
+Params:
+    Source (str): The source file to plot data from
+    Column_X (str): The column to plot on the x-axis
+    Column_Y (str): The column to plot on the y-axis
+"""
 configfile: "config/config.yaml"
 from snakemake.remote import AUTO
 import json
@@ -5,20 +16,26 @@ import json
 indir = config["input_namespace"]
 outdir = config["output_namespace"]
 params = config["params"]
+filename = params["Source"]
+
+
+def script(name=""):
+    """Return the path to a script (detects local or remote execution modes)"""
+    workflow_srcdir = srcdir("")
+    try:
+        from snakemake.remote import AUTO
+
+        return AUTO.remote("/".join([workflow_srcdir, "scripts", name]))
+    except TypeError:
+        return Path(workflow_srcdir) / "scripts" / name
+
 
 rule target:
     input:
-        source=expand(
-            "results/{indir}/{filename}",
-            indir=indir,
-            filename=params["Source"],
-        ),
-        script=AUTO.remote(srcdir("../resources/scripts/plotcol.py")),
+        source=f"results/{indir}/{filename}",
+        script=script("plotcol.py"),
     output:
-        temp(touch(expand(
-            "results/{outdir}/mark",
-            outdir=outdir
-        ))),
+        temp(touch(f"results/{outdir}/mark")),
     log:
         "logs/test.log"
     params:

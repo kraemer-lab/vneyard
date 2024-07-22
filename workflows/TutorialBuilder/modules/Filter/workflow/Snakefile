@@ -1,3 +1,11 @@
+"""Filter data based on a list of criteria
+
+This script reads a CSV file and filters it based on a list of criteria. The list of criteria are provided as dictionaries in the config file.
+
+Params:
+    Source (str): "data.csv"
+    Filters (list): List of criteria to filter the data by. For example, to filter by a CountryCode of "GB", the list would be ["CountryCode": "GB"]
+"""
 configfile: "config/config.yaml"
 from snakemake.remote import AUTO
 import json
@@ -5,21 +13,26 @@ import json
 indir = config["input_namespace"]
 outdir = config["output_namespace"]
 params = config["params"]
+filename = params["Source"]
+
+
+def script(name=""):
+    """Return the path to a script (detects local or remote execution modes)"""
+    workflow_srcdir = srcdir("")
+    try:
+        from snakemake.remote import AUTO
+
+        return AUTO.remote("/".join([workflow_srcdir, "scripts", name]))
+    except TypeError:
+        return Path(workflow_srcdir) / "scripts" / name
+
 
 rule target:
     input:
-        source=expand(
-            "results/{indir}/{filename}",
-            indir=indir,
-            filename=params["Source"],
-        ),
-        script=AUTO.remote(srcdir("../resources/scripts/filter.py")),
+        source=f"results/{indir}/{filename}",
+        script=script("filter.py"),
     output:
-        expand(
-            "results/{outdir}/{filename}",
-            outdir=outdir,
-            filename=params["Source"],
-        ),
+        f"results/{outdir}/{filename}",
     log:
         "logs/test.log"
     params:
@@ -33,3 +46,21 @@ rule target:
             --dest="{output}" \
             --filters="{params.filters}" \
         """
+
+rule _test:
+    input:
+        source=f"results/{indir}/{filename}",
+        filtered=f"results/{outdir}/{filename}"
+    run:
+        # Test data format:
+        #  Date, CountryCode, CountryName, ...
+
+        # Source file should have 10 lines (plus one header)
+        with open(input.source) as f:
+            assert len(f.readlines()) == 11
+
+        # Filtered file should have 1 line (plus one header)
+        with open(input.filtered) as f:
+            lines = f.readlines()
+        assert len(lines) == 2
+        assert lines[-1].split(',')[1] == "GB"  # CountryCode should be filtered to 'GB'

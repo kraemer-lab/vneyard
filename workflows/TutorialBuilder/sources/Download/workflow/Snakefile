@@ -1,3 +1,11 @@
+"""Download a file from a URL.
+
+This module downloads a file from a URL and saves it so that it is accessible from the modules' output port.
+
+Params:
+    url (str): URL to download from
+    filename (str): Name of the file to use in the workflow
+"""
 configfile: "config/config.yaml"
 
 import shutil
@@ -6,19 +14,20 @@ from snakemake.remote import AUTO
 indir=config["input_namespace"]
 outdir=config["output_namespace"]
 params=config["params"]
+filename=params["Filename"]
 
 rule target:
     input:
-        url=AUTO.remote(params["url"])
+        url=AUTO.remote(params["url"]),
     output:
-        expand(
-            "results/{outdir}/{filename}",
-            outdir=outdir,
-            filename=params["filename"]
-        )
+        outfile=f"results/{outdir}/{filename}",
     log:
         f"benchmark/{outdir}.txt"
     benchmark:
         f"benchmark/{outdir}"
     run:
-        shutil.move(input.url[0], output[0])
+        shutil.move(input.url[0], output.outfile)
+
+rule _test:
+    input:
+        f"results/{outdir}/{filename}"

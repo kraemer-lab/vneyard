@@ -1,3 +1,12 @@
+"""Aggregate data by month
+
+This module aggregates data by date. It takes a source file and a list of columns to aggregate. The source file must contain a column with dates.
+
+Params:
+    Source (str): The source file to aggregate
+    DateColumn (str): The column containing the date
+    Columns (list): The columns to aggregate
+"""
 configfile: "config/config.yaml"
 from snakemake.remote import AUTO
 import json
@@ -5,21 +14,26 @@ import json
 indir = config["input_namespace"]
 outdir = config["output_namespace"]
 params = config["params"]
+filename = params["Source"]
+
+
+def script(name=""):
+    """Return the path to a script (detects local or remote execution modes)"""
+    workflow_srcdir = srcdir("")
+    try:
+        from snakemake.remote import AUTO
+
+        return AUTO.remote("/".join([workflow_srcdir, "scripts", name]))
+    except TypeError:
+        return Path(workflow_srcdir) / "scripts" / name
+
 
 rule target:
     input:
-        source=expand(
-            "results/{indir}/{filename}",
-            indir=indir,
-            filename=params["Source"],
-        ),
-        script=AUTO.remote(srcdir("../resources/scripts/aggregate.py")),
+        source=f"results/{indir}/{filename}",
+        script=script("aggregate.py"),
     output:
-        expand(
-            "results/{outdir}/{filename}",
-            outdir=outdir,
-            filename=params["Source"],
-        ),
+        f"results/{outdir}/{filename}",
     log:
         "logs/test.log"
     params:
@@ -35,3 +49,15 @@ rule target:
             --datecol="{params.datecol}" \
             --cols="{params.cols}"
         """
+
+rule _test:
+    input:
+        infile = f"results/{indir}/{filename}",
+        outfile = f"results/{outdir}/{filename}"
+    run:
+        with open(input.infile, "r") as f:
+            lines = f.readlines()
+        assert len(lines) > 13  # day reporting
+        with open(input.outfile, "r") as f:
+            lines = f.readlines()
+        assert len(lines) == 13  # 12 months + header
