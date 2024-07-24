@@ -41,6 +41,17 @@ outdir = config["output_namespace"]
 params = config["params"]
 
 
+def script(name=""):
+    """Return the path to a script (detects local or remote execution modes)"""
+    workflow_srcdir = srcdir("")
+    try:
+        from snakemake.remote import AUTO
+
+        return AUTO.remote("/".join([workflow_srcdir, "scripts", name]))
+    except TypeError:
+        return Path(workflow_srcdir) / "scripts" / name
+
+
 rule arguments:
     params:
         metadata=f'results/{indir}/{params["Metadata file"]}',
@@ -82,7 +93,7 @@ rule genome_matrix:
         """
     input:
         metadata=arguments.metadata,
-        script="workflow/scripts/get_genome_matrix.py",
+        script=script("get_genome_matrix.py"),
     params:
         index=arguments.geo_column,
         extra_columns="country_exposure",
@@ -110,7 +121,7 @@ rule unit_conversion:
     input:
         genome_matrix=f"results/{outdir}/genome_matrix_days.tsv",
         case_matrix=arguments.case_data,
-        script="workflow/scripts/aggregator.py",
+        script=script("aggregator.py"),
     output:
         output1=f"results/{outdir}/matrix_genomes_unit.tsv",
         output2=f"results/{outdir}/matrix_cases_unit.tsv",
@@ -145,7 +156,7 @@ rule correct_bias:
     input:
         genome_matrix=f"results/{outdir}/matrix_genomes_unit.tsv",
         case_matrix=f"results/{outdir}/matrix_cases_unit.tsv",
-        script="workflow/scripts/correct_bias.py",
+        script=script("correct_bias.py"),
     params:
         index="code",
         baseline=arguments.baseline,
@@ -179,7 +190,7 @@ rule subsample:
         keep=arguments.keep_file,
         remove_file=arguments.remove_file,
         filter_file=arguments.filter_file,
-        script="workflow/scripts/subsampler_timeseries.py",
+        script=script("subsampler_timeseries.py"),
     params:
         size=arguments.refgenome_size,
         missing=arguments.max_missing,
