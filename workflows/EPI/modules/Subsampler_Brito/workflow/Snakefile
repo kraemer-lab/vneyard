@@ -221,9 +221,15 @@ rule subsample:
         echo '# Sampling proportion: {arguments.baseline}' | cat - {output.output3} > temp && mv temp {output.output3}
         """
 
+# Default GRAPEVNE target rule
+rule target:
+    # Complete pipeline (genome_matrix -> unit_conversion -> correct_bias -> subsampler)
+    input:
+        output1=f"results/{outdir}/selected_sequences.txt",
+        output2=f"results/{outdir}/selected_metadata.tsv",
+        output3=f"results/{outdir}/sampling_stats.txt",
 
 rule _test:
-    # Pipeline (genome_matrix -> unit_conversion -> correct_bias -> subsampler)
     input:
         output1=f"results/{outdir}/selected_sequences.txt",
         output2=f"results/{outdir}/selected_metadata.tsv",
