@@ -2,6 +2,10 @@
 
 A pipeline for subsampling genomic data based on epidemiological time series data. This pipeline was developed by Anderson Brito and is available at: https://github.com/andersonbrito/subsampler/tree/master.
 
+Ports:
+    data: Input data (metadata and case data)
+    config: Configuration files (keep, remove and filter files)
+
 Params:
     Metadata file (str): Name of the metadata file
     Case data file (str): Name of the case data file
