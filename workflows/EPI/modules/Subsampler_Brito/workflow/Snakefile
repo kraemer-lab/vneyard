@@ -6,9 +6,9 @@ Params:
     Metadata file (str): Name of the metadata file
     Case data file (str): Name of the case data file
     Subsampler:
-        keep file (str): Name of the keep file
-        remove file (str): Name of the remove file
-        filter file (str): Name of the filter file
+        keep file (str): File designating sequences to keep. This should be a plain-text (.txt) file containing one ID (e.g. EPI_ISL_402125) per line.
+        remove file (str): File designating sequences to remove. This should be a plain-text (.txt) file containing one ID (e.g. EPI_ISL_12345678) per line.
+        filter file (str): File containing sequence filters. This should be a tab-delimited file (.tsv) with columns `action`, `column` and `value`. `action` can contain "exclude", the `column` should contain the name of the column to filter on, and the `value` column should contain the value to filter on.
     ID Column (str): Column name for the ID
     GEO Column (str): Column name for the geographic location
     Date column (str): Column name for the date
@@ -28,7 +28,8 @@ This Snakefile is a translation of:
 with minor adaptations for use as a GRAPEVNE module.
 """
 
-indir=config["input_namespace"]
+indir=config["input_namespace"]["data"]
+indir_config=config["input_namespace"]["config"]
 outdir=config["output_namespace"]
 params=config["params"]
 
@@ -36,9 +37,9 @@ rule arguments:
     params:
         metadata = f'results/{indir}/{params["Metadata file"]}',
         case_data = f'results/{indir}/{params["Case data file"]}',
-        keep_file = f'results/{indir}/{params["Subsampler"]["keep file"]}',
-        remove_file = f'results/{indir}/{params["Subsampler"]["remove file"]}',
-        filter_file = f'results/{indir}/{params["Subsampler"]["filter file"]}',
+        keep_file = f'results/{indir_config}/{params["Subsampler"]["keep file"]}',
+        remove_file = f'results/{indir_config}/{params["Subsampler"]["remove file"]}',
+        filter_file = f'results/{indir_config}/{params["Subsampler"]["filter file"]}',
         id_column = params["ID Column"],
         geo_column = params["GEO Column"],
         date_column = params["Date column"],

@@ -1,4 +1,6 @@
-input_namespace: in
+input_namespace:
+  data: data
+  config: config
 output_namespace: out
 params:
   "Metadata file": metadata.tsv
