@@ -1,6 +1,7 @@
 channels:
+  - conda-forge
   - bioconda/label/cf201901
 dependencies:
   - java-jdk==8.0.112
-  - beagle==4.1_21Jan17.6cc.jar
+  - beagle-lib==3.1.2
   - beast==1.10.4
