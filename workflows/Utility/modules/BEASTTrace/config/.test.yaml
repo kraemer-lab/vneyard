@@ -4,10 +4,10 @@ input_namespace:
 output_namespace: out
 params:
   filename: data.txt
-  cols: ""
+  cols: "joint,prior,likelihood"
   joint: ""
   burnin: 0
-  interval: 60
+  interval: 0.1  # (mins) = 6 seconds
   "Update on modify": true
   "End trigger file": trigger
   "Ready trigger file": ready
