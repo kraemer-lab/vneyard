@@ -6,6 +6,7 @@ params:
   filename: data.txt
   cols: ""
   joint: ""
+  burnin: 0
   interval: 60
   "Update on modify": true
   "End trigger file": trigger

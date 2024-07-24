@@ -10,6 +10,7 @@ Params:
     filename (str): Name of the file to monitor
     cols (str): Columns to plot (all if empty). Expected format is "x,y,z"
     joint (str): Joint distributions to plot (none if empty). Expected format is "a,b;c,d;e,f"
+    burnin (int): Number of iterations to discard as burn-in
     interval (number): Time interval between visualisations (in minutes)
     Update on modify (bool): If true, visualisation will only be updated if the input file has been modified
     End trigger file (str): Name of the trigger file to end visualization (e.g. "trigger")
@@ -39,8 +40,9 @@ rule trace:
     params:
         cols = params["cols"],
         joint = params["joint"],
+        burnin = params["burnin"],
         outdir = f"results/{outdir}",
-        interval = params["interval"] / 60,  # interval in secs
+        interval = params["interval"] * 60,  # interval in secs
         update_on_modify = update_on_modify,
         end_marker = f"results/{indir_end}/{params['End trigger file']}",
         ready_marker = f"results/{outdir}/{params['Ready trigger file']}",
@@ -62,6 +64,7 @@ rule trace:
                     --filename {input.filename} \
                     --cols "{params.cols}" \
                     --joint "{params.joint}" \
+                    --burnin {params.burnin} \
                     --outdir {params.outdir}
                 # Signal that the visualisation is ready
                 touch {params.ready_marker}
@@ -69,9 +72,14 @@ rule trace:
             # Break from loop if the end marker is present
             [[ ! -f {params.end_marker} ]] || break
             # Sleep
+            echo "Sleeping... {params.interval} secs"
             sleep {params.interval}
         done
 
         # Mark the end of execution
         echo "done" > {output.touch}
         """
+
+rule _test:
+    input:
+        touch = f"results/{outdir}/touch",

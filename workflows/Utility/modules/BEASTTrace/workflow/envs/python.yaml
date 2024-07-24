@@ -1,8 +1,9 @@
 channels:
+  - conda-forge
   - bioconda
 dependencies:
-  - python==3.11
   - pip
   - pip:
-    - seaborn==0.13.2
-    - argparse==1.4.0
+    - seaborn==0.13.*
+    - argparse==1.*
+    - arviz==0.19.*

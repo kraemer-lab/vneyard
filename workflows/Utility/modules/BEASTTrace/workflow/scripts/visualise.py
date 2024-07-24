@@ -1,12 +1,19 @@
 import os
+import arviz
 import argparse
+import numpy as np
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_pdf import PdfPages
 
 
-def report_descriptives(data, allcols, figsize, pdf):
+def calculate_ess(samples, burnin=0):
+    """Calculate the effective sample size (ESS) of a set of samples."""
+    return np.round(arviz.ess(samples[burnin:].values), decimals=1)
+
+
+def report_descriptives(data, allcols, burnin, figsize, pdf):
     # Descriptive statistics
     allcols = ["state"] + cols
 
@@ -15,13 +22,14 @@ def report_descriptives(data, allcols, figsize, pdf):
     fig, ax = plt.subplots(figsize=figsize)
     ax.axis("off")
     table = ax.table(
-        cellText=data[allcols].describe().values,
-        colLabels=data[allcols].describe().columns,
+        cellText=np.round(data[allcols][burnin:].describe().values.T, decimals=3),
+        colLabels=data[allcols].describe().index,
+        rowLabels=data[allcols].describe().columns,
         cellLoc="center",
         loc="center",
     )
     table.scale(1, 1.5)
-    plt.title("Descriptive statistics")
+    plt.title(f"Descriptive statistics (burn-in={burnin})")
     pdf.savefig(fig)
     plt.close(fig)
 
@@ -38,7 +46,7 @@ def plot_and_save(
 ):
     # Generate a joint plot, save it to png, then append to pdf
     plt.figure()
-    g = sns.jointplot(x=x, y=y, data=data)
+    g = sns.jointplot(x=x, y=y, data=data, edgecolor="none")
     if remove_marg_x:
         g.ax_marg_x.remove()
     if title:
@@ -53,15 +61,16 @@ def plot_and_save(
     plt.close(g.fig)
 
 
-def report_trace(data, cols, outdir, figsize, pdf):
+def report_trace(data, cols, burnin, outdir, figsize, pdf):
     # Plot the trace and density for each col
     for col in cols:
+        ess = calculate_ess(data[col], burnin=burnin)
         plot_and_save(
             data,
             x="state",
             y=col,
             figsize=figsize,
-            title=f"{col}",
+            title=f"{col} (ESS={ess:.1f})",
             pngfile=os.path.join(outdir, f"{col}_trace.png"),
             pdf=pdf,
             remove_marg_x=True,
@@ -83,7 +92,7 @@ def report_joint(data, joint, outdir, figsize, pdf):
         )
 
 
-def report(filename, cols, joint, outdir, pdf_file):
+def report(filename, cols, joint, burnin, outdir, pdf_file):
     # Load the data
     data = pd.read_csv(filename, sep="\t", comment="#")
 
@@ -96,8 +105,8 @@ def report(filename, cols, joint, outdir, pdf_file):
     cols = cols if cols else data.columns[1:]  # Exclude 'state' from visualisations
 
     # Generate report pages
-    report_descriptives(data, cols, figsize, pdf)
-    report_trace(data, cols, outdir, figsize, pdf)
+    report_descriptives(data, cols, burnin, figsize, pdf)
+    report_trace(data, cols, burnin, outdir, figsize, pdf)
     report_joint(data, joint, outdir, figsize_square, pdf)
 
     # Save all figures to a single pdf
@@ -110,6 +119,7 @@ if __name__ == "__main__":
     parser.add_argument("--filename", help="Filename of the trace file", required=True)
     parser.add_argument("--cols", help="Columns to visualise", default="")
     parser.add_argument("--joint", help="Joint visualisation", default="")
+    parser.add_argument("--burnin", help="Burn-in period", type=int, default=0)
     parser.add_argument("--outdir", help="Output directory", default="plots")
     args = parser.parse_args()
 
@@ -124,8 +134,9 @@ if __name__ == "__main__":
         if args.joint
         else []
     )
+    burnin = args.burnin
     outdir = args.outdir
     pdf_file = os.path.join(args.outdir, "output.pdf")
 
     # Generate the report
-    report(filename, cols, joint, outdir, pdf_file)
+    report(filename, cols, joint, burnin, outdir, pdf_file)
