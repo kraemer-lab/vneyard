@@ -17,6 +17,7 @@ def report_descriptives(data, allcols, figsize, pdf):
     table = ax.table(
         cellText=data[allcols].describe().values,
         colLabels=data[allcols].describe().columns,
+        rowLabels=data[allcols].describe().index,
         cellLoc="center",
         loc="center",
     )
