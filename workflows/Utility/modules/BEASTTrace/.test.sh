@@ -4,7 +4,6 @@
 rm -rf results/out
 
 # Run snakemake in the background
-trap "kill 0" EXIT  # Kill all child processes on exit
 snakemake --use-conda --cores 1 --configfile=config/.test.yaml _test & PID=$!
 
 # Create 'ready' trigger in a loop until plots are generated.
