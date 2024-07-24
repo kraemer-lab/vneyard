@@ -6,9 +6,9 @@ Params:
     Metadata file (str): Name of the metadata file
     Case data file (str): Name of the case data file
     Subsampler:
-        keep file (str): File designating sequences to keep. This should be a plain-text (.txt) file containing one ID (e.g. EPI_ISL_402125) per line.
-        remove file (str): File designating sequences to remove. This should be a plain-text (.txt) file containing one ID (e.g. EPI_ISL_12345678) per line.
-        filter file (str): File containing sequence filters. This should be a tab-delimited file (.tsv) with columns `action`, `column` and `value`. `action` can contain "exclude", the `column` should contain the name of the column to filter on, and the `value` column should contain the value to filter on.
+        keep file (str): File designating sequences to keep. This should be a plain-text (.txt) file containing one ID (e.g. EPI_ISL_402125) per line. Leave blank for none.
+        remove file (str): File designating sequences to remove. This should be a plain-text (.txt) file containing one ID (e.g. EPI_ISL_12345678) per line. Leave blank for none.
+        filter file (str): File containing sequence filters. This should be a tab-delimited file (.tsv) with columns `action`, `column` and `value`. `action` can contain "exclude", the `column` should contain the name of the column to filter on, and the `value` column should contain the value to filter on. Leave blank for none.
     ID Column (str): Column name for the ID
     GEO Column (str): Column name for the geographic location
     Date column (str): Column name for the date
