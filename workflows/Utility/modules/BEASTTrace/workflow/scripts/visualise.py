@@ -1,4 +1,5 @@
 import os
+import arviz
 import argparse
 import numpy as np
 import pandas as pd
@@ -9,24 +10,7 @@ from matplotlib.backends.backend_pdf import PdfPages
 
 def calculate_ess(samples, burnin=0):
     """Calculate the effective sample size (ESS) of a set of samples."""
-    samples = samples[burnin:]
-    N = len(samples)
-    mean = np.mean(samples)
-
-    def autocorrelation(k):
-        return np.sum((samples[: N - k] - mean) * (samples[k:] - mean)) / np.sum(
-            (samples - mean) ** 2
-        )
-
-    # Autocorrelations
-    autocorrs = np.array([autocorrelation(k) for k in range(1, N)])
-    # Use only positive autocorrelations
-    positive_autocorrs = autocorrs[autocorrs > 0]
-    # Calculate the autocorrelation sum
-    autocorr_sum = 1 + 2 * np.sum(positive_autocorrs)
-    # Calculate ESS
-    ess = N / autocorr_sum
-    return ess
+    return np.round(arviz.ess(samples[burnin:].values), decimals=1)
 
 
 def report_descriptives(data, allcols, burnin, figsize, pdf):
@@ -45,7 +29,7 @@ def report_descriptives(data, allcols, burnin, figsize, pdf):
         loc="center",
     )
     table.scale(1, 1.5)
-    plt.title(f"Descriptive statistics (burning={burnin})")
+    plt.title(f"Descriptive statistics (burn-in={burnin})")
     pdf.savefig(fig)
     plt.close(fig)
 
@@ -62,7 +46,7 @@ def plot_and_save(
 ):
     # Generate a joint plot, save it to png, then append to pdf
     plt.figure()
-    g = sns.jointplot(x=x, y=y, data=data)
+    g = sns.jointplot(x=x, y=y, data=data, edgecolor="none")
     if remove_marg_x:
         g.ax_marg_x.remove()
     if title:

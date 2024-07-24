@@ -4,7 +4,7 @@ input_namespace:
 output_namespace: out
 params:
   filename: data.txt
-  cols: "joint,prior,likelihood"
+  cols: "joint,prior,likelihood,meanRate"
   joint: ""
   burnin: 0
   interval: 0.1  # (mins) = 6 seconds
