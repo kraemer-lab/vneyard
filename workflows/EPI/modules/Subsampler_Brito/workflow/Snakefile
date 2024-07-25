@@ -22,7 +22,7 @@ Params:
     Seed number (int): Seed
     Start date (str): Start date
     End date (str): End date
-    Unit (str): Unit
+    Unit (str): Time unit
 """
 
 
