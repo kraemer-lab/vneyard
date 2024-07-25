@@ -1,0 +1,8 @@
+input_namespace: null
+output_namespace: "out"
+params:
+  File:
+    Filename: "test.file"
+    Folder: "results/in"
+  ":File":
+    type: "File"

@@ -15,7 +15,7 @@ outdir = config["output_namespace"]
 params = config["params"]
 
 # Get the full path to the target file
-filename = params["File"]["Name"]
+filename = params["File"]["Filename"]
 filepath = params["File"]["Folder"]
 fullfile = os.path.abspath(os.path.join(filepath, filename))
 
@@ -38,3 +38,7 @@ rule copy:
         """
         ln -s -f {params.relpath} {output.outfile}
         """
+
+rule _test:
+    input:
+        outfile = f"results/{outdir}/{filename}",
