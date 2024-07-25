@@ -8,6 +8,7 @@ Params:
     folder (string): Path to folder to copy
 """
 configfile: "config/config.yaml"
+outdir=config["output_namespace"]
 params = config["params"]
 
 import os
@@ -30,16 +31,11 @@ def parse_folder(path, targetpath):
 
 rule target:
     output:
-        directory(
-            expand(
-                "results/{infile}",
-                infile=config["output_namespace"],
-            )
-        ),
+        #directory(f"results/{outdir}"),
         # The file outputs are used to inform downstream modules of the generated files
         parse_folder(
             params["folder"],
-            os.path.join("results", config["output_namespace"]),
+            os.path.join("results", outdir),
         ),
     params:
         folder=os.path.abspath(
@@ -47,22 +43,17 @@ rule target:
         ),
         outdir=os.path.join(
             "results",
-            config["output_namespace"]
+            outdir,
         ),
     shell:
         """
-        rm -rf {params.outdir}  # remove folder created by snakemake
+        mkdir -p results/
+        rm -rf {params.outdir}  # created by Snakemake
         ln -s -f {params.folder} {params.outdir}
         """
 
-testing = False
-if testing:
-    rule test_target:
-        input:
-            "results/out/1"
-        output:
-            'results/out/done'
-        shell:
-            """
-            touch results/out/done
-            """
+rule _test:
+    input:
+        f"results/{outdir}/1",
+        f"results/{outdir}/2",
+        f"results/{outdir}/3",
