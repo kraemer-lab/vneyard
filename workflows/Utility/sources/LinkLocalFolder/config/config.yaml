@@ -2,3 +2,5 @@ input_namespace: null
 output_namespace: "out"
 params:
   folder: "<Full path to local file>"
+  ":folder":
+    type: "Folder"
