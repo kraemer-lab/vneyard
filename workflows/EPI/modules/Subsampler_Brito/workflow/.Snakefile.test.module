@@ -1,0 +1,12 @@
+configfile: "config/config.yaml"
+
+print(config)
+print(config["subsampler_brito"]["snakefile"])
+print(config["subsampler_brito"]["config"])
+
+module subsampler_brito:
+    snakefile:
+        config["subsampler_brito"]["snakefile"]
+    config:
+        config["subsampler_brito"]["config"]
+use rule * from subsampler_brito as subsampler_brito_*

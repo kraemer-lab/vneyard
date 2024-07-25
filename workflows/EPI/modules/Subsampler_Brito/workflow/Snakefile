@@ -89,7 +89,7 @@ arguments = rules.arguments.params
 rule genome_matrix:
     message:
         """
-        Generate matrix of genome counts per day, for each element in column="{arguments.geo_column}"
+        Generate matrix of genome counts per day, for each element in column="{params.geo_column}"
         """
     input:
         metadata=arguments.metadata,
@@ -98,6 +98,7 @@ rule genome_matrix:
         index=arguments.geo_column,
         extra_columns="country_exposure",
         date=arguments.date_column,
+        geo_column=arguments.geo_column,
     output:
         matrix=f"results/{outdir}/genome_matrix_days.tsv",
     conda:
@@ -135,13 +136,13 @@ rule unit_conversion:
         """
         python3 {input.script} \
             --input {input.genome_matrix} \
-            --unit {arguments.unit} \
+            --unit {params.time_unit} \
             --format {params.format} \
             --output {output.output1}
 
         python3 {input.script} \
             --input {input.case_matrix} \
-            --unit {arguments.unit} \
+            --unit {params.time_unit} \
             --format {params.format} \
             --start-date {params.start_date} \
             --output {output.output2}
@@ -202,6 +203,7 @@ rule subsample:
         end=arguments.end_date,
         time_unit=arguments.unit,
         weekasdate="no",
+        baseline=arguments.baseline,
     output:
         output1=f"results/{outdir}/selected_sequences.txt",
         output2=f"results/{outdir}/selected_metadata.tsv",
@@ -229,7 +231,7 @@ rule subsample:
             --sampled-sequences {output.output1} \
             --sampled-metadata {output.output2} \
             --report {output.output3}
-        echo '# Sampling proportion: {arguments.baseline}' | cat - {output.output3} > temp && mv temp {output.output3}
+        echo '# Sampling proportion: {params.baseline}' | cat - {output.output3} > temp && mv temp {output.output3}
         """
 
 # Default GRAPEVNE target rule
