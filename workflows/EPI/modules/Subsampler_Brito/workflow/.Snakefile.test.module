@@ -1,9 +1,5 @@
 configfile: "config/config.yaml"
 
-print(config)
-print(config["subsampler_brito"]["snakefile"])
-print(config["subsampler_brito"]["config"])
-
 module subsampler_brito:
     snakefile:
         config["subsampler_brito"]["snakefile"]
