@@ -16,13 +16,13 @@ Params:
     ID Column (str): Column name for the ID
     GEO Column (str): Column name for the geographic location
     Date column (str): Column name for the date
-    Baseline (decimal): 
+    Baseline (decimal): Baseline sampling proportion
     Reference genome size (int): Reference genome size
     Max missing (int): Maximum number of missing data
     Seed number (int): Seed
-    Start date (str): Start date
-    End date (str): End date
-    Unit (str): Time unit
+    Start date (str): Start date (YYYY-MM-DD)
+    End date (str): End date (YYYY-MM-DD)
+    Unit (str): Time unit ('week', 'month', 'year', 'full')
 """
 
 
