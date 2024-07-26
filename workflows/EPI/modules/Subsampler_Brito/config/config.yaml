@@ -1,0 +1,21 @@
+input_namespace:
+  data: data
+  config: config
+output_namespace: out
+params:
+  "Metadata file": metadata.tsv
+  "Case data file": time_series_covid19_global_reformatted.tsv
+  Subsampler:
+    "keep file": keep.txt
+    "remove file": remove.txt
+    "filter file": filters.tsv
+  "ID Column": "gisaid_epi_isl"
+  "GEO Column": "country_exposure"
+  "Date column": "date"
+  Baseline: 0.001
+  "Reference genome size": 1
+  "Max missing": 99
+  "Seed number": 2007
+  "Start date": "2020-03-01"
+  "End date": "2021-12-31"
+  "Unit": "week"

@@ -1,0 +1,249 @@
+"""Subsampler (Anderson Brito)
+
+A pipeline for subsampling genomic data based on epidemiological time series data. This pipeline was developed by Anderson Brito and is available at: https://github.com/andersonbrito/subsampler/tree/master.
+
+Ports:
+    data: Input data (metadata and case data)
+    config: Configuration files (keep, remove and filter files), default none if unconnected
+
+Params:
+    Metadata file (str): Name of the metadata file
+    Case data file (str): Name of the case data file
+    Subsampler:
+        keep file (str): File designating sequences to keep. This should be a plain-text (.txt) file containing one ID (e.g. EPI_ISL_402125) per line. Leave blank for none.
+        remove file (str): File designating sequences to remove. This should be a plain-text (.txt) file containing one ID (e.g. EPI_ISL_12345678) per line. Leave blank for none.
+        filter file (str): File containing sequence filters. This should be a tab-delimited file (.tsv) with columns `action`, `column` and `value`. `action` can contain "exclude", the `column` should contain the name of the column to filter on, and the `value` column should contain the value to filter on. Leave blank for none.
+    ID Column (str): Column name for the ID
+    GEO Column (str): Column name for the geographic location
+    Date column (str): Column name for the date
+    Baseline (decimal): Baseline sampling proportion
+    Reference genome size (int): Reference genome size
+    Max missing (int): Maximum number of missing data
+    Seed number (int): Seed
+    Start date (str): Start date (YYYY-MM-DD)
+    End date (str): End date (YYYY-MM-DD)
+    Unit (str): Time unit ('week', 'month', 'year', 'full')
+"""
+
+
+configfile: "config/config.yaml"
+
+
+"""
+This Snakefile is a translation of:
+ https://github.com/andersonbrito/subsampler/blob/master/Snakefile
+with minor adaptations for use as a GRAPEVNE module.
+"""
+
+indir = config["input_namespace"]["data"]
+indir_config = config["input_namespace"]["config"]
+outdir = config["output_namespace"]
+params = config["params"]
+
+
+def script(name=""):
+    """Return the path to a script (detects local or remote execution modes)"""
+    workflow_srcdir = srcdir("")
+    try:
+        from snakemake.remote import AUTO
+
+        return AUTO.remote("/".join([workflow_srcdir, "scripts", name]))
+    except TypeError:
+        return Path(workflow_srcdir) / "scripts" / name
+
+
+rule arguments:
+    params:
+        metadata=f'results/{indir}/{params["Metadata file"]}',
+        case_data=f'results/{indir}/{params["Case data file"]}',
+        keep_file=(
+            f'results/{indir_config}/{params["Subsampler"]["keep file"]}'
+            if params["Subsampler"]["keep file"]
+            else ""
+        ),
+        remove_file=(
+            f'results/{indir_config}/{params["Subsampler"]["remove file"]}'
+            if params["Subsampler"]["remove file"]
+            else ""
+        ),
+        filter_file=(
+            f'results/{indir_config}/{params["Subsampler"]["filter file"]}'
+            if params["Subsampler"]["filter file"]
+            else ""
+        ),
+        id_column=params["ID Column"],
+        geo_column=params["GEO Column"],
+        date_column=params["Date column"],
+        baseline=params["Baseline"],
+        refgenome_size=params["Reference genome size"],
+        max_missing=params["Max missing"],
+        seed_num=params["Seed number"],
+        start_date=params["Start date"],
+        end_date=params["End date"],
+        unit=params["Unit"],
+
+
+arguments = rules.arguments.params
+
+
+rule genome_matrix:
+    message:
+        """
+        Generate matrix of genome counts per day, for each element in column="{params.geo_column}"
+        """
+    input:
+        metadata=arguments.metadata,
+        script=script("get_genome_matrix.py"),
+    params:
+        index=arguments.geo_column,
+        extra_columns="country_exposure",
+        date=arguments.date_column,
+        geo_column=arguments.geo_column,
+    output:
+        matrix=f"results/{outdir}/genome_matrix_days.tsv",
+    conda:
+        "envs/genome_matrix.yaml"
+    shell:
+        """
+        python3 {input.script} \
+            --metadata {input.metadata} \
+            --index-column {params.index} \
+            --extra-columns {params.extra_columns} \
+            --date-column {params.date} \
+            --output {output.matrix}
+        """
+
+
+rule unit_conversion:
+    message:
+        """
+        Generate matrix of genome and case counts per epiweek
+        """
+    input:
+        genome_matrix=f"results/{outdir}/genome_matrix_days.tsv",
+        case_matrix=arguments.case_data,
+        script=script("aggregator.py"),
+    output:
+        output1=f"results/{outdir}/matrix_genomes_unit.tsv",
+        output2=f"results/{outdir}/matrix_cases_unit.tsv",
+    params:
+        start_date="2020-02-22",
+        format="integer",
+        time_unit=arguments.unit,
+    conda:
+        "envs/aggregator.yaml"
+    shell:
+        """
+        python3 {input.script} \
+            --input {input.genome_matrix} \
+            --unit {params.time_unit} \
+            --format {params.format} \
+            --output {output.output1}
+
+        python3 {input.script} \
+            --input {input.case_matrix} \
+            --unit {params.time_unit} \
+            --format {params.format} \
+            --start-date {params.start_date} \
+            --output {output.output2}
+        """
+
+
+rule correct_bias:
+    message:
+        """
+        Correct under- and oversampling genome counts based on epidemiological data
+        """
+    input:
+        genome_matrix=f"results/{outdir}/matrix_genomes_unit.tsv",
+        case_matrix=f"results/{outdir}/matrix_cases_unit.tsv",
+        script=script("correct_bias.py"),
+    params:
+        index="code",
+        baseline=arguments.baseline,
+    output:
+        output1=f"results/{outdir}/weekly_sampling_proportions.tsv",
+        output2=f"results/{outdir}/weekly_sampling_bias.tsv",
+        output3=f"results/{outdir}/matrix_genomes_unit_corrected.tsv",
+    conda:
+        "envs/correct_bias.yaml"
+    shell:
+        """
+        python3 {input.script} \
+            --genome-matrix {input.genome_matrix} \
+            --case-matrix {input.case_matrix} \
+            --index-column {params.index} \
+            --baseline {params.baseline} \
+            --output1 {output.output1} \
+            --output2 {output.output2} \
+            --output3 {output.output3}
+        """
+
+
+rule subsample:
+    message:
+        """
+        Sample genomes and metadata according to the corrected genome matrix
+        """
+    input:
+        metadata=arguments.metadata,
+        corrected_matrix=f"results/{outdir}/matrix_genomes_unit_corrected.tsv",
+        keep=arguments.keep_file,
+        remove_file=arguments.remove_file,
+        filter_file=arguments.filter_file,
+        script=script("subsampler_timeseries.py"),
+    params:
+        size=arguments.refgenome_size,
+        missing=arguments.max_missing,
+        seed=arguments.seed_num,
+        id_column=arguments.id_column,
+        geo_column=arguments.geo_column,
+        date=arguments.date_column,
+        start=arguments.start_date,
+        end=arguments.end_date,
+        time_unit=arguments.unit,
+        weekasdate="no",
+        baseline=arguments.baseline,
+    output:
+        output1=f"results/{outdir}/selected_sequences.txt",
+        output2=f"results/{outdir}/selected_metadata.tsv",
+        output3=f"results/{outdir}/sampling_stats.txt",
+    conda:
+        "envs/subsampler.yaml"
+    shell:
+        """
+        python3 {input.script} \
+            --metadata {input.metadata} \
+            --genome-matrix {input.corrected_matrix} \
+            --max-missing {params.missing} \
+            --refgenome-size {params.size} \
+            --keep {input.keep} \
+            --remove {input.remove_file} \
+            --filter-file {input.filter_file} \
+            --seed {params.seed} \
+            --index-column {params.id_column} \
+            --geo-column {params.geo_column} \
+            --date-column {params.date} \
+            --time-unit {params.time_unit} \
+            --weekasdate {params.weekasdate} \
+            --start-date {params.start} \
+            --end-date {params.end} \
+            --sampled-sequences {output.output1} \
+            --sampled-metadata {output.output2} \
+            --report {output.output3}
+        echo '# Sampling proportion: {params.baseline}' | cat - {output.output3} > temp && mv temp {output.output3}
+        """
+
+# Default GRAPEVNE target rule
+rule target:
+    # Complete pipeline (genome_matrix -> unit_conversion -> correct_bias -> subsampler)
+    input:
+        output1=f"results/{outdir}/selected_sequences.txt",
+        output2=f"results/{outdir}/selected_metadata.tsv",
+        output3=f"results/{outdir}/sampling_stats.txt",
+
+rule _test:
+    input:
+        output1=f"results/{outdir}/selected_sequences.txt",
+        output2=f"results/{outdir}/selected_metadata.tsv",
+        output3=f"results/{outdir}/sampling_stats.txt",
