@@ -20,21 +20,7 @@ indir=config["input_namespace"]
 outdir=config["output_namespace"]
 params=config["params"]
 
-rule target:
-    input:
-        infile = expand(
-            "results/{indir}/{filename}",
-            indir=indir,
-            filename=params["input"]["infile"]
-        )
-    output:
-        outfile = expand(
-            "results/{outdir}/{filename}",
-            outdir=outdir,
-            filename=params["output"]["outfile"]
-        )
-    conda:
-        "envs/conda.yaml"
+rule parameters:
     params:
         heights=params["heights"],
         burnin=params["burnin"],
@@ -43,15 +29,39 @@ rule target:
         target=params["target"],
         forceDiscrete=params["forceDiscrete"],
         hpd2D=params["hpd2D"],
+        infile=params["infile"],
+        outfile=params["outfile"]
+
+params = rules.parameters.params
+
+rule target:
+    input:
+        infile = f"results/{indir}/{params.infile}",
+    output:
+        outfile = f"results/{outdir}/{params.outfile}",
+    conda:
+        "envs/conda.yaml"
+    params:
+        heights = params.heights if params.heights in ["keep", "median", "mean", "ca"] else "keep",
+        burnin = f"-burnin {params.burnin}" if params.burnin else "",
+        burninTrees = f"-burninTrees {params.burninTrees}" if params.burninTrees else "",
+        limit = f"-limit {params.limit}" if params.limit else "",
+        target = f"-target {params.target}" if params.target else "",
+        forceDiscrete = f"-forceDiscrete" if params.forceDiscrete else "",
+        hpd2D = f"-hpd2D {params.hpd2D}" if params.hpd2D else "",
     shell:
         """
         treeannotator \
-            $(if {params.heights in ["keep", "median", "mean", "ca"]}, -heights {params.heights}, -heights keep) \
-            $(if [ -z {params.burnin} ]; then echo ""; else echo -burnin {params.burnin}; fi) \
-            $(if [ -z {params.burninTrees} ]; then echo ""; else echo -burninTrees {params.burninTrees}; fi) \
-            $(if [ -z {params.limit} ]; then echo ""; else echo -limit {params.limit}; fi) \
-            $(if [ -z {params.target} ]; then echo ""; else echo -target {params.target}; fi) \
-            $(if [ {params.forceDiscrete} == true ]; then echo "-forceDiscrete"; else echo ""; fi) \
-            $(if [ -z {params.hpd2D} ]; then echo ""; else echo -hpd2D {params.hpd2D}; fi) \
+            -heights {params.heights} \
+            {params.burnin} \
+            {params.burninTrees} \
+            {params.limit} \
+            {params.target} \
+            {params.forceDiscrete} \
+            {params.hpd2D} \
             {input.infile} {output.outfile}
         """
+
+rule _test:
+    input:
+        outfile = f"results/{outdir}/{params.outfile}",
