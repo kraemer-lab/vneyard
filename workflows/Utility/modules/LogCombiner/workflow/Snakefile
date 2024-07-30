@@ -23,32 +23,35 @@ indir=config["input_namespace"]
 outdir=config["output_namespace"]
 params=config["params"]
 
+rule parameters:
+    params:
+        trees=params["trees"],
+        decimal=params["decimal"],
+        burnin=params["burnin"],
+        resample=params["resample"],
+        scale=params["scale"],
+        strip=params["strip"],
+        renumber=params["renumber"],
+        infile1=params["input"]["infile1"],
+        infile2=params["input"]["infile2"],
+        outfile=params["output"]["outfile"]
+
+params = rules.parameters.params
+
 rule target:
     input:
-        infile1 = expand(
-            "results/{indir}/{filename}",
-            indir=indir,
-            filename=params["input"]["infile1"]
-        ),
-        infile2 = expand(
-            "results/{indir}/{filename}",
-            indir=indir,
-            filename=params["input"]["infile2"]
-        )
+        infile1 = f"results/{indir}/{params.infile1}",
+        infile2 = f"results/{indir}/{params.infile2}",
     output:
-        outfile = expand(
-            "results/{outdir}/{filename}",
-            outdir=outdir,
-            filename=params["output"]["outfile"]
-        )
+        outfile = f"results/{outdir}/{params.outfile}",
     conda:
         "envs/conda.yaml"
     params:
         trees = f"-trees" if params.trees else "",
         decimal = f"-decimal" if params.decimal else "",
-        burnin = params["burnin"],
-        resample = params["resample"],
-        scale = params["scale"],
+        burnin = params.burnin,
+        resample = params.resample,
+        scale = params.scale,
         strip = f"-strip" if params.strip else "",
         renumber = f"-renumber" if params.renumber else ""
     shell:
@@ -66,4 +69,4 @@ rule target:
 
 rule _test:
     input:
-        outfile = f"results/{outdir}/{params.output.outfile}",
+        outfile = f"results/{outdir}/{params.outfile}",
