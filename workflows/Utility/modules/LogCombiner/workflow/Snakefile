@@ -44,22 +44,26 @@ rule target:
     conda:
         "envs/conda.yaml"
     params:
-        trees=params["trees"],
-        decimal=params["decimal"],
-        burnin=params["burnin"],
-        resample=params["resample"],
-        scale=params["scale"],
-        strip=params["strip"],
-        renumber=params["renumber"] 
+        trees = f"-trees" if params.trees else "",
+        decimal = f"-decimal" if params.decimal else "",
+        burnin = params["burnin"],
+        resample = params["resample"],
+        scale = params["scale"],
+        strip = f"-strip" if params.strip else "",
+        renumber = f"-renumber" if params.renumber else ""
     shell:
         """
         logcombiner \
-            $(if [ {params.trees} == true ]; then echo "-trees"; else echo ""; fi) \
-            $(if [ {params.decimal} == true ]; then echo "-decimal"; else echo ""; fi) \
+            {params.trees} \
+            {params.decimal} \
             -burnin {params.burnin} \
             -resample {params.resample} \
             -scale {params.scale} \
-            $(if [ {params.strip} == true ]; then echo "-strip"; else echo ""; fi) \
-            $(if [ {params.renumber} == true ]; then echo "-renumber"; else echo ""; fi) \
+            {params.strip} \
+            {params.renumber} \
             {input.infile1} {input.infile2} {output.outfile}
         """
+
+rule _test:
+    input:
+        outfile = f"results/{outdir}/{params.output.outfile}",
