@@ -1,4 +1,4 @@
-name: Channels check
+name: Check for outlawed channels
 
 on:
   pull_request:
@@ -17,4 +17,6 @@ jobs:
       - name: Check for outlawed channels
         shell: bash -l {0}
         run: |
+          python -m pip install --upgrade pip
+          python -m pip install yaml
           python channel_check.py .
