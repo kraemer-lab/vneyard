@@ -2,8 +2,8 @@ import os
 import json
 import gzip
 
-FILENAME = 'manifest'
-COMPRESSION = False
+FILENAME = os.environ.get('MANIFEST_FILENAME', 'manifest')
+COMPRESSION = os.environ.get('MANIFEST_COMPRESSION', 'False').lower() == 'true'
 
 reject_list = [
     '.snakemake',
