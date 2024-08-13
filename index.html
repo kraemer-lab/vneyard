@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manifest Viewer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0px;
+            background-color: #f4f4f4;
+            display: flex;
+            height: 100vh;
+        }
+        .side-panel {
+            width: 300px;
+            padding: 5px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+            box-sizing: border-box;
+            border-right: 1px solid lightgrey;
+        }
+        .main-content {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            box-sizing: border-box;
+        }
+        .logo-top {
+            width: 100%;
+            height: auto;
+        }
+        .logo-bottom {
+            width: 80%;
+            height: auto;
+        }
+        .logo-bottom-wrapper {
+            width: 100%;
+            border-top: 1px solid lightgrey;
+            text-align: center;
+            padding-top: 10px;
+        }
+        #search-bar-container {
+            max-width: 600px;
+            margin: 0 auto 20px auto;
+            text-align: center;
+        }
+        #search-bar {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .concertina {
+            max-width: 600px;
+            margin: 0 auto 20px auto;
+        }
+        .concertina button {
+            width: 100%;
+            padding: 10px;
+            background-color: #f4f4f4;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            text-align: left;
+            outline: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .concertina button:after {
+            content: '\002B';
+            float: right;
+        }
+        .concertina button.active:after {
+            content: "\2212";
+        }
+        .concertina-content {
+            display: none;
+            padding: 10px;
+            overflow: hidden;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-top: 10px;
+            background-color: #fff;
+        }
+        .concertina-content ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        .concertina-content li {
+            padding: 5px 0;
+            display: flex;
+            align-items: center;
+        }
+        .concertina-content input {
+            flex-grow: 1;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-right: 5px;
+            box-sizing: border-box;
+            width: 90%; /* Make the input wider */
+        }
+        .concertina-content button.remove {
+            padding: 2px 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #f4f4f4;
+            cursor: pointer;
+            font-size: 12px;
+            height: 24px;
+            line-height: 12px;
+        }
+        #data-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 4px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .entry {
+            margin-bottom: 10px;
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        .entry-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .entry-header .project-name {
+            font-weight: bold;
+            color: grey;
+        }
+        .entry-header .module-name {
+            color: black;
+        }
+        .entry-header .separator {
+            color: lightgrey;
+        }
+        .entry a {
+            color: #333;
+            text-decoration: none;
+        }
+        .entry a:hover {
+            text-decoration: underline;
+        }
+        .entry-content {
+            display: none;
+            font-size: 14px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-top: 10px;
+            background-color: #fff;
+            white-space: pre-wrap;
+        }
+        .docstring {
+            font-size: 16px;
+        }
+        .docstring b {
+            font-weight: bold;
+        }
+        .loading {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 2s linear infinite;
+        }
+        .loading-manifest {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="side-panel">
+        <img src="vneyard.png" alt="Vneyard" class="logo-top">
+        <div class="logo-bottom-wrapper">
+            <img src="grapevne.png" alt="Logo" class="logo-bottom">
+        </div>
+        </div>
+    </div>
+    <div class="main-content">
+        <div id="search-bar-container">
+            <p>Search for modules:</p>
+            <input type="text" id="search-bar" placeholder="Search...">
+            <div class="concertina">
+                <button>Repositories</button>
+                <div class="concertina-content">
+                    <p>Repositories must have a manifest.json file</p>
+                    <ul id="manifest-url-list"></ul>
+                    <button id="add-url-button">Add URL</button>
+                    <button id="refresh-repositories">Refresh</button>
+                </div>
+            </div>
+        </div>
+        <div id="data-container">
+            <div id="loading-manifest" class="loading-manifest">
+                <div class="loading"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let repositories = [];
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadDefaultRepositories();
+            initializeConcertina();
+            fetchData();
+        });
+
+        async function loadDefaultRepositories() {
+            try {
+                const response = await fetch('repositories.json');
+                const data = await response.json();
+                repositories = data.repositories;
+            } catch (error) {
+                console.error('Error loading default repositories:', error);
+            }
+        }
+
+        function initializeConcertina() {
+            const concertinaButton = document.querySelector('.concertina button');
+            const content = concertinaButton.nextElementSibling;
+
+            concertinaButton.addEventListener('click', function() {
+                this.classList.toggle('active');
+                content.style.display = content.style.display === "block" ? "none" : "block";
+            });
+
+            const urlList = document.getElementById('manifest-url-list');
+            repositories.forEach((repo, index) => {
+                addUrlListItem(urlList, repo, index);
+            });
+
+            document.getElementById('add-url-button').addEventListener('click', () => {
+                addUrlListItem(urlList, '', repositories.length);
+                repositories.push('');
+            });
+
+            document.getElementById('refresh-repositories').addEventListener('click', () => {
+                fetchData();
+            });
+        }
+
+        function addUrlListItem(urlList, repo, index) {
+            const listItem = document.createElement('li');
+            const input = document.createElement('input');
+            const removeButton = document.createElement('button');
+
+            input.type = 'text';
+            input.value = repo;
+            input.addEventListener('input', (e) => {
+                repositories[index] = e.target.value;
+            });
+
+            removeButton.textContent = 'Remove';
+            removeButton.className = 'remove';
+            removeButton.addEventListener('click', () => {
+                urlList.removeChild(listItem);
+                repositories.splice(index, 1);
+                refreshUrlList();
+            });
+
+            listItem.appendChild(input);
+            listItem.appendChild(removeButton);
+            urlList.appendChild(listItem);
+        }
+
+        function refreshUrlList() {
+            const urlList = document.getElementById('manifest-url-list');
+            urlList.innerHTML = '';
+            repositories.forEach((repo, index) => {
+                addUrlListItem(urlList, repo, index);
+            });
+        }
+
+        async function fetchData() {
+            try {
+                const allData = [];
+                for (const repo of repositories) {
+                    const url = `https://raw.githubusercontent.com/${repo}/main/manifest.json`;
+                    if (repo.trim()) {
+                        const response = await fetch(url);
+                        const data = await response.json();
+                        allData.push({ repo, data });
+                    }
+                }
+                displayData(allData);
+            } catch (error) {
+                console.error('Error fetching the JSON data:', error);
+            } finally {
+                document.getElementById('loading-manifest').style.display = 'none';
+            }
+        }
+
+        function displayData(allData) {
+            const container = document.getElementById('data-container');
+            container.innerHTML = '';
+            const paths = [];
+            allData.forEach(({ repo, data }) => extractPaths(repo, data, '', paths));
+            paths.forEach(({ path, url, repo, fullPath }) => {
+                const entryDiv = document.createElement('div');
+                entryDiv.className = 'entry';
+
+                const entryHeader = document.createElement('div');
+                entryHeader.className = 'entry-header';
+
+                const entryText = document.createElement('span');
+                const projectName = document.createElement('span');
+                projectName.className = 'project-name';
+                const moduleName = path.split(' | ').pop();
+                projectName.textContent = path.replace(` | ${moduleName}`, '');
+
+                entryText.appendChild(projectName);
+                const separator = document.createElement('span');
+                separator.className = 'separator';
+                separator.textContent = ' | ';
+                entryText.appendChild(separator);
+                entryText.appendChild(document.createTextNode(moduleName));
+
+                const plusSign = document.createElement('span');
+                plusSign.textContent = ' +';
+                plusSign.style.float = 'right';
+
+                entryHeader.appendChild(entryText);
+                entryHeader.appendChild(plusSign);
+
+                const entryContentDiv = document.createElement('div');
+                entryContentDiv.className = 'entry-content';
+
+                const link = document.createElement('a');
+                link.href = url;
+                link.textContent = 'GitHub Link';
+                link.target = '_blank';
+
+                const docstringDiv = document.createElement('div');
+                docstringDiv.className = 'docstring';
+
+                const loadingDiv = document.createElement('div');
+                loadingDiv.className = 'loading';
+                loadingDiv.style.display = 'none';
+
+                entryDiv.appendChild(entryHeader);
+                entryDiv.appendChild(loadingDiv);
+
+                entryDiv.addEventListener('click', async () => {
+                    if (entryContentDiv.style.display === 'block') {
+                        entryContentDiv.style.display = 'none';
+                        plusSign.textContent = ' +';
+                    } else {
+                        entryContentDiv.style.display = 'none';
+                        loadingDiv.style.display = 'block';
+                        await fetchDocstring(repo, fullPath, docstringDiv, loadingDiv, entryContentDiv);
+                        entryContentDiv.innerHTML = '';  // Clear previous content
+                        entryContentDiv.appendChild(docstringDiv);
+                        const divider = document.createElement('hr'); // Add horizontal line
+                        entryContentDiv.appendChild(divider);
+                        entryContentDiv.appendChild(link);
+                        entryDiv.appendChild(entryContentDiv);
+                        loadingDiv.style.display = 'none';
+                        entryContentDiv.style.display = 'block';
+                        plusSign.textContent = ' -';
+                    }
+                });
+
+                container.appendChild(entryDiv);
+            });
+        }
+
+        function extractPaths(repo, node, currentPath, paths) {
+            if (node.type === 'folder' && node.children) {
+                node.children.forEach(child => {
+                    if (node.name === 'workflows') {
+                        extractPaths(repo, child, `workflows/${child.name}`, paths);
+                    } else if (currentPath) {
+                        const newPath = `${currentPath}/${child.name}`;
+                        if (child.type === 'folder' && (child.name === 'modules' || child.name === 'sources')) {
+                            child.children.forEach(grandChild => {
+                                if (grandChild.type === 'folder') {
+                                    const displayName = `${currentPath}/${child.name}/${grandChild.name}`.replace(/workflows\//, '').replace(/\/modules|\/sources/, '').replace(/\//g, ' | ');
+                                    const githubUrl = `https://github.com/${repo}/tree/main/${newPath}/${grandChild.name}`;
+                                    paths.push({ path: displayName, url: githubUrl, repo, fullPath: `${newPath}/${grandChild.name}` });
+                                }
+                            });
+                        } else if (child.type === 'folder') {
+                            extractPaths(repo, child, newPath, paths);
+                        }
+                    } else {
+                        extractPaths(repo, child, currentPath, paths);
+                    }
+                });
+            }
+        }
+
+        async function fetchDocstring(repo, fullPath, docstringDiv, loadingDiv, entryContentDiv) {
+            const snakefilePath = `https://raw.githubusercontent.com/${repo}/main/${fullPath}/workflow/Snakefile`;
+            try {
+                const response = await fetch(snakefilePath);
+                const text = await response.text();
+                const docstringMatch = text.match(/^"""\s*([\s\S]*?)\s*"""/);
+                if (docstringMatch) {
+                    const lines = docstringMatch[1].trim().split('\n');
+                    docstringDiv.innerHTML = `<b>${lines.shift()}</b><br>` + lines.join('\n');
+                } else {
+                    docstringDiv.textContent = 'No docstring found.';
+                }
+            } catch (error) {
+                docstringDiv.textContent = 'Error fetching docstring.';
+            } finally {
+                loadingDiv.style.display = 'none';
+                entryContentDiv.style.display = 'block';
+            }
+        }
+
+        function filterData() {
+            const searchTerm = document.getElementById('search-bar').value.toLowerCase();
+            const entries = document.getElementsByClassName('entry');
+
+            for (let entry of entries) {
+                const text = entry.textContent.toLowerCase();
+                entry.style.display = text.includes(searchTerm) ? 'block' : 'none';
+            }
+        }
+
+        document.getElementById('search-bar').addEventListener('input', filterData);
+
+        fetchData();
+        initializeConcertina();
+    </script>
+</body>
+</html>
