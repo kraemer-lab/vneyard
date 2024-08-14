@@ -146,6 +146,10 @@
         .entry-header .separator {
             color: lightgrey;
         }
+        .entry-header .repo-name {
+            color: grey;
+            font-size: 10px;
+        }
         .entry a {
             color: #333;
             text-decoration: none;
@@ -204,7 +208,7 @@
             <div class="concertina">
                 <button>Repositories</button>
                 <div class="concertina-content">
-                    <p>Repositories must have a manifest.json file</p>
+                    <p>Repositories must possess a manifest.json file</p>
                     <ul id="manifest-url-list"></ul>
                     <button id="add-url-button">Add URL</button>
                     <button id="refresh-repositories">Refresh</button>
@@ -222,6 +226,7 @@
         let repositories = [];
 
         document.addEventListener('DOMContentLoaded', async () => {
+            document.getElementById('search-bar').addEventListener('input', filterData);
             await loadDefaultRepositories();
             initializeConcertina();
             fetchData();
@@ -337,6 +342,11 @@
                 entryText.appendChild(separator);
                 entryText.appendChild(document.createTextNode(moduleName));
 
+                const repoName = document.createElement('span');
+                repoName.className = 'repo-name';
+                repoName.textContent = ' (' + repo + ')';
+                entryText.appendChild(repoName);
+
                 const plusSign = document.createElement('span');
                 plusSign.textContent = ' +';
                 plusSign.style.float = 'right';
@@ -441,10 +451,6 @@
             }
         }
 
-        document.getElementById('search-bar').addEventListener('input', filterData);
-
-        fetchData();
-        initializeConcertina();
     </script>
 </body>
 </html>
