@@ -22,14 +22,14 @@ jobs:
         with:
           miniforge-version: latest
           auto-update-conda: true
-          python-version: 3.11
+          python-version: 3.12
 
       - name: Install Snakemake
         shell: bash -l {0}
         run: |
           source $CONDA/bin/activate
           # https://github.com/snakemake/snakemake/issues/2480
-          conda install -y -n base -c bioconda -c conda-forge snakemake=7.32.4 python=3.11
+          conda install -y -n base -c bioconda -c conda-forge "snakemake<9" python=3.12
 
       - name: Setup tmate session
         uses: mxschmitt/action-tmate@v3
