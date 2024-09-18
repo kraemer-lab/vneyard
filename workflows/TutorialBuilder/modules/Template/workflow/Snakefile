@@ -7,38 +7,24 @@ Params:
     outfile (str): The name of the output file to write to the output port
 """
 configfile: "config/config.yaml"
-from snakemake.remote import AUTO
+from grapevne_helper import import_grapevne
 
-indir=config["input_namespace"]
-outdir=config["output_namespace"]
-params=config["params"]
-infile=params["infile"]
-outfile=params["outfile"]
-
-
-def script(name=""):
-    """Return the path to a script (detects local or remote execution modes)"""
-    workflow_srcdir = srcdir("")
-    try:
-        from snakemake.remote import AUTO
-
-        return AUTO.remote("/".join([workflow_srcdir, "scripts", name]))
-    except TypeError:
-        return Path(workflow_srcdir) / "scripts" / name
+grapevne = import_grapevne(workflow)
+globals().update(vars(grapevne))
 
 
 rule target:
     input:
-        infile = f"results/{indir}/{infile}",
+        infile = input(params("infile")),
         script = script("test.sh"),
     output:
-        f"results/{outdir}/{outfile}",
+        output(params("outfile")),
     log:
-        f"benchmark/{outdir}.log"
+        log("log.txt"),
     benchmark:
-        f"benchmark/{outdir}.txt"
+        benchmark("benchmark.tsv")
     conda:
-        "envs/conda.yaml"
+        env("conda.yaml")
     shell:
         """
         {input.script} {input.infile} {output[0]}
@@ -46,8 +32,8 @@ rule target:
 
 rule _test:
     input:
-        infile=f"results/{outdir}/{outfile}",
-        outfile=f"results/{outdir}/{outfile}",
+        infile=input(params("infile")),
+        outfile=output(params("outfile"))
     run:
         # Check that the output file exists and contains the same content as the input file
         assert Path(input.infile).read_text() == Path(input.outfile).read_text()

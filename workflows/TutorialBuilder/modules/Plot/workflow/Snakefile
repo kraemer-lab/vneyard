@@ -10,39 +10,26 @@ Params:
     Column_Y (str): The column to plot on the y-axis
 """
 configfile: "config/config.yaml"
-from snakemake.remote import AUTO
+from grapevne_helper import import_grapevne
 import json
 
-indir = config["input_namespace"]
-outdir = config["output_namespace"]
-params = config["params"]
-filename = params["Source"]
-
-
-def script(name=""):
-    """Return the path to a script (detects local or remote execution modes)"""
-    workflow_srcdir = srcdir("")
-    try:
-        from snakemake.remote import AUTO
-
-        return AUTO.remote("/".join([workflow_srcdir, "scripts", name]))
-    except TypeError:
-        return Path(workflow_srcdir) / "scripts" / name
+grapevne = import_grapevne(workflow)
+globals().update(vars(grapevne))
 
 
 rule target:
     input:
-        source=f"results/{indir}/{filename}",
+        source=input(params("Source")),
         script=script("plotcol.py"),
     output:
-        temp(touch(f"results/{outdir}/mark")),
+        temp(touch(output("mark"))),
     log:
-        "logs/test.log"
+        log("test.log")
     params:
-        col_x=params["Column_X"],
-        col_y=params["Column_Y"],
+        col_x=params("Column_X"),
+        col_y=params("Column_Y"),
     conda:
-        "envs/conda.yaml"
+        env("conda.yaml")
     shell:
         """
         python {input.script} \
@@ -50,3 +37,7 @@ rule target:
             --col_x="{params.col_x}" \
             --col_y="{params.col_y}" \
         """
+
+rule _test:
+    input:
+        output("mark")
