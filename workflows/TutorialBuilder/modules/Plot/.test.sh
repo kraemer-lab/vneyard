@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# !!! This module is not currently tested as it requires user interaction !!!
-
 rm -rf results/out
-# snakemake --use-conda --cores 1 --configfile=config/.test.yaml _test
+
+# We use dry-run to test the pipeline without running it (as the module requires user interaction)
+snakemake --use-conda --cores 1 --dry-run --configfile=config/.test.yaml _test

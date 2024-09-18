@@ -8,39 +8,26 @@ Params:
     Columns (list): The columns to aggregate
 """
 configfile: "config/config.yaml"
-from snakemake.remote import AUTO
+from grapevne_helper import import_grapevne
 import json
 
-indir = config["input_namespace"]
-outdir = config["output_namespace"]
-params = config["params"]
-filename = params["Source"]
-
-
-def script(name=""):
-    """Return the path to a script (detects local or remote execution modes)"""
-    workflow_srcdir = srcdir("")
-    try:
-        from snakemake.remote import AUTO
-
-        return AUTO.remote("/".join([workflow_srcdir, "scripts", name]))
-    except TypeError:
-        return Path(workflow_srcdir) / "scripts" / name
+grapevne = import_grapevne(workflow)
+globals().update(vars(grapevne))
 
 
 rule target:
     input:
-        source=f"results/{indir}/{filename}",
+        source=input(params("Source")),
         script=script("aggregate.py"),
     output:
-        f"results/{outdir}/{filename}",
+        output(params("Source")),
     log:
-        "logs/test.log"
+        log("test.log")
     params:
-        datecol=params["DateColumn"],
-        cols=json.dumps(params["Columns"]).replace("\"", "\'"),
+        datecol=params("DateColumn"),
+        cols=json.dumps(params("Columns")).replace("\"", "\'"),
     conda:
-        "envs/conda.yaml"
+        env("conda.yaml")
     shell:
         """
         python {input.script} \
@@ -52,8 +39,8 @@ rule target:
 
 rule _test:
     input:
-        infile = f"results/{indir}/{filename}",
-        outfile = f"results/{outdir}/{filename}"
+        infile = input(params("Source")),
+        outfile = output(params("Source")),
     run:
         with open(input.infile, "r") as f:
             lines = f.readlines()
