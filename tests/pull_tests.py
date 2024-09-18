@@ -36,10 +36,8 @@ def test_module(module_path):
         print(e)
         return Status.FAILED
     if result.returncode == 0:
-        print(f"Module {module_path} passed.")
         return Status.PASSED
     else:
-        print(f"Module {module_path} failed.")
         return Status.FAILED
 
 
@@ -56,14 +54,15 @@ def run_tests(module_list):
         else:
             failed_modules.append(module)
 
-    print("Passed modules: ", passed_modules)
-    if skipped_modules:
-        print("Skipped modules: ", skipped_modules)
+    for module in passed_modules:
+        print(f"✅ {module}: Passed")
+    for module in skipped_modules:
+        print(f"🟡 {module}: Skipped")
+    for module in failed_modules:
+        print(f"❌ {module}: Failed")
     if failed_modules:
-        print("Failed modules: ", failed_modules)
         exit(1)
-    # No failed modules
-    print("All modules passed.")
+    print("✅ All modules passed.")
     exit(0)
 
 
