@@ -56,4 +56,4 @@ jobs:
           python tests/pull_tests.py $TRUNK_HASH $BRANCH_HASH
 
       - name: Report summary
-        run: echo report.txt > $GITHUB_STEP_SUMMARY
+        run: cat report.txt > $GITHUB_STEP_SUMMARY
