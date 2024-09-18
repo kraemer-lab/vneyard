@@ -9,9 +9,6 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 console_handler = logging.StreamHandler()
 file_handler = logging.FileHandler("report.txt")
-formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
-console_handler.setFormatter(formatter)
-file_handler.setFormatter(formatter)
 logger.addHandler(console_handler)
 logger.addHandler(file_handler)
 
@@ -67,21 +64,21 @@ def run_tests(module_list):
             failed_modules.append(module)
 
     for module in passed_modules:
-        logging.info(f"✅ {module}: Passed")
+        logger.info(f"✅ {module}: Passed")
     for module in skipped_modules:
-        logging.info(f"🟡 {module}: Skipped")
+        logger.info(f"🟡 {module}: Skipped")
     for module in failed_modules:
-        logging.info(f"❌ {module}: Failed")
+        logger.info(f"❌ {module}: Failed")
     if failed_modules:
-        logging.info("❌ Some modules failed.")
+        logger.info("❌ Some modules failed.")
         exit(1)
     if not skipped_modules and not passed_modules:
-        logging.info("🟡 There were no modules to test.")
+        logger.info("🟡 There were no modules to test.")
         exit(0)
     if skipped_modules:
-        logging.info("🟡 Some modules were skipped.")
+        logger.info("🟡 Some modules were skipped.")
         exit(0)
-    logging.info("✅ All modules passed.")
+    logger.info("✅ All modules passed.")
     exit(0)
 
 
@@ -92,5 +89,5 @@ if __name__ == "__main__":
     main_commit_hash = sys.argv[1]
     fork_commit_hash = sys.argv[2]
     module_list = get_module_list(main_commit_hash, fork_commit_hash)
-    logging.info(f"Modules to test: {module_list}")
+    logger.info(f"Modules to test: {module_list}")
     run_tests(module_list)
