@@ -1,7 +1,19 @@
 import sys
+import logging
 import subprocess
 from enum import Enum
 from pathlib import Path
+
+# Create a custom logger
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+console_handler = logging.StreamHandler()
+file_handler = logging.FileHandler("report.txt")
+formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+console_handler.setFormatter(formatter)
+file_handler.setFormatter(formatter)
+logger.addHandler(console_handler)
+logger.addHandler(file_handler)
 
 
 class Status(Enum):
@@ -55,21 +67,21 @@ def run_tests(module_list):
             failed_modules.append(module)
 
     for module in passed_modules:
-        print(f"✅ {module}: Passed")
+        logging.info(f"✅ {module}: Passed")
     for module in skipped_modules:
-        print(f"🟡 {module}: Skipped")
+        logging.info(f"🟡 {module}: Skipped")
     for module in failed_modules:
-        print(f"❌ {module}: Failed")
+        logging.info(f"❌ {module}: Failed")
     if failed_modules:
-        print("❌ Some modules failed.")
+        logging.info("❌ Some modules failed.")
         exit(1)
     if not skipped_modules and not passed_modules:
-        print("🟡 There were no modules to test.")
+        logging.info("🟡 There were no modules to test.")
         exit(0)
     if skipped_modules:
-        print("🟡 Some modules were skipped.")
+        logging.info("🟡 Some modules were skipped.")
         exit(0)
-    print("✅ All modules passed.")
+    logging.info("✅ All modules passed.")
     exit(0)
 
 
@@ -80,5 +92,5 @@ if __name__ == "__main__":
     main_commit_hash = sys.argv[1]
     fork_commit_hash = sys.argv[2]
     module_list = get_module_list(main_commit_hash, fork_commit_hash)
-    print(f"Modules to test: {module_list}")
+    logging.info(f"Modules to test: {module_list}")
     run_tests(module_list)

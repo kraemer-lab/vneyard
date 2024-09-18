@@ -54,3 +54,9 @@ jobs:
 
           # Run tests
           python tests/pull_tests.py $TRUNK_HASH $BRANCH_HASH
+
+      - name: Upload report
+        uses: actions/upload-artifact@v4
+        with:
+          name: report
+          path: report.txt
