@@ -61,7 +61,14 @@ def run_tests(module_list):
     for module in failed_modules:
         print(f"❌ {module}: Failed")
     if failed_modules:
+        print("❌ Some modules failed.")
         exit(1)
+    if not skipped_modules and not passed_modules:
+        print("🟡 There were no modules to test.")
+        exit(0)
+    if skipped_modules:
+        print("🟡 Some modules were skipped.")
+        exit(0)
     print("✅ All modules passed.")
     exit(0)
 
