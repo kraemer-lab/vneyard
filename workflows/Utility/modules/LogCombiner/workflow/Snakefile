@@ -18,42 +18,28 @@ Params:
 """
 
 configfile: "config/config.yaml"
+from grapevne_helper import import_grapevne
 
-indir=config["input_namespace"]
-outdir=config["output_namespace"]
-params=config["params"]
+grapevne = import_grapevne(workflow)
+globals().update(vars(grapevne))
 
-rule parameters:
-    params:
-        trees=params["trees"],
-        decimal=params["decimal"],
-        burnin=params["burnin"],
-        resample=params["resample"],
-        scale=params["scale"],
-        strip=params["strip"],
-        renumber=params["renumber"],
-        infile1=params["input"]["infile1"],
-        infile2=params["input"]["infile2"],
-        outfile=params["output"]["outfile"]
-
-params = rules.parameters.params
 
 rule target:
     input:
-        infile1 = f"results/{indir}/{params.infile1}",
-        infile2 = f"results/{indir}/{params.infile2}",
+        infile1 = input(params("input", "infile1")),
+        infile2 = input(params("input", "infile2")),
     output:
-        outfile = f"results/{outdir}/{params.outfile}",
+        outfile = output(params("output", "outfile")),
     conda:
-        "envs/conda.yaml"
+        env("conda.yaml")
     params:
-        trees = f"-trees" if params.trees else "",
-        decimal = f"-decimal" if params.decimal else "",
-        burnin = params.burnin,
-        resample = params.resample,
-        scale = params.scale,
-        strip = f"-strip" if params.strip else "",
-        renumber = f"-renumber" if params.renumber else ""
+        trees = f"-trees" if params("trees") else "",
+        decimal = f"-decimal" if params("decimal") else "",
+        burnin = params("burnin"),
+        resample = params("resample"),
+        scale = params("scale"),
+        strip = f"-strip" if params("strip") else "",
+        renumber = f"-renumber" if params("renumber") else ""
     shell:
         """
         logcombiner \
@@ -69,4 +55,4 @@ rule target:
 
 rule _test:
     input:
-        outfile = f"results/{outdir}/{params.outfile}",
+        outfile = rules.target.output.outfile
