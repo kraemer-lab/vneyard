@@ -4,5 +4,5 @@
 **/**/.venv
 **/**/results/out
 **/**/logs
-**/**/benchmark
+**/**/benchmarks
 **/**/__pycache__
