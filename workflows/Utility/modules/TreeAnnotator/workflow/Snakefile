@@ -13,42 +13,28 @@ Params:
     infile (string): input trees file
     outfile (string): output target tree file
 """
-
 configfile: "config/config.yaml"
+from grapevne_helper import import_grapevne
 
-indir=config["input_namespace"]
-outdir=config["output_namespace"]
-params=config["params"]
+grapevne = import_grapevne(workflow)
+globals().update(vars(grapevne))
 
-rule parameters:
-    params:
-        heights=params["heights"],
-        burnin=params["burnin"],
-        burninTrees=params["burninTrees"],
-        limit=params["limit"],
-        target=params["target"],
-        forceDiscrete=params["forceDiscrete"],
-        hpd2D=params["hpd2D"],
-        infile=params["infile"],
-        outfile=params["outfile"]
-
-params = rules.parameters.params
 
 rule target:
     input:
-        infile = f"results/{indir}/{params.infile}",
+        infile = input(params("infile")),
     output:
-        outfile = f"results/{outdir}/{params.outfile}",
+        outfile = output(params("outfile")),
     conda:
-        "envs/conda.yaml"
+        env("conda.yaml")
     params:
-        heights = params.heights if params.heights in ["keep", "median", "mean", "ca"] else "keep",
-        burnin = f"-burnin {params.burnin}" if params.burnin else "",
-        burninTrees = f"-burninTrees {params.burninTrees}" if params.burninTrees else "",
-        limit = f"-limit {params.limit}" if params.limit else "",
-        target = f"-target {params.target}" if params.target else "",
-        forceDiscrete = f"-forceDiscrete" if params.forceDiscrete else "",
-        hpd2D = f"-hpd2D {params.hpd2D}" if params.hpd2D else "",
+        heights = params("heights") if params("heights") in ["keep", "median", "mean", "ca"] else "keep",
+        burnin = f"-burnin {params('burnin')}" if params("burnin") else "",
+        burninTrees = f"-burninTrees {params('burninTrees')}" if params("burninTrees") else "",
+        limit = f"-limit {params('limit')}" if params("limit") else "",
+        target = f"-target {params('target')}" if params("target") else "",
+        forceDiscrete = f"-forceDiscrete" if params("forceDiscrete") else "",
+        hpd2D = f"-hpd2D {params('hpd2D')}" if params("hpd2D") else "",
     shell:
         """
         treeannotator \
@@ -64,4 +50,4 @@ rule target:
 
 rule _test:
     input:
-        outfile = f"results/{outdir}/{params.outfile}",
+        outfile = output(params("outfile"))
