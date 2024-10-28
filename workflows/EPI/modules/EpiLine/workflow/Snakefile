@@ -8,35 +8,24 @@ Params:
     Linelist file (str): Filename containing two columns (report, symptom) providing the date of report and date of symptom onset.
 """
 configfile: "config/config.yaml"
-indir = config["input_namespace"]
-outdir = config["output_namespace"]
-params = config["params"]
+from grapevne_helper import import_grapevne
+
+grapevne = import_grapevne(workflow)
+globals().update(vars(grapevne))
 
 # Form filestem (can be empty)
-sep="_" if params["Prefix"] else ""
-folder = f"results/{outdir}"
-filestem = f"{folder}/{params['Prefix']}{sep}"
+sep="_" if params("Prefix") else ""
+filestem = f"{output()}/{params('Prefix')}{sep}"
 
 # Input data filenames
-reported_filename = f"{params['Reported symptoms file']}"
-linelist_filename = f"{params['Linelist file']}"
-
-
-def script(name=""):
-    """Return the path to a script (detects local or remote execution modes)"""
-    workflow_srcdir = srcdir("")
-    try:
-        from snakemake.remote import AUTO
-
-        return AUTO.remote("/".join([workflow_srcdir, "scripts", name]))
-    except TypeError:
-        return Path(workflow_srcdir) / "scripts" / name
+reported_filename = f"{params('Reported symptoms file')}"
+linelist_filename = f"{params('Linelist file')}"
 
 
 rule epiline:
     input:
-        reported=f"results/{indir}/{reported_filename}",
-        linelist=f"results/{indir}/{linelist_filename}",
+        reported=input(reported_filename),
+        linelist=input(linelist_filename),
         script=script("epiline.R"),
         install_script=script("install.sh")
     output:
@@ -46,9 +35,9 @@ rule epiline:
         symptom_report_quantiles=expand(f"{filestem}symptom_report_quantiles.{{ext}}", ext=["html", "png"]),
     params:
         filestem=filestem,
-        folder=folder,
+        folder=output(),
     conda:
-        "envs/epiline.yaml"
+        env("epiline.yaml")
     shell:
         """
         set -eoux pipefail
