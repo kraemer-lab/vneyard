@@ -1,0 +1,58 @@
+"""LogCombiner-BEAST1
+
+This module takes two log or tree files from BEAST (v1.10.4/5) as input and returns a single combined log or tree file as output. Please see https://beast.community/logcombiner for more information.
+
+Params:
+    trees (boolean): use this option to combine tree log files (default is false)
+    decimal (boolean): this option converts numbers from scientific to decimal notation (default is false)
+    burnin (integer): number of states to be considered as 'burn-in' (default is 100000)
+    resample (integer): resample the log files to this frequency (the original sampling frequency must be a factor of this value) (default is 10000)
+    scale (float): a scaling factor that will multiply any time units by this value
+    strip (boolean): strip out all annotations (trees only)
+    renumber (boolean): this option renumbers output states consecutively (default is false)
+    input:
+        infile1 (string): input log/tree file 1
+        infile2 (string): input log/tree file 2
+    output:
+        outfile (string): output combined log/tree file
+"""
+
+configfile: "config/config.yaml"
+from grapevne_helper import import_grapevne
+
+grapevne = import_grapevne(workflow)
+globals().update(vars(grapevne))
+
+
+rule target:
+    input:
+        infile1 = input(params("input", "infile1")),
+        infile2 = input(params("input", "infile2")),
+    output:
+        outfile = output(params("output", "outfile")),
+    conda:
+        env("conda.yaml")
+    params:
+        trees = f"-trees" if params("trees") else "",
+        decimal = f"-decimal" if params("decimal") else "",
+        burnin = params("burnin"),
+        resample = params("resample"),
+        scale = params("scale"),
+        strip = f"-strip" if params("strip") else "",
+        renumber = f"-renumber" if params("renumber") else ""
+    shell:
+        """
+        logcombiner \
+            {params.trees} \
+            {params.decimal} \
+            -burnin {params.burnin} \
+            -resample {params.resample} \
+            -scale {params.scale} \
+            {params.strip} \
+            {params.renumber} \
+            {input.infile1} {input.infile2} {output.outfile}
+        """
+
+rule _test:
+    input:
+        outfile = rules.target.output.outfile

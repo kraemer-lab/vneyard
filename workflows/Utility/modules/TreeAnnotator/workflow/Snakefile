@@ -1,0 +1,53 @@
+"""TreeAnnotator-BEAST1
+
+This module summarises the information from a sample of trees produced by BEAST (v1.10.4/5) onto a single "target" tree. Summary information includes the posterior probabilities of the nodes in the target tree, the posterior estimates and HPD limits of the node heights and (in the case of a relaxed molecular clock model) the rates. Please see https://beast.community/treeannotator#user-interface for more information.
+
+Params:
+    heights (string): use option to select how the node heights are summarised on the target tree ['keep' (default), 'median', 'mean', 'ca']
+    burnin (integer): number of states to be considered as 'burn-in' (default is 0)
+    burninTrees (integer): number of trees to be considered as 'burn-in' (default is 0)
+    limit (float): minimum posterior probability for a node to be annotated (default is 0)
+    target (string): a user target tree (file) to be annotated
+    forceDiscrete (boolean): use this option to force integer traits to be treated as discrete traits (default is false)
+    hpd2D (float): use this option to specify a (vector of comma seperated) HPD proportion(s)
+    infile (string): input trees file
+    outfile (string): output target tree file
+"""
+configfile: "config/config.yaml"
+from grapevne_helper import import_grapevne
+
+grapevne = import_grapevne(workflow)
+globals().update(vars(grapevne))
+
+
+rule target:
+    input:
+        infile = input(params("infile")),
+    output:
+        outfile = output(params("outfile")),
+    conda:
+        env("conda.yaml")
+    params:
+        heights = params("heights") if params("heights") in ["keep", "median", "mean", "ca"] else "keep",
+        burnin = f"-burnin {params('burnin')}" if params("burnin") else "",
+        burninTrees = f"-burninTrees {params('burninTrees')}" if params("burninTrees") else "",
+        limit = f"-limit {params('limit')}" if params("limit") else "",
+        target = f"-target {params('target')}" if params("target") else "",
+        forceDiscrete = f"-forceDiscrete" if params("forceDiscrete") else "",
+        hpd2D = f"-hpd2D {params('hpd2D')}" if params("hpd2D") else "",
+    shell:
+        """
+        treeannotator \
+            -heights {params.heights} \
+            {params.burnin} \
+            {params.burninTrees} \
+            {params.limit} \
+            {params.target} \
+            {params.forceDiscrete} \
+            {params.hpd2D} \
+            {input.infile} {output.outfile}
+        """
+
+rule _test:
+    input:
+        outfile = output(params("outfile"))
