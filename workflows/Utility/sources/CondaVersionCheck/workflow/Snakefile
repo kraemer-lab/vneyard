@@ -1,0 +1,14 @@
+"""Print conda information to the console
+
+Does not output anything - use for debug purposes only
+"""
+# Very simple rule - no need to import grapevne or helpers
+rule all:
+    shell:
+        """
+        echo "Conda information:"
+        echo "  version: $(conda --version)"
+        echo "  whereis $(whereis conda)"
+        echo "  which: $(which conda)"
+        echo "  shell: $SHELL"
+        """
