@@ -36,6 +36,10 @@ Params:
         Shutdown timeout (int): The maximum time to wait before shutting down the module. Set to 0 to disable.
 """
 configfile: "config/config.yaml"
+from grapevne_helper import import_grapevne
+
+grapevne = import_grapevne(workflow)
+globals().update(vars(grapevne))
 
 import time
 import json
@@ -43,37 +47,21 @@ import glob
 import importlib.util
 from pathlib import Path
 
-# Folder mappings
-indirs = config["input_namespace"]
-outdir = config["output_namespace"]
-params = config["params"]
-
 # Parameters
-delay_timer = params["Behaviour"]["Check triggers interval (secs)"]
-allow_multiple_emails = params["Behaviour"]["Allow multiple emails"]
-timeout = params["Behaviour"]["Shutdown timeout"]
+delay_timer = param("Behaviour", "Check triggers interval (secs)")
+allow_multiple_emails = param("Behaviour", "Allow multiple emails")
+timeout = param("Behaviour", "Shutdown timeout")
 
 # Paths
 credentials = (
-    Path("results") / indirs["credentials"] / params["Credentials"]["Filename"]
+    Path("results") / input(None, "credentials") / param("Credentials", "Filename")
 )
-send_trigger = Path("results") / indirs["send"] / params["Triggers"]["Send email"]
-shutdown_trigger = Path("results") / indirs["shutdown"] / params["Triggers"]["Shutdown"]
+send_trigger = Path("results") / input(None, "send") / param("Triggers", "Send email")
+shutdown_trigger = Path("results") / input(None, "shutdown") / param("Triggers", "Shutdown")
 
 # Developer settings
 test_send = False
 verbose = True
-
-
-def script(name=""):
-    """Return the path to a script (detects local or remote execution modes)"""
-    workflow_srcdir = srcdir("")
-    try:
-        from snakemake.remote import AUTO
-
-        return AUTO.remote("/".join([workflow_srcdir, "scripts", name]))
-    except TypeError:
-        return Path(workflow_srcdir) / "scripts" / name
 
 
 def import_module(name, module_file):
@@ -101,15 +89,15 @@ rule email_rule:
         credentials=credentials,
         scriptfile=script("sendmail.py"),
     output:
-        f"results/{outdir}/touch",
+        output("touch"),
     params:
-        SMTP_Server=params["Server"]["SMTP Server"],
-        SMTP_Port=params["Server"]["SMTP Port"],
-        Subject=params["Message"]["Subject"],
-        Body=params["Message"]["Body"],
-        Recipients=params["Message"]["Recipients"].split(','),
-        Attachments=params["Message"]["Attachments"],
-        AttachmentsFolder=f"results/{indirs['attachments']}",
+        SMTP_Server=param("Server", "SMTP Server"),
+        SMTP_Port=param("Server", "SMTP Port"),
+        Subject=param("Message". "Subject"),
+        Body=param("Message", "Body"),
+        Recipients=param("Message", "Recipients").split(','),
+        Attachments=param("Message", "Attachments"),
+        AttachmentsFolder=input(None, 'attachments'),
     run:
         email_loop(
             input,
