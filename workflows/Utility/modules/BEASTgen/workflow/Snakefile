@@ -61,7 +61,7 @@ rule beastgen:
     shell:
         """
         # Download BEASTGen if not already present
-        if [ ! -d {params.workspace} ]; then
+        if [ ! -d {params.workspace}/beastgen ]; then
             mkdir -p {params.workspace}/beastgen
             mv {input.beastgen} {params.workspace}/beastgen.tgz
             tar -xzf {params.workspace}/beastgen.tgz -C {params.workspace}/beastgen --strip-components 1
