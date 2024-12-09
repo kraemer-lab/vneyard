@@ -1,0 +1,34 @@
+"""Read data from a DuckDB database table.
+
+Read data from an DuckDB database table and write it to a target file.
+
+Params:
+    Database file (file): DuckDB database file (.db)
+    Table (str): Table name to read from
+    Fields (str[]): List of fields to read from the table. Provide as a comma-separated list, or enter "*" for all.
+    Output filename (str): Filename for the output. Currently supported output formats: csv.
+"""
+configfile: "config/config.yaml"
+from pathlib import Path
+from grapevne_helper import import_grapevne
+
+grapevne = import_grapevne(workflow)
+gv = grapevne
+# globals().update(vars(grapevne))
+
+rule target:
+    input:
+        db=gv.input(gv.param("Database file")),
+    output:
+        outfile=gv.output(gv.param("Output filename")),
+    params:
+        table=gv.param("Table"),
+        fields=gv.param("Fields"),
+    conda:
+        gv.env("duckdb.yml")
+    script:
+        "scripts/convert_duckdb.py"
+
+rule _test:
+    input:
+        gv.output(gv.param("Output filename"))
