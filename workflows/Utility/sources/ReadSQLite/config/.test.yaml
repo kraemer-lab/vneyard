@@ -1,0 +1,7 @@
+input_namespace: in
+output_namespace: out
+params:
+  "Database file": "my_database.db"
+  Table: "my_table"
+  Fields: "*"
+  "Output filename": "data.csv"

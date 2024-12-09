@@ -1,0 +1,38 @@
+"""Read data from a SQLite database table.
+
+Read data from an SQLite database table and write it to a target file.
+
+Params:
+    Database file (file): SQLite database file (.db)
+    Table (str): Table name to read from
+    Fields (str[]): List of fields to read from the table. Provide as a comma-separated list, or enter "*" for all.
+    Output filename (str): Filename for the output. Currently supported output formats: csv.
+"""
+configfile: "config/config.yaml"
+from pathlib import Path
+from grapevne_helper import import_grapevne
+
+grapevne = import_grapevne(workflow)
+globals().update(vars(grapevne))
+
+rule target:
+    input:
+        db=input(param("Database file")),
+    output:
+        outfile=output(param("Output filename")),
+    params:
+        table=param("Table"),
+        fields=param("Fields"),
+    run:
+        import sqlite3
+        conn = sqlite3.connect(input.db)
+        c = conn.cursor()
+        c.execute(f"SELECT {params.fields} FROM \"{params.table}\"")
+        with open(output.outfile, "w") as f:
+            for row in c.fetchall():
+                f.write(str(row) + "\n")
+        conn.close()
+
+rule _test:
+    input:
+        output(param("Output filename")),
