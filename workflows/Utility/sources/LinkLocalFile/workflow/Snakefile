@@ -8,32 +8,30 @@ Params:
     file (string): Path to file to copy
 """
 configfile: "config/config.yaml"
+from grapevne_helper import import_grapevne
 import os
 
-# Extract params from config file
-outdir = config["output_namespace"]
-params = config["params"]
+grapevne = import_grapevne(workflow)
+globals().update(vars(grapevne))
 
 # Get the full path to the target file
-filename = params["File"]["Filename"]
-filepath = params["File"]["Folder"]
+filename = params("File.Filename")
+filepath = params("File.Folder")
 fullfile = os.path.abspath(os.path.join(filepath, filename))
 
 # Get the output directory and the relative path from that directory to the target
-output_dir = os.path.abspath(f"results/{outdir}")
+output_dir = os.path.abspath(output())
 relpath = os.path.relpath(fullfile, output_dir)
 
 rule copy:
     input:
         fullfile,
     output:
-        outfile = f"results/{outdir}/{filename}",
+        outfile = output(filename),
     params:
         relpath = relpath,
-    conda:
-        "envs/empty.yaml",
     log:
-        f"logs/copy_{filename}.log",
+        log(f"copy_{filename}.log"),
     shell:
         """
         ln -s -f {params.relpath} {output.outfile}
@@ -41,4 +39,4 @@ rule copy:
 
 rule _test:
     input:
-        outfile = f"results/{outdir}/{filename}",
+        outfile = output(filename),

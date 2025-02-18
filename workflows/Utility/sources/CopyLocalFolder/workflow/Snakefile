@@ -8,10 +8,12 @@ Params:
     folder (string): Path to folder to copy
 """
 configfile: "config/config.yaml"
-params = config["params"]
-
+from grapevne_helper import import_grapevne
 import os
 import shutil
+
+grapevne = import_grapevne(workflow)
+globals().update(vars(grapevne))
 
 def parse_folder(path, targetpath):
     """
@@ -33,12 +35,12 @@ rule target:
     output:
         # The file outputs are used to inform downstream modules of the generated files
         parse_folder(
-            params["folder"],
-            os.path.join("results", config["output_namespace"]),
+            params("folder"),
+            output(),
         ),
     params:
-        folder=params["folder"],
-        output=os.path.join("results", config["output_namespace"])
+        folder=params("folder"),
+        output=output(),
     run:
         shutil.copytree(
             params.folder,
@@ -46,14 +48,8 @@ rule target:
             dirs_exist_ok=True,  # snakemake creates the target 'folder'
         )
 
-testing = False
-if testing:
-    rule test_target:
-        input:
-            "results/out/1"
-        output:
-            'results/out/done'
-        shell:
-            """
-            touch results/out/done
-            """
+rule _test:
+    input:
+        output("1"),
+        output("2"),
+        output("3"),

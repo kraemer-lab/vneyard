@@ -8,10 +8,12 @@ Params:
     folder (string): Path to folder to copy
 """
 configfile: "config/config.yaml"
-outdir=config["output_namespace"]
-params = config["params"]
-
+from grapevne_helper import import_grapevne
 import os
+
+grapevne = import_grapevne(workflow)
+globals().update(vars(grapevne))
+
 
 def parse_folder(path, targetpath):
     """
@@ -31,20 +33,16 @@ def parse_folder(path, targetpath):
 
 rule target:
     output:
-        #directory(f"results/{outdir}"),
         # The file outputs are used to inform downstream modules of the generated files
         parse_folder(
-            params["folder"],
-            os.path.join("results", outdir),
+            params("folder"),
+            output(),
         ),
     params:
         folder=os.path.abspath(
-            params["folder"]
+            params("folder")
         ),
-        outdir=os.path.join(
-            "results",
-            outdir,
-        ),
+        outdir=output(),
     shell:
         """
         mkdir -p results/
@@ -54,6 +52,6 @@ rule target:
 
 rule _test:
     input:
-        f"results/{outdir}/1",
-        f"results/{outdir}/2",
-        f"results/{outdir}/3",
+        output("1"),
+        output("2"),
+        output("3"),

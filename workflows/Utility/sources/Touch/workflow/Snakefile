@@ -6,18 +6,21 @@ Params:
     Filename (str): The name of the file to create.
 """
 configfile: "config/config.yaml"
-
+from grapevne_helper import import_grapevne
 from pathlib import Path
 
-outdir = config["output_namespace"]
-params = config["params"]
-filename = params["Filename"]
+grapevne = import_grapevne(workflow)
+globals().update(vars(grapevne))
 
 rule touch:
     output:
-        filename = f"results/{outdir}/{filename}",
+        filename = output(params("Filename")),
     params:
-        outdir = f"results/{outdir}"
+        outdir = output(),
     run:
         Path(params.outdir).mkdir(parents=True, exist_ok=True)
         Path(output.filename).touch()
+
+rule _test:
+    input:
+        output(params("Filename")),
