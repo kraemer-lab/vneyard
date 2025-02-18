@@ -1,0 +1,8 @@
+ports:
+  - ref: fasta
+    label: fasta
+    namespace: fasta
+  - ref: tree
+    label: tree
+    namespace: tree
+namespace: out

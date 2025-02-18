@@ -1,0 +1,8 @@
+ports:
+  - ref: csv
+    label: csv
+    namespace: csv
+  - ref: fasta
+    label: fasta
+    namespace: fasta
+namespace: out

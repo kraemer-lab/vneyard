@@ -1,0 +1,1326 @@
+addgenotypeinformation:
+  config:
+    namespace: addgenotypeinformation
+    ports:
+    - label: genotype
+      namespace: assignserotypeandgenotypenextclade
+      ref: genotype
+    - label: metadata
+      namespace: processdenguedata
+      ref: metadata
+  name: addgenotypeinformation
+  snakefile:
+    args:
+    - kraemer-lab/vneyard
+    function: github
+    kwargs:
+      branch: main
+      path: workflows/Dengue/modules/AddGenotypeInformation/workflow/Snakefile
+  type: module
+assignserotypeandgenotypenextclade:
+  config:
+    namespace: assignserotypeandgenotypenextclade
+    ports:
+    - label: In
+      namespace: processdenguedata
+      ref: in
+  name: assignserotypeandgenotypenextclade
+  snakefile:
+    args:
+    - kraemer-lab/vneyard
+    function: github
+    kwargs:
+      branch: main
+      path: workflows/Dengue/modules/AssignSerotypeAndGenotypeNextclade/workflow/Snakefile
+  type: module
+combinetaxaandcleanedtrees:
+  config:
+    namespace: combinetaxaandcleanedtrees
+    ports:
+    - label: original
+      namespace: treetimebioconda
+      ref: original
+    - label: cleaned
+      namespace: RemoveAnnotations
+      ref: cleaned
+  name: CombineTaxaAndCleanedTrees
+  snakefile:
+    args:
+    - kraemer-lab/vneyard
+    function: github
+    kwargs:
+      branch: main
+      path: workflows/Dengue/modules/CombineTaxaAndCleanedTrees/workflow/Snakefile
+  type: module
+determinetargets:
+  config:
+    namespace: determinetargets
+    params:
+      Input Pattern: '{sample}.fasta'
+      Output Pattern: dengue_{sample}.json
+      Triggers:
+        Parse inputs: mark
+    ports:
+    - label: generator
+      namespace: partitionintogenotypes
+      ref: generator
+    - label: target
+      namespace: export
+      ref: target
+  name: determinetargets
+  snakefile:
+    args:
+    - kraemer-lab/vneyard
+    function: github
+    kwargs:
+      branch: main
+      path: workflows/Dengue/modules/DetermineTargets/workflow/Snakefile
+  type: module
+determinetargets_1:
+  config:
+    namespace: determinetargets_1
+    params:
+      Input Pattern: '{sample}.fasta'
+      Output Pattern: subsampled_{sample}.fasta
+      Triggers:
+        Parse inputs: mark
+    ports:
+    - label: generator
+      namespace: partitionintogenotypes
+      ref: generator
+    - label: target
+      namespace: removeincongruentsequences
+      ref: target
+  name: determinetargets_1
+  snakefile:
+    args:
+    - kraemer-lab/vneyard
+    function: github
+    kwargs:
+      branch: main
+      path: workflows/Dengue/modules/DetermineTargets/workflow/Snakefile
+  type: module
+determinetargets_10:
+  config:
+    namespace: determinetargets_10
+    params:
+      Input Pattern: '{sample}.fasta'
+      Output Pattern: lineage_{sample}.trees
+      Triggers:
+        Parse inputs: mark
+    ports:
+    - label: generator
+      namespace: partitionintogenotypes
+      ref: generator
+    - label: target
+      namespace: RunBeast
+      ref: target
+  name: DetermineTargets_10
+  snakefile:
+    args:
+    - kraemer-lab/vneyard
+    function: github
+    kwargs:
+      branch: main
+      path: workflows/Dengue/modules/DetermineTargets/workflow/Snakefile
+  type: module
+determinetargets_2:
+  config:
+    namespace: determinetargets_2
+    params:
+      Input Pattern: '{sample}.fasta'
+      Output Pattern: '{sample}.png'
+      Triggers:
+        Parse inputs: mark
+    ports:
+    - label: generator
+      namespace: partitionintogenotypes
+      ref: generator
+    - label: target
+      namespace: plotviralmovements
+      ref: target
+  name: determinetargets_2
+  snakefile:
+    args:
+    - kraemer-lab/vneyard
+    function: github
+    kwargs:
+      branch: main
+      path: workflows/Dengue/modules/DetermineTargets/workflow/Snakefile
+  type: module
+determinetargets_3:
+  config:
+    namespace: determinetargets_3
+    params:
+      Input Pattern: '{sample}.fasta'
+      Output Pattern: '{sample}.png'
+      Triggers:
+        Parse inputs: mark
+    ports:
+    - label: generator
+      namespace: partitionintogenotypes
+      ref: generator
+    - label: target
+      namespace: plotviralmovements_1
+      ref: target
+  name: determinetargets_3
+  snakefile:
+    args:
+    - kraemer-lab/vneyard
+    function: github
+    kwargs:
+      branch: main
+      path: workflows/Dengue/modules/DetermineTargets/workflow/Snakefile
+  type: module
+determinetargets_4:
+  config:
+    namespace: determinetargets_4
+    params:
+      Input Pattern: '{sample}.fasta'
+      Output Pattern: transmission_lineages_{sample}.csv
+      Triggers:
+        Parse inputs: mark
+    ports:
+    - label: generator
+      namespace: partitionintogenotypes
+      ref: generator
+    - label: target
+      namespace: fertree
+      ref: target
+  name: determinetargets_4
+  snakefile:
+    args:
+    - kraemer-lab/vneyard
+    function: github
+    kwargs:
+      branch: main
+      path: workflows/Dengue/modules/DetermineTargets/workflow/Snakefile
+  type: module
+determinetargets_5:
+  config:
+    namespace: determinetargets_5
+    params:
+      Input Pattern: '{sample}.fasta'
+      Output Pattern: meme_{sample}.json
+      Triggers:
+        Parse inputs: mark
+    ports:
+    - label: generator
+      namespace: partitionintogenotypes
+      ref: generator
+    - label: target
+      namespace: HyphyMeme
+      ref: target
+  name: DetermineTargets_5
+  snakefile:
+    args:
+    - kraemer-lab/vneyard
+    function: github
+    kwargs:
+      branch: main
+      path: workflows/Dengue/modules/DetermineTargets/workflow/Snakefile
+  type: module
+determinetargets_6:
+  config:
+    namespace: determinetargets_6
+    params:
+      Input Pattern: '{sample}.fasta'
+      Output Pattern: fubar_{sample}.json
+      Triggers:
+        Parse inputs: mark
+    ports:
+    - label: generator
+      namespace: partitionintogenotypes
+      ref: generator
+    - label: target
+      namespace: HyphyFubar
+      ref: target
+  name: DetermineTargets_6
+  snakefile:
+    args:
+    - kraemer-lab/vneyard
+    function: github
+    kwargs:
+      branch: main
+      path: workflows/Dengue/modules/DetermineTargets/workflow/Snakefile
+  type: module
+determinetargets_7:
+  config:
+    namespace: determinetargets_7
+    params:
+      Input Pattern: '{sample}.fasta'
+      Output Pattern: slac_{sample}.json
+      Triggers:
+        Parse inputs: mark
+    ports:
+    - label: generator
+      namespace: partitionintogenotypes
+      ref: generator
+    - label: target
+      namespace: HyphySlac
+      ref: target
+  name: DetermineTargets_7
+  snakefile:
+    args:
+    - kraemer-lab/vneyard
+    function: github
+    kwargs:
+      branch: main
+      path: workflows/Dengue/modules/DetermineTargets/workflow/Snakefile
+  type: module
+determinetargets_8:
+  config:
+    namespace: determinetargets_8
+    params:
+      Input Pattern: '{sample}.fasta'
+      Output Pattern: fel_{sample}.json
+      Triggers:
+        Parse inputs: mark
+    ports:
+    - label: generator
+      namespace: partitionintogenotypes
+      ref: generator
+    - label: target
+      namespace: HyphyFel
+      ref: target
+  name: DetermineTargets_8
+  snakefile:
+    args:
+    - kraemer-lab/vneyard
+    function: github
+    kwargs:
+      branch: main
+      path: workflows/Dengue/modules/DetermineTargets/workflow/Snakefile
+  type: module
+determinetargets_9:
+  config:
+    namespace: determinetargets_9
+    params:
+      Input Pattern: '{sample}.fasta'
+      Output Pattern: contrast_fel_{sample}.json
+      Triggers:
+        Parse inputs: mark
+    ports:
+    - label: generator
+      namespace: partitionintogenotypes
+      ref: generator
+    - label: target
+      namespace: HyphyContrastFel
+      ref: target
+  name: DetermineTargets_9
+  snakefile:
+    args:
+    - kraemer-lab/vneyard
+    function: github
+    kwargs:
+      branch: main
+      path: workflows/Dengue/modules/DetermineTargets/workflow/Snakefile
+  type: module
+downloadgenbank:
+  config:
+    namespace: downloadgenbank
+    params:
+      Command line arguments: []
+      Data format: virus-genome
+      Date: 01/01/2010
+      Sequence: virus genome taxon "Dengue Virus"
+    ports: []
+  name: downloadgenbank
+  snakefile:
+    args:
+    - kraemer-lab/vneyard
+    function: github
+    kwargs:
+      branch: main
+      path: workflows/Dengue/sources/DownloadGenbank/workflow/Snakefile
+  type: module
+export:
+  config:
+    namespace: export
+    ports:
+    - label: treetime
+      namespace: treetime
+      ref: treetime
+    - label: translation
+      namespace: translation
+      ref: translation
+    - label: subsample
+      namespace: reformatting
+      ref: subsample
+    - label: mutations
+      namespace: mutations
+      ref: mutations
+    - label: mugrations
+      namespace: mugration
+      ref: mugrations
+  name: export
+  snakefile:
+    args:
+    - kraemer-lab/vneyard
+    function: github
+    kwargs:
+      branch: main
+      path: workflows/Dengue/modules/Export/workflow/Snakefile
+  type: module
+extracttreeeventscountry:
+  config:
+    namespace: extracttreeeventscountry
+    params:
+      Trait: Country
+    ports:
+    - label: nexus
+      namespace: treetimemugrationcountry
+      ref: nexus
+    - label: metadata
+      namespace: reformatting
+      ref: metadata
+  name: extracttreeeventscountry
+  snakefile:
+    args:
+    - kraemer-lab/vneyard
+    function: github
+    kwargs:
+      branch: main
+      path: workflows/Dengue/modules/ExtractTreeEvents/workflow/Snakefile
+  type: module
+extracttreeeventsstate:
+  config:
+    namespace: extracttreeeventsstate
+    params:
+      Trait: State
+    ports:
+    - label: nexus
+      namespace: treetimemugrationstate
+      ref: nexus
+    - label: metadata
+      namespace: reformatting
+      ref: metadata
+  name: extracttreeeventsstate
+  snakefile:
+    args:
+    - kraemer-lab/vneyard
+    function: github
+    kwargs:
+      branch: main
+      path: workflows/Dengue/modules/ExtractTreeEvents/workflow/Snakefile
+  type: module
+fertree:
+  config:
+    namespace: fertree
+    params:
+      Location: Africa
+      Spatial scale: Continent
+    ports:
+    - label: nexus
+      namespace: treetimemugrationcontinent
+      ref: nexus
+    - label: metadata
+      namespace: reformatting
+      ref: metadata
+  name: fertree
+  snakefile:
+    args:
+    - kraemer-lab/vneyard
+    function: github
+    kwargs:
+      branch: main
+      path: workflows/Dengue/modules/Fertree/workflow/Snakefile
+  type: module
+fillbeastxmlcustom:
+  config:
+    namespace: fillbeastxmlcustom
+    params:
+      Chain length: 10000000
+    ports:
+    - label: in
+      namespace: CombineTaxaAndCleanedTrees
+      ref: in
+  name: FillBeastXMLCustom
+  snakefile:
+    args:
+    - kraemer-lab/vneyard
+    function: github
+    kwargs:
+      branch: main
+      path: workflows/Dengue/modules/FillBeastXMLCustom/workflow/Snakefile
+  type: module
+filterafricastrains:
+  config:
+    namespace: filterafricastrains
+    params:
+      Continent: Africa
+    ports:
+    - label: in
+      namespace: RemoveDupesFromMetaData
+      ref: in
+  name: FilterAfricaStrains
+  snakefile:
+    args:
+    - kraemer-lab/vneyard
+    function: github
+    kwargs:
+      branch: main
+      path: workflows/Dengue/modules/FilterAfricaStrains/workflow/Snakefile
+  type: module
+filtergenotypesdata:
+  config:
+    namespace: filtergenotypesdata
+    params:
+      Classification: Major_Lineage
+      Min count: 100
+      Serotype targets:
+      - Dengue_1
+      - Dengue_2
+      - Dengue_3
+      - Dengue_4
+      Target: Africa
+    ports:
+    - label: fasta
+      namespace: splitgenomeandqc
+      ref: fasta
+    - label: metadata
+      namespace: addgenotypeinformation
+      ref: metadata
+  name: filtergenotypesdata
+  snakefile:
+    args:
+    - kraemer-lab/vneyard
+    function: github
+    kwargs:
+      branch: main
+      path: workflows/Dengue/modules/FilterGenotypesData/workflow/Snakefile
+  type: module
+hyphycln:
+  config:
+    namespace: hyphycln
+    ports:
+    - label: fasta
+      namespace: reformatting
+      ref: in
+  name: HyphyCln
+  snakefile:
+    args:
+    - kraemer-lab/vneyard
+    function: github
+    kwargs:
+      branch: main
+      path: workflows/Dengue/modules/HyphyCln/workflow/Snakefile
+  type: module
+hyphycontrastfel:
+  config:
+    namespace: hyphycontrastfel
+    params:
+      Branch Set: Foreground
+      threads: 1
+    ports:
+    - label: in
+      namespace: HyphyLabelTrees
+      ref: in
+  name: HyphyContrastFel
+  snakefile:
+    args:
+    - kraemer-lab/vneyard
+    function: github
+    kwargs:
+      branch: main
+      path: workflows/Dengue/modules/HyphyContrastFel/workflow/Snakefile
+  type: module
+hyphyfel:
+  config:
+    namespace: hyphyfel
+    params:
+      branches: Foreground
+      threads: 1
+    ports:
+    - label: in
+      namespace: HyphyLabelTrees
+      ref: in
+  name: HyphyFel
+  snakefile:
+    args:
+    - kraemer-lab/vneyard
+    function: github
+    kwargs:
+      branch: main
+      path: workflows/Dengue/modules/HyphyFel/workflow/Snakefile
+  type: module
+hyphyfubar:
+  config:
+    namespace: hyphyfubar
+    params:
+      threads: 1
+    ports:
+    - label: in
+      namespace: HyphyLabelTrees
+      ref: in
+  name: HyphyFubar
+  snakefile:
+    args:
+    - kraemer-lab/vneyard
+    function: github
+    kwargs:
+      branch: main
+      path: workflows/Dengue/modules/HyphyFubar/workflow/Snakefile
+  type: module
+hyphylabeltrees:
+  config:
+    namespace: hyphylabeltrees
+    params:
+      Continent: Africa
+    ports:
+    - label: tree
+      namespace: HyphyRemoveDupes
+      ref: tree
+    - label: strains
+      namespace: FilterAfricaStrains
+      ref: strains
+  name: HyphyLabelTrees
+  snakefile:
+    args:
+    - kraemer-lab/vneyard
+    function: github
+    kwargs:
+      branch: main
+      path: workflows/Dengue/modules/HyphyLabelTrees/workflow/Snakefile
+  type: module
+hyphymeme:
+  config:
+    namespace: hyphymeme
+    params:
+      Branches: Foreground
+      threads: 1
+    ports:
+    - label: in
+      namespace: HyphyLabelTrees
+      ref: in
+  name: HyphyMeme
+  snakefile:
+    args:
+    - kraemer-lab/vneyard
+    function: github
+    kwargs:
+      branch: main
+      path: workflows/Dengue/modules/HyphyMeme/workflow/Snakefile
+  type: module
+hyphyremovedupes:
+  config:
+    namespace: hyphyremovedupes
+    ports:
+    - label: fasta
+      namespace: HyphyCln
+      ref: fasta
+    - label: tree
+      namespace: TreeBuildingNoStopCodons
+      ref: tree
+  name: HyphyRemoveDupes
+  snakefile:
+    args:
+    - kraemer-lab/vneyard
+    function: github
+    kwargs:
+      branch: main
+      path: workflows/Dengue/modules/HyphyRemoveDupes/workflow/Snakefile
+  type: module
+hyphyslac:
+  config:
+    namespace: hyphyslac
+    params:
+      branches: Foreground
+      threads: 1
+    ports:
+    - label: in
+      namespace: HyphyLabelTrees
+      ref: in
+  name: HyphySlac
+  snakefile:
+    args:
+    - kraemer-lab/vneyard
+    function: github
+    kwargs:
+      branch: main
+      path: workflows/Dengue/modules/HyphySlac/workflow/Snakefile
+  type: module
+linklocalfolder:
+  config:
+    namespace: linklocalfolder
+    params:
+      :folder:
+        type: Folder
+      folder: /Users/jsb/repos/jsbrittain/dengue_pipeline/workflows/Dengue/modules/ProcessGisaidData/results/in
+    ports: []
+  name: linklocalfolder
+  snakefile:
+    args:
+    - kraemer-lab/vneyard
+    function: github
+    kwargs:
+      branch: main
+      path: workflows/Utility/sources/LinkLocalFolder/workflow/Snakefile
+  type: module
+mergegenbankgisaid:
+  config:
+    namespace: mergegenbankgisaid
+    ports:
+    - label: genbank
+      namespace: processgenbankdata
+      ref: genbank
+    - label: gisaid
+      namespace: processgisaiddata
+      ref: gisaid
+  name: mergegenbankgisaid
+  snakefile:
+    args:
+    - kraemer-lab/vneyard
+    function: github
+    kwargs:
+      branch: main
+      path: workflows/Dengue/modules/MergeGenbankGISAID/workflow/Snakefile
+  type: module
+mugration:
+  config:
+    namespace: mugration
+    ports:
+    - label: treetime
+      namespace: treetime
+      ref: treetime
+    - label: subsample
+      namespace: reformatting
+      ref: subsample
+  name: mugration
+  snakefile:
+    args:
+    - kraemer-lab/vneyard
+    function: github
+    kwargs:
+      branch: main
+      path: workflows/Dengue/modules/Mugration/workflow/Snakefile
+  type: module
+mutations:
+  config:
+    namespace: mutations
+    ports:
+    - label: fasta
+      namespace: treetime
+      ref: fasta
+    - label: metadata
+      namespace: rename
+      ref: metadata
+  name: mutations
+  snakefile:
+    args:
+    - kraemer-lab/vneyard
+    function: github
+    kwargs:
+      branch: main
+      path: workflows/Dengue/modules/Mutations/workflow/Snakefile
+  type: module
+namespace: determinetargets_7
+partitionintogenotypes:
+  config:
+    namespace: partitionintogenotypes
+    params:
+      Serotypes:
+      - Dengue_1
+      - Dengue_2
+      - Dengue_3
+      - Dengue_4
+    ports:
+    - label: fasta
+      namespace: filtergenotypesdata
+      ref: fasta
+    - label: metadata
+      namespace: filtergenotypesdata
+      ref: metadata
+  name: partitionintogenotypes
+  snakefile:
+    args:
+    - kraemer-lab/vneyard
+    function: github
+    kwargs:
+      branch: main
+      path: workflows/Dengue/modules/PartitionIntoGenotypes/workflow/Snakefile
+  type: module
+plotviralmovements:
+  config:
+    namespace: plotviralmovements
+    ports:
+    - label: In
+      namespace: extracttreeeventscountry
+      ref: in
+  name: plotviralmovements
+  snakefile:
+    args:
+    - kraemer-lab/vneyard
+    function: github
+    kwargs:
+      branch: main
+      path: workflows/Dengue/modules/PlotViralMovements/workflow/Snakefile
+  type: module
+plotviralmovements_1:
+  config:
+    namespace: plotviralmovements_1
+    ports:
+    - label: In
+      namespace: extracttreeeventsstate
+      ref: in
+  name: plotviralmovements_1
+  snakefile:
+    args:
+    - kraemer-lab/vneyard
+    function: github
+    kwargs:
+      branch: main
+      path: workflows/Dengue/modules/PlotViralMovements/workflow/Snakefile
+  type: module
+ports:
+- label: target (determinetargets_7)
+  mapping:
+  - module: determinetargets_7
+    port: target
+  namespace: HyphySlac
+  ref: determinetargets_7$target
+- label: in (treebuildingnostopcodons)
+  mapping:
+  - module: treebuildingnostopcodons
+    port: in
+  namespace: HyphyCln
+  ref: treebuildingnostopcodons$in
+- label: fasta (hyphyremovedupes)
+  mapping:
+  - module: hyphyremovedupes
+    port: fasta
+  namespace: HyphyCln
+  ref: hyphyremovedupes$fasta
+- label: tree (hyphyremovedupes)
+  mapping:
+  - module: hyphyremovedupes
+    port: tree
+  namespace: TreeBuildingNoStopCodons
+  ref: hyphyremovedupes$tree
+- label: fasta (removedupesfrommetadata)
+  mapping:
+  - module: removedupesfrommetadata
+    port: fasta
+  namespace: HyphyCln
+  ref: removedupesfrommetadata$fasta
+- label: in (filterafricastrains)
+  mapping:
+  - module: filterafricastrains
+    port: in
+  namespace: RemoveDupesFromMetaData
+  ref: filterafricastrains$in
+- label: tree (hyphylabeltrees)
+  mapping:
+  - module: hyphylabeltrees
+    port: tree
+  namespace: HyphyRemoveDupes
+  ref: hyphylabeltrees$tree
+- label: strains (hyphylabeltrees)
+  mapping:
+  - module: hyphylabeltrees
+    port: strains
+  namespace: FilterAfricaStrains
+  ref: hyphylabeltrees$strains
+- label: in (hyphymeme)
+  mapping:
+  - module: hyphymeme
+    port: in
+  namespace: HyphyLabelTrees
+  ref: hyphymeme$in
+- label: in (hyphyfubar)
+  mapping:
+  - module: hyphyfubar
+    port: in
+  namespace: HyphyLabelTrees
+  ref: hyphyfubar$in
+- label: in (hyphyslac)
+  mapping:
+  - module: hyphyslac
+    port: in
+  namespace: HyphyLabelTrees
+  ref: hyphyslac$in
+- label: in (hyphyfel)
+  mapping:
+  - module: hyphyfel
+    port: in
+  namespace: HyphyLabelTrees
+  ref: hyphyfel$in
+- label: in (hyphycontrastfel)
+  mapping:
+  - module: hyphycontrastfel
+    port: in
+  namespace: HyphyLabelTrees
+  ref: hyphycontrastfel$in
+- label: cleaned (combinetaxaandcleanedtrees)
+  mapping:
+  - module: combinetaxaandcleanedtrees
+    port: cleaned
+  namespace: RemoveAnnotations
+  ref: combinetaxaandcleanedtrees$cleaned
+- label: in (fillbeastxmlcustom)
+  mapping:
+  - module: fillbeastxmlcustom
+    port: in
+  namespace: CombineTaxaAndCleanedTrees
+  ref: fillbeastxmlcustom$in
+- label: in (runbeast)
+  mapping:
+  - module: runbeast
+    port: in
+  namespace: FillBeastXMLCustom
+  ref: runbeast$in
+- label: target (determinetargets_5)
+  mapping:
+  - module: determinetargets_5
+    port: target
+  namespace: HyphyMeme
+  ref: determinetargets_5$target
+- label: target (determinetargets_6)
+  mapping:
+  - module: determinetargets_6
+    port: target
+  namespace: HyphyFubar
+  ref: determinetargets_6$target
+- label: target (determinetargets_8)
+  mapping:
+  - module: determinetargets_8
+    port: target
+  namespace: HyphyFel
+  ref: determinetargets_8$target
+- label: target (determinetargets_9)
+  mapping:
+  - module: determinetargets_9
+    port: target
+  namespace: HyphyContrastFel
+  ref: determinetargets_9$target
+- label: target (determinetargets_10)
+  mapping:
+  - module: determinetargets_10
+    port: target
+  namespace: RunBeast
+  ref: determinetargets_10$target
+processdenguedata:
+  config:
+    namespace: processdenguedata
+    ports:
+    - label: In
+      namespace: mergegenbankgisaid
+      ref: in
+  name: processdenguedata
+  snakefile:
+    args:
+    - kraemer-lab/vneyard
+    function: github
+    kwargs:
+      branch: main
+      path: workflows/Dengue/modules/ProcessDengueData/workflow/Snakefile
+  type: module
+processgenbankdata:
+  config:
+    namespace: processgenbankdata
+    params:
+      End date: '2023-12-24T00:00:00.000Z'
+      Host: Homo sapiens
+      Start date: '2000-01-01T00:00:00.000Z'
+    ports:
+    - label: In
+      namespace: downloadgenbank
+      ref: in
+  name: processgenbankdata
+  snakefile:
+    args:
+    - kraemer-lab/vneyard
+    function: github
+    kwargs:
+      branch: main
+      path: workflows/Dengue/modules/ProcessGenbankData/workflow/Snakefile
+  type: module
+processgisaiddata:
+  config:
+    namespace: processgisaiddata
+    params:
+      End date: '2024-11-18'
+      Filename: gisaid_arbo_2024_11_18_17
+      Host: Human
+      Start date: '2000-01-01'
+    ports:
+    - label: In
+      namespace: linklocalfolder
+      ref: in
+  name: processgisaiddata
+  snakefile:
+    args:
+    - kraemer-lab/vneyard
+    function: github
+    kwargs:
+      branch: main
+      path: workflows/Dengue/modules/ProcessGisaidData/workflow/Snakefile
+  type: module
+prunetree:
+  config:
+    namespace: prunetree
+    ports:
+    - label: In
+      namespace: treetimebioconda
+      ref: in
+  name: prunetree
+  snakefile:
+    args:
+    - kraemer-lab/vneyard
+    function: github
+    kwargs:
+      branch: main
+      path: workflows/Dengue/modules/PruneTree/workflow/Snakefile
+  type: module
+reformatting:
+  config:
+    namespace: reformatting
+    ports:
+    - label: In
+      namespace: subsamplelineages
+      ref: in
+  name: reformatting
+  snakefile:
+    args:
+    - kraemer-lab/vneyard
+    function: github
+    kwargs:
+      branch: main
+      path: workflows/Dengue/modules/Reformatting/workflow/Snakefile
+  type: module
+removeannotations:
+  config:
+    namespace: removeannotations
+    ports:
+    - label: in
+      namespace: treetimebioconda
+      ref: in
+  name: RemoveAnnotations
+  snakefile:
+    args:
+    - kraemer-lab/vneyard
+    function: github
+    kwargs:
+      branch: main
+      path: workflows/Dengue/modules/RemoveAnnotations/workflow/Snakefile
+  type: module
+removedupesfrommetadata:
+  config:
+    namespace: removedupesfrommetadata
+    ports:
+    - label: csv
+      namespace: reformatting
+      ref: csv
+    - label: fasta
+      namespace: HyphyCln
+      ref: fasta
+  name: RemoveDupesFromMetaData
+  snakefile:
+    args:
+    - kraemer-lab/vneyard
+    function: github
+    kwargs:
+      branch: main
+      path: workflows/Dengue/modules/RemoveDupesFromMetaData/workflow/Snakefile
+  type: module
+removeincongruentsequences:
+  config:
+    namespace: removeincongruentsequences
+    ports:
+    - label: fasta
+      namespace: prunetree
+      ref: fasta
+    - label: metadata
+      namespace: reformatting
+      ref: metadata
+  name: removeincongruentsequences
+  snakefile:
+    args:
+    - kraemer-lab/vneyard
+    function: github
+    kwargs:
+      branch: main
+      path: workflows/Dengue/modules/RemoveIncongruentSequences/workflow/Snakefile
+  type: module
+rename:
+  config:
+    namespace: rename
+    params:
+      Input Pattern: '{sample}.fasta'
+      Output Pattern: subsampled_{sample}.fasta
+      Triggers:
+        Parse inputs: mark
+    ports:
+    - label: In
+      namespace: partitionintogenotypes
+      ref: in
+  name: rename
+  snakefile:
+    args:
+    - kraemer-lab/vneyard
+    function: github
+    kwargs:
+      branch: main
+      path: workflows/Dengue/modules/Rename/workflow/Snakefile
+  type: module
+runbeast:
+  config:
+    namespace: runbeast
+    params:
+      Chain length: 10000000
+    ports:
+    - label: in
+      namespace: FillBeastXMLCustom
+      ref: in
+  name: RunBeast
+  snakefile:
+    args:
+    - kraemer-lab/vneyard
+    function: github
+    kwargs:
+      branch: main
+      path: workflows/Dengue/modules/RunBeast/workflow/Snakefile
+  type: module
+sequencealignment:
+  config:
+    namespace: sequencealignment
+    ports:
+    - label: In
+      namespace: processdenguedata
+      ref: in
+  name: sequencealignment
+  snakefile:
+    args:
+    - kraemer-lab/vneyard
+    function: github
+    kwargs:
+      branch: main
+      path: workflows/Dengue/modules/SequenceAlignment/workflow/Snakefile
+  type: module
+splitgenomeandqc:
+  config:
+    namespace: splitgenomeandqc
+    params:
+      EG Threshold: '0.31'
+      Serotypes:
+      - Dengue_1
+      - Dengue_2
+      - Dengue_3
+      - Dengue_4
+      WG Threshold: '0.31'
+    ports:
+    - label: In
+      namespace: sequencealignment
+      ref: in
+  name: splitgenomeandqc
+  snakefile:
+    args:
+    - kraemer-lab/vneyard
+    function: github
+    kwargs:
+      branch: main
+      path: workflows/Dengue/modules/SplitGenomeAndQC/workflow/Snakefile
+  type: module
+subsamplelineages:
+  config:
+    namespace: subsamplelineages
+    params:
+      Number sequences (background): 0.3
+      Number sequences (local): all
+      Sampling method: Even
+      Time interval: Year
+      Triggers:
+        Parse inputs: mark
+    ports:
+    - label: In
+      namespace: partitionintogenotypes
+      ref: in
+  name: subsamplelineages
+  snakefile:
+    args:
+    - kraemer-lab/vneyard
+    function: github
+    kwargs:
+      branch: main
+      path: workflows/Dengue/modules/SubsampleLineages/workflow/Snakefile
+  type: module
+translation:
+  config:
+    namespace: translation
+    ports:
+    - label: treetime
+      namespace: treetime
+      ref: treetime
+    - label: mutations
+      namespace: mutations
+      ref: mutations
+  name: translation
+  snakefile:
+    args:
+    - kraemer-lab/vneyard
+    function: github
+    kwargs:
+      branch: main
+      path: workflows/Dengue/modules/Translation/workflow/Snakefile
+  type: module
+treebuilding:
+  config:
+    namespace: treebuilding
+    params:
+      Command line arguments: ''
+      Model: HKY+F+I
+    ports:
+    - label: In
+      namespace: reformatting
+      ref: in
+  name: treebuilding
+  snakefile:
+    args:
+    - kraemer-lab/vneyard
+    function: github
+    kwargs:
+      branch: main
+      path: workflows/Dengue/modules/TreeBuilding/workflow/Snakefile
+  type: module
+treebuildingnostopcodons:
+  config:
+    namespace: treebuildingnostopcodons
+    params:
+      model: HKY+F+I
+    ports:
+    - label: aln
+      namespace: HyphyCln
+      ref: in
+  name: TreeBuildingNoStopCodons
+  snakefile:
+    args:
+    - kraemer-lab/vneyard
+    function: github
+    kwargs:
+      branch: main
+      path: workflows/Dengue/modules/TreeBuildingNoStopCodons/workflow/Snakefile
+  type: module
+treetime:
+  config:
+    namespace: treetime
+    params:
+      Clock filter IQD: 3
+    ports:
+    - label: fasta
+      namespace: treebuilding
+      ref: fasta
+    - label: metadata
+      namespace: reformatting
+      ref: metadata
+  name: treetime
+  snakefile:
+    args:
+    - kraemer-lab/vneyard
+    function: github
+    kwargs:
+      branch: main
+      path: workflows/Dengue/modules/TreeTime/workflow/Snakefile
+  type: module
+treetimebioconda:
+  config:
+    namespace: treetimebioconda
+    params:
+      Clock rate: 0.0008
+      Clock rate (SD): 0.0004
+    ports:
+    - label: fasta
+      namespace: treebuilding
+      ref: fasta
+    - label: metadata
+      namespace: reformatting
+      ref: metadata
+  name: treetimebioconda
+  snakefile:
+    args:
+    - kraemer-lab/vneyard
+    function: github
+    kwargs:
+      branch: main
+      path: workflows/Dengue/modules/TreeTimeBioconda/workflow/Snakefile
+  type: module
+treetimemugrationcontinent:
+  config:
+    namespace: treetimemugrationcontinent
+    params:
+      Attribute: Continent
+    ports:
+    - label: nexus
+      namespace: prunetree
+      ref: nexus
+    - label: metadata
+      namespace: reformatting
+      ref: metadata
+  name: treetimemugrationcontinent
+  snakefile:
+    args:
+    - kraemer-lab/vneyard
+    function: github
+    kwargs:
+      branch: main
+      path: workflows/Dengue/modules/TreeTimeMugration/workflow/Snakefile
+  type: module
+treetimemugrationcountry:
+  config:
+    namespace: treetimemugrationcountry
+    params:
+      Attribute: Country
+    ports:
+    - label: nexus
+      namespace: prunetree
+      ref: nexus
+    - label: metadata
+      namespace: reformatting
+      ref: metadata
+  name: treetimemugrationcountry
+  snakefile:
+    args:
+    - kraemer-lab/vneyard
+    function: github
+    kwargs:
+      branch: main
+      path: workflows/Dengue/modules/TreeTimeMugration/workflow/Snakefile
+  type: module
+treetimemugrationstate:
+  config:
+    namespace: treetimemugrationstate
+    params:
+      Attribute: State
+    ports:
+    - label: nexus
+      namespace: prunetree
+      ref: nexus
+    - label: metadata
+      namespace: reformatting
+      ref: metadata
+  name: treetimemugrationstate
+  snakefile:
+    args:
+    - kraemer-lab/vneyard
+    function: github
+    kwargs:
+      branch: main
+      path: workflows/Dengue/modules/TreeTimeMugration/workflow/Snakefile
+  type: module
+triggermark:
+  config:
+    namespace: triggermark
+    params:
+      Trigger: mark
+    ports:
+    - label: In
+      namespace: rename
+      ref: in
+  name: triggermark
+  snakefile:
+    args:
+    - kraemer-lab/vneyard
+    function: github
+    kwargs:
+      branch: main
+      path: workflows/Dengue/modules/TriggerMark/workflow/Snakefile
+  type: module

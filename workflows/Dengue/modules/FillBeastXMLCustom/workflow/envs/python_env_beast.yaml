@@ -1,0 +1,7 @@
+name: python_env_beast
+channels:
+  - conda-forge
+dependencies:
+  - python=3.8
+  - jinja2
+  - pip

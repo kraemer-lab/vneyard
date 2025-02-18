@@ -1,0 +1,57 @@
+"""Remove duplicates with hyphy analysis
+"""
+configfile: "config/config.yaml"
+from grapevne_helper import import_grapevne
+
+grapevne = import_grapevne(workflow)
+globals().update(vars(grapevne))
+
+
+def workspace(path=None, workspace=None):
+    name = os.path.basename(output())
+    if path:
+        return os.path.join("workspace", name, path)
+    else:
+        return os.path.join("workspace", name)
+
+
+rule hyphy_remove_dupes:
+    input:
+        fasta_file = input("subsampled_{major_lineages}.fasta", "fasta"),
+        tree_file = input("subsampled_{major_lineages}.treefile", "tree"),
+        bf_file = resource("remove-duplicates.bf"),
+    output:
+        outfile = output("subsampled_{major_lineages}.fasta"),
+    params:
+        workdir = workspace("hyphy"),
+    conda:
+        env("hyphy.yaml")
+    log:
+        log("hyphy_remove_dupes_{major_lineages}.log")
+    shell:
+        """
+        # Create and navigate to the temporary work directory
+        ROOTDIR=$(pwd)
+        mkdir -p {params.workdir}
+        cp {input.fasta_file} {params.workdir}
+        cp {input.tree_file} {params.workdir}
+        cp {input.bf_file} {params.workdir}
+
+        # Ensure the target output directory exists
+        mkdir -p $(dirname {output.outfile})
+
+        # Execute the HyPhy script
+        (cd {params.workdir};
+        hyphy remove-duplicates.bf \
+            --msa $(basename {input.fasta_file}) \
+            --tree $(basename {input.tree_file}) \
+            --output $ROOTDIR/{output.outfile} \
+            ENV="DATA_FILE_PRINT_FORMAT=9" \
+        ) > {log} 2>&1
+        """
+
+rule _test:
+    input:
+        output("subsampled_Dengue_1.fasta"),
+        output("subsampled_Dengue_2.fasta"),
+        output("subsampled_Dengue_4.fasta"),

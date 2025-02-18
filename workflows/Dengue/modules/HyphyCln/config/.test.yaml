@@ -1,0 +1,5 @@
+ports:
+  - ref: in
+    label: fasta
+    namespace: in
+namespace: out

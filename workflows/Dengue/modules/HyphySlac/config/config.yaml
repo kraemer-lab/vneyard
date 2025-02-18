@@ -1,0 +1,8 @@
+ports:
+  - ref: in
+    label: in
+    namespace: in
+namespace: out
+params:
+  branches: "Foreground"
+  threads: 1

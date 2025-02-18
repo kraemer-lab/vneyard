@@ -1,0 +1,8 @@
+ports:
+  - ref: original
+    label: original
+    namespace: original
+  - ref: cleaned
+    label: cleaned
+    namespace: cleaned
+namespace: out

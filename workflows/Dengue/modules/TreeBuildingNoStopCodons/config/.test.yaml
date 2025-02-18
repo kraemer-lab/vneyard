@@ -1,0 +1,7 @@
+ports:
+  - ref: in
+    label: aln
+    namespace: in
+namespace: out
+params:
+  model: "HKY+F+I"

@@ -1,0 +1,33 @@
+"""Tree-building (no stop codons)
+"""
+configfile: "config/config.yaml"
+from grapevne_helper import import_grapevne
+
+grapevne = import_grapevne(workflow)
+globals().update(vars(grapevne))
+
+
+rule treebuilding_no_stop_condons:
+    input:
+        aln = input("subsampled_{major_lineages}.fasta"),
+    output:
+        tree = output("subsampled_{major_lineages}.treefile"),
+    params:
+        prefix = output("subsampled_{major_lineages}"),
+        model = param("model"),
+    conda:
+        env("iqtree.yaml")
+    log:
+        log("iqtree_{major_lineages}_hyphy.log")
+    message:
+        "Inferring maximum likelihood phylogenetic trees for major_lineages {wildcards.major_lineages} using IQ-TREE."
+    shell:
+        """
+        iqtree2 -s {input.aln} -m {params.model} -pre {params.prefix} -redo > {log} 2>&1
+        """
+
+rule _test:
+    input:
+        output("subsampled_Dengue_1.treefile"),
+        output("subsampled_Dengue_2.treefile"),
+        output("subsampled_Dengue_4.treefile"),

@@ -1,0 +1,41 @@
+"""HyPhy selection pressure w/ FUBAR
+"""
+configfile: "config/config.yaml"
+from grapevne_helper import import_grapevne
+
+grapevne = import_grapevne(workflow)
+globals().update(vars(grapevne))
+
+
+rule hyphy_fubar:
+    input:
+        alignment_file = input("subsampled_{major_lineages}.fasta"),
+    output:
+        outfile = output("fubar_{major_lineages}.json"),
+        cache = output("fubar_{major_lineages}.cache"),
+    threads:
+        params("threads")
+    conda:
+        env("hyphy.yaml")
+    log:
+        log("hyphy_fubar_{major_lineages}.log")
+    shell:
+        """
+        mpirun -np {threads} \
+            HYPHYMPI fubar \
+            --alignment {input.alignment_file} \
+            > {log} 2>&1
+        
+        mv {input.alignment_file}.FUBAR.json {output.outfile}
+        mv {input.alignment_file}.FUBAR.cache {output.cache}
+        """
+
+
+rule _test:
+    input:
+        output("fubar_Dengue_1.json"),
+        output("fubar_Dengue_1.cache"),
+        output("fubar_Dengue_2.json"),
+        output("fubar_Dengue_2.cache"),
+        output("fubar_Dengue_4.json"),
+        output("fubar_Dengue_4.cache"),

@@ -1,0 +1,53 @@
+"""Thorney BEAST
+"""
+configfile: "config/config.yaml"
+from grapevne_helper import import_grapevne
+
+grapevne = import_grapevne(workflow)
+globals().update(vars(grapevne))
+
+def workspace(path=None, workspace=None):
+    name = os.path.basename(output())
+    if path:
+        return os.path.join("workspace", name, path)
+    else:
+        return os.path.join("workspace", name)
+
+
+rule run_beast:
+    input:
+        xml = input("{major_lineages}.xml"),
+    output:
+        log = output("lineage_{major_lineages}.log"),
+        trees = output("lineage_{major_lineages}.trees"),
+    params:
+        beast_jar = resource("beast.jar"),
+        workdir = workspace(),
+    conda:
+        env("beast_env.yml")
+    log:
+        log("{major_lineages}_run.log")
+    shell:
+        """
+        ROOT_DIR=$(pwd)
+        mkdir -p {params.workdir}
+        pushd {params.workdir}
+        CONDA_PREFIX=$(conda info --base)/envs/beast_env java \
+            -Djava.library.path=$CONDA_PREFIX/lib \
+            -jar {params.beast_jar} \
+            -overwrite \
+            ${{ROOT_DIR}}/{input.xml} > ${{ROOT_DIR}}/{log} 2>&1
+        popd
+        mv {params.workdir}/lineage_{wildcards.major_lineages}.log {output.log}
+        mv {params.workdir}/lineage_{wildcards.major_lineages}.trees {output.trees}
+        """
+
+
+rule _test:
+    input:
+        output("lineage_Dengue_1.log"),
+        output("lineage_Dengue_1.trees"),
+        output("lineage_Dengue_2.log"),
+        output("lineage_Dengue_2.trees"),
+        output("lineage_Dengue_4.log"),
+        output("lineage_Dengue_4.trees"),

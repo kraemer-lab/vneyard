@@ -7,8 +7,6 @@ from grapevne_helper import import_grapevne
 grapevne = import_grapevne(workflow)
 globals().update(vars(grapevne))
 
-outdir = config["output_namespace"]
-
 
 rule process_dengue_data:
     input:

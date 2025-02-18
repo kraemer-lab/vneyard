@@ -1,0 +1,38 @@
+"""HyPhy selection pressure w/ MEME
+"""
+configfile: "config/config.yaml"
+from grapevne_helper import import_grapevne
+
+grapevne = import_grapevne(workflow)
+globals().update(vars(grapevne))
+
+
+rule hyphy_meme:
+    input:
+        alignment_file = input("subsampled_{major_lineages}.fasta"),
+    output:
+        outfile = output("meme_{major_lineages}.json"),
+    params:
+        branches = params("Branches"),
+    threads:
+        params("threads"),
+    conda:
+        env("hyphy.yaml")
+    log:
+        log("hyphy_meme_{major_lineages}.log")
+    shell:
+        """
+        mpirun -np {threads} \
+            HYPHYMPI meme \
+            --alignment {input.alignment_file} \
+            --branches {params.branches} \
+            --output {output.outfile} \
+            > {log} 2>&1
+        """
+
+
+rule _test:
+    input:
+        output("meme_Dengue_1.json"),
+        output("meme_Dengue_2.json"),
+        output("meme_Dengue_4.json"),

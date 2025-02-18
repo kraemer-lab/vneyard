@@ -1,0 +1,35 @@
+"""HyPhy selection pressure w/ FEL
+"""
+configfile: "config/config.yaml"
+from grapevne_helper import import_grapevne
+
+grapevne = import_grapevne(workflow)
+globals().update(vars(grapevne))
+
+
+rule hyphy_fel:
+    input:
+        alignment_file = input("subsampled_{major_lineages}.fasta"),
+    output:
+        outfile = output("fel_{major_lineages}.json"),
+    threads:
+        params("threads"),
+    conda:
+        env("hyphy.yaml")
+    log:
+        log("hyphy_fel_{major_lineages}.log")
+    shell:
+        """
+        mpirun -np {threads} \
+            HYPHYMPI fel \
+            --alignment {input.alignment_file} \
+            --output {output.outfile} \
+            > {log} 2>&1
+        """
+
+
+rule _test:
+    input:
+        output("fel_Dengue_1.json"),
+        output("fel_Dengue_2.json"),
+        output("fel_Dengue_4.json"),
