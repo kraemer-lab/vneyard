@@ -1,0 +1,37 @@
+"""Filter strains from Africa only
+"""
+configfile: "config/config.yaml"
+from grapevne_helper import import_grapevne
+
+grapevne = import_grapevne(workflow)
+globals().update(vars(grapevne))
+
+
+# Filter strains from africa only
+rule filter_africa_strains:
+    input:
+        script = script("filter_country_strains.R"),
+        csv_file = input("subsampled_{major_lineages}_infoTbl.csv"),
+    output:
+        outfile = output("subsampled_{major_lineages}.txt"),
+    params:
+        Continent = params("Continent")
+    conda:
+        env("r_env_hyphy.yaml")
+    log:
+        log("filter_africa_strains_{major_lineages}.log")
+    shell:
+        """
+        Rscript {input.script} \
+            --csv {input.csv_file} \
+            --Continent {params.Continent} \
+            --outfile {output.outfile} \
+            > {log} 2>&1
+        """
+
+
+rule _test:
+    input:
+        output("subsampled_Dengue_1.txt"),
+        output("subsampled_Dengue_2.txt"),
+        output("subsampled_Dengue_4.txt"),

@@ -1,0 +1,36 @@
+"""Remove annotations from a tree file
+"""
+configfile: "config/config.yaml"
+from grapevne_helper import import_grapevne
+
+grapevne = import_grapevne(workflow)
+globals().update(vars(grapevne))
+
+
+rule combine_taxa_and_cleaned_trees:
+    input:
+        original=input("timetree_{major_lineages}/timetree.nexus", "original"),
+        cleaned=input("timetree_{major_lineages}/timetree.nexus", "cleaned"),
+    output:
+        combined=output("timetree_{major_lineages}/timetree.nexus"),
+    shell:
+        """
+        # Remove old Trees block
+        sed '/^begin trees;/I, /^end;/I d' {input.original} > tmp.nexus
+
+        # Insert new Trees block
+        echo "Begin Trees;" >> tmp.nexus
+        echo -n "Tree tree1= " >> tmp.nexus
+        cat {input.cleaned} >> tmp.nexus
+        echo ";" >> tmp.nexus
+        echo "End;" >> tmp.nexus
+
+        mv tmp.nexus {output.combined}
+        """
+
+
+rule _test:
+    input:
+        output("timetree_Dengue_1/timetree.nexus"),
+        output("timetree_Dengue_2/timetree.nexus"),
+        output("timetree_Dengue_4/timetree.nexus"),

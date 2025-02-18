@@ -1,0 +1,38 @@
+"""HyPhy selection pressure w/ Contrast-FEL
+"""
+configfile: "config/config.yaml"
+from grapevne_helper import import_grapevne
+
+grapevne = import_grapevne(workflow)
+globals().update(vars(grapevne))
+
+
+rule hyphy_contrast_fel:
+    input:
+        alignment_file = input("subsampled_{major_lineages}.fasta"),
+    output:
+        outfile = output("contrast_fel_{major_lineages}.json"),
+    params:
+        branch_set = params("Branch Set"),
+    threads:
+        params("threads")
+    conda:
+        env("hyphy.yaml")
+    log:
+        log("hyphy_contrast_fel_{major_lineages}.log")
+    shell:
+        """
+        mpirun -np {threads} \
+            HYPHYMPI contrast-fel \
+            --alignment {input.alignment_file} \
+            --branch-set {params.branch_set} \
+            --output {output.outfile} \
+            > {log} 2>&1
+        """
+
+
+rule _test:
+    input:
+        output("contrast_fel_Dengue_1.json"),
+        output("contrast_fel_Dengue_2.json"),
+        output("contrast_fel_Dengue_4.json"),

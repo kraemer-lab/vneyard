@@ -1,0 +1,10 @@
+ports:
+  - ref: tree
+    label: tree
+    namespace: tree
+  - ref: strains
+    label: strains
+    namespace: strains
+namespace: out
+params:
+  Continent: Africa

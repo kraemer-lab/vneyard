@@ -1,0 +1,61 @@
+"""Label tree with Hyphy analysis
+"""
+configfile: "config/config.yaml"
+from grapevne_helper import import_grapevne
+
+grapevne = import_grapevne(workflow)
+globals().update(vars(grapevne))
+
+
+def workspace(path=None, workspace=None):
+    name = os.path.basename(output())
+    if path:
+        return os.path.join("workspace", name, path)
+    else:
+        return os.path.join("workspace", name)
+
+
+rule hyphy_label_trees:
+    input:
+        treefile = input("subsampled_{major_lineages}.fasta", "tree"),
+        filtered_strains = input("subsampled_{major_lineages}.txt", "strains"),
+        labeltree = resource("label-tree.bf"),
+    output:
+        labelled_tree = output("subsampled_{major_lineages}.fasta"),
+    params:
+        outdir = output(),
+        workdir = workspace(),
+        fasta_dat = workspace("fasta_seq_{major_lineages}.temp"),
+        temp_file = workspace("tree_{major_lineages}.temp"),
+    conda:
+        env("hyphy.yaml")
+    log:
+        log("hyphy_label_trees_{major_lineages}.log")
+    shell:
+        """
+        mkdir -p {params.workdir}
+        mkdir -p {params.outdir}
+        cp {input.filtered_strains} {params.workdir}
+        cp {input.labeltree} {params.workdir}
+        cat {input.treefile} | sed '$d' > {params.fasta_dat}
+        tail -1 {input.treefile} > {params.workdir}/$(basename {input.treefile})
+        
+        (pushd {params.workdir};
+        hyphy label-tree.bf \
+            --tree $(basename {input.treefile}) \
+            --list $(basename {input.filtered_strains}) \
+            --output $(basename {params.temp_file}) \
+            --internal-nodes None;
+        echo "Finished labelling. Adding labelled nwk to fasta.";
+        popd;
+        cat {params.fasta_dat} > {output.labelled_tree};
+        cat {params.temp_file} >> {output.labelled_tree};
+        ) > {log} 2>&1
+        """
+
+
+rule _test:
+    input:
+        output("subsampled_Dengue_1.fasta"),
+        output("subsampled_Dengue_2.fasta"),
+        output("subsampled_Dengue_4.fasta"),

@@ -1,0 +1,34 @@
+"""Filter to remove duplicates from metadata
+"""
+configfile: "config/config.yaml"
+from grapevne_helper import import_grapevne
+
+grapevne = import_grapevne(workflow)
+globals().update(vars(grapevne))
+
+
+rule remove_dupes_from_metadata:
+    input:
+        script = script("filter_hyphy_metadata.R"),
+        csv_file = input("subsampled_{major_lineages}_infoTbl.csv", "csv"),
+        fasta = input("subsampled_{major_lineages}.fasta", "fasta"),
+    output:
+        outfile = output("subsampled_{major_lineages}_infoTbl.csv"),
+    conda:
+        env("r_env_hyphy.yaml")
+    log:
+        log("hyphy_metadata_{major_lineages}.log")
+    shell:
+        """
+        Rscript {input.script} \
+            --csv {input.csv_file} \
+            --fasta {input.fasta} \
+            --outfile {output.outfile} \
+            > {log} 2>&1
+        """
+
+rule _test:
+    input:
+        output("subsampled_Dengue_1_infoTbl.csv"),
+        output("subsampled_Dengue_2_infoTbl.csv"),
+        output("subsampled_Dengue_4_infoTbl.csv"),

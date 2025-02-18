@@ -1,0 +1,34 @@
+"""
+"""
+configfile: "config/config.yaml"
+from grapevne_helper import import_grapevne
+
+grapevne = import_grapevne(workflow)
+globals().update(vars(grapevne))
+
+
+rule hyphy_cln:
+    input:
+        fasta_file = input("subsampled_{major_lineages}.fasta"),
+    output:
+        cleaned_fasta = output("subsampled_{major_lineages}.fasta"),
+    conda:
+        env("hyphy.yaml")
+    log:
+        log("hyphy_cln_{major_lineages}.log")
+    shell:
+        """
+        touch {output.cleaned_fasta}
+        hyphy cln \
+            Universal \
+            {input.fasta_file} \
+            "Yes/Yes" \
+            {output.cleaned_fasta} \
+            > {log} 2>&1
+        """
+
+rule _test:
+    input:
+        output("subsampled_Dengue_1.fasta"),
+        output("subsampled_Dengue_2.fasta"),
+        output("subsampled_Dengue_4.fasta"),

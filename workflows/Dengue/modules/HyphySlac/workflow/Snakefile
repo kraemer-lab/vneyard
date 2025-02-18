@@ -1,0 +1,35 @@
+"""HyPhy selection pressure w/ SLAC
+"""
+configfile: "config/config.yaml"
+from grapevne_helper import import_grapevne
+
+grapevne = import_grapevne(workflow)
+globals().update(vars(grapevne))
+
+
+rule hyphy_slac:
+    input:
+        alignment_file = input("subsampled_{major_lineages}.fasta"),
+    output:
+        outfile = output("slac_{major_lineages}.json"),
+    threads:
+        params("threads")
+    conda:
+        env("hyphy.yaml")
+    log:
+        log("hyphy_slac_{major_lineages}.log")
+    shell:
+        """
+        mpirun -np {threads} \
+            HYPHYMPI slac \
+            --alignment {input.alignment_file} \
+            --output {output.outfile} \
+            > {log} 2>&1
+        """
+
+
+rule _test:
+    input:
+        output("slac_Dengue_1.json"),
+        output("slac_Dengue_2.json"),
+        output("slac_Dengue_4.json"),

@@ -1,0 +1,7 @@
+ports:
+  - ref: in
+    label: in
+    namespace: in
+namespace: out
+params:
+  Continent: Africa

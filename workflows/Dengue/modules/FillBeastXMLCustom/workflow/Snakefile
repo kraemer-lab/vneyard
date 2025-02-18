@@ -1,0 +1,40 @@
+"""Generates a BEAST-compatible XML file with a completely variable name.
+"""
+configfile: "config/config.yaml"
+from grapevne_helper import import_grapevne
+
+grapevne = import_grapevne(workflow)
+globals().update(vars(grapevne))
+
+
+rule fill_beast_xml_custom:
+    input:
+        script = script("xml_parser.py"),
+        nexus = input("timetree_{major_lineages}/timetree.nexus"),
+        template = resource("template.j2"),
+    output:
+        xml = output("{major_lineages}.xml"),
+    params:
+        chain_length = params("Chain length"),
+        output_stem = "lineage_{major_lineages}",
+    conda:
+        env("python_env_beast.yaml"),
+    log:
+        log("fill_beast_{major_lineages}.log")
+    shell:
+        """
+        python3 {input.script} \
+            -n {input.nexus} \
+            -o {params.output_stem} \
+            -c {params.chain_length} \
+            -f {output.xml} \
+            -p {input.template} \
+            > {log} 2>&1
+        """
+
+
+rule _test:
+    input:
+        output("Dengue_1.xml"),
+        output("Dengue_2.xml"),
+        output("Dengue_4.xml"),
