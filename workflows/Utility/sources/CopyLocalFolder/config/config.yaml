@@ -1,4 +1,4 @@
-input_namespace: null
-output_namespace: "out"
+ports: []
+namespace: "out"
 params:
   folder: "<Full path to local file>"

@@ -1,0 +1,4 @@
+ports: []
+namespace: "out"
+params:
+  file: results/in/test.file

@@ -8,23 +8,23 @@ Params:
     file (string): Path to file to copy
 """
 configfile: "config/config.yaml"
+from grapevne_helper import import_grapevne
 import os
 import shutil
 
-params = config["params"]
-filepath, filename = os.path.split(os.path.abspath(params["file"]))
+grapevne = import_grapevne(workflow)
+globals().update(vars(grapevne))
+
+filepath, filename = os.path.split(os.path.abspath(params("file")))
 
 rule copy:
     input:
-        expand(
-            "{fullfile}",
-            fullfile=params["file"],
-        )
+        params("file"),
     output:
-        expand(
-            "results/{outdir}/{filename}",
-            outdir=config["output_namespace"],
-            filename=filename,
-        )
+        output(filename),
     run:
         shutil.copy(input[0], output[0])
+
+rule _test:
+    input:
+        output(filename)
