@@ -12,39 +12,23 @@ Params:
     Output image (string): Filename for the output map [.png] file
 """
 configfile: "config/config.yaml"
-from snakemake.remote import AUTO
-params = config["params"]
+from grapevne_helper import import_grapevne
+
+grapevne = import_grapevne(workflow)
+globals().update(vars(grapevne))
 
 rule target:
     input:
-        shpfile=expand(
-            "results/{indir}/{filename}",
-            indir=config["input_namespace"]["shape"],
-            filename=params["Root shape file"],
-        ),
-        rwifile=expand(
-            "results/{indir}/{filename}",
-            indir=config["input_namespace"]["rwi"],
-            filename=params["RWI file"],
-        ),
-        popfile=expand(
-            "results/{indir}/{filename}",
-            indir=config["input_namespace"]["pop"],
-            filename=params["Population file"],
-        ),
-        script=AUTO.remote(
-            srcdir("../resources/scripts/rwi_proc_and_agg.py")
-        ),
+        shpfile=input(param("Root shape file"), "shape"),
+        rwifile=input(param("RWI file"), "rwi"),
+        popfile=input(param("Population file"), "pop"),
+        script=script("rwi_proc_and_agg.py"),
     output:
-        expand(
-            "results/{outdir}/{filename}",
-            outdir=config["output_namespace"],
-            filename=params["Output image"]
-        ),
+        output(param("Output image"))
     params:
-        gid_id=params["GID ID"],
+        gid_id=param("GID ID"),
     conda:
-        "envs/conda.yaml"
+        env("conda.yaml")
     shell:
         """
         python {input.script} \

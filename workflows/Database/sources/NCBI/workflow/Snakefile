@@ -13,28 +13,25 @@ Params:
   Filename (string): Output filename ("seq.fasta")
 """
 configfile: "config/config.yaml"
-from snakemake.remote import AUTO
-params = config["params"]
+from grapevne_helper import import_grapevne
+
+grapevne = import_grapevne(workflow)
+globals().update(vars(grapevne))
+
 
 rule target:
     input:
-        script=AUTO.remote(
-            srcdir('../resources/scripts/download_fasta.R')
-        )
+        script=script("download_fasta.R"),
     output:
-        expand(
-            "results/{outdir}/{filename}",
-            outdir=config["output_namespace"],
-            filename=params["Filename"],
-        )
+        output(param("Filename")),
     params:
-        db = params["Database"],
-        id = params["ID"],
-        rettype = params["Return type"],
+        db = param("Database"),
+        id = param("ID"),
+        rettype = param("Return type"),
     log:
-        "logs/genbank.log"
+        log("genbank.log")
     conda:
-        "envs/conda.yaml"
+        env("conda.yaml")
     shell:
         """
         RScript {input.script} \
@@ -43,3 +40,7 @@ rule target:
             --rettype {params.rettype} \
             --output {output}
         """
+
+rule _test:
+    input:
+        output(param("Filename")),
