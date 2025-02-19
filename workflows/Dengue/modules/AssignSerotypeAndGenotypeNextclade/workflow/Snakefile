@@ -6,15 +6,29 @@ from grapevne_helper import import_grapevne
 grapevne = import_grapevne(workflow)
 globals().update(vars(grapevne))
 
+file_list = [
+    "genome_annotation.gff3",
+    "pathogen.json",
+    "reference.fasta",
+    "sequences.fasta",
+    "tree.json",
+]
+
 
 rule assign_serotype_and_genotype_nextclade:
     input:
-        dataset=resource("datasets/{serotype}"),
+        expand(
+            resource(
+                "datasets/{{serotype}}/{file}",
+            ),
+            file=file_list,
+        ),
         fasta=input("Unaligned_{serotype}.fasta"),
     output:
         csv=output("nextclade_output_{serotype}/nextclade.csv"),
     params:
         outdir=output("nextclade_output_{serotype}/"),
+        dataset=resource("datasets/{serotype}"),
     conda:
         env("nextstrain_all.yaml")
     log:
@@ -25,7 +39,7 @@ rule assign_serotype_and_genotype_nextclade:
         """
         mkdir -p {params.outdir}
         nextclade run \
-            --input-dataset {input.dataset} \
+            --input-dataset {params.dataset} \
             --output-all={params.outdir} \
             {input.fasta} > {log} 2>&1
         """
