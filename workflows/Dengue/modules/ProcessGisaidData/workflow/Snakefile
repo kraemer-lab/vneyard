@@ -55,6 +55,6 @@ rule process_data_GISAID:
 
 rule _test:
     input:
-        fasta_files = output("clean_metadata_and_fasta_gisaid/Unaligned_gisaid.fasta"),
-        info_tables_txt = output("clean_metadata_and_fasta_gisaid/infoTbl_gisaid.txt"),
-        info_tables_csv = output("clean_metadata_and_fasta_gisaid/infoTbl_gisaid.csv"),
+        fasta_files = output("Unaligned_gisaid.fasta"),
+        info_tables_txt = output("infoTbl_gisaid.txt"),
+        info_tables_csv = output("infoTbl_gisaid.csv"),
