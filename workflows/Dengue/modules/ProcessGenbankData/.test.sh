@@ -4,10 +4,10 @@ if [ ! -d "results" ]; then
     mkdir results
 fi
 if [ ! -d "results/in" ]; then
-    ln -s ../../../sources/AcquireData/results/out results/in
+    ln -s ../../../sources/DownloadGenbank/results/out results/in
 fi
 if [ ! -d "results/in" ]; then
-    echo "No input data found. Please run the AcquireData pipeline first."
+    echo "No input data found. Please run the DownloadGenbank pipeline first."
     exit 1
 fi
 rm -rf results/out
