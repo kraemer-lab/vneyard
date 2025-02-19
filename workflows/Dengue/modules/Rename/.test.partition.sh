@@ -5,14 +5,10 @@ if [ ! -d "results" ]; then
     mkdir results
 fi
 if [ ! -d "results/in" ]; then
-    mkdir results/in
-    touch "results/in/pre_A.fasta"
-    touch "results/in/pre_B.fasta"
-    touch "results/in/pre_C.fasta"
-    touch "results/in/mark"
+    ln -s ../../PartitionIntoGenotypes/results/out results/in
 fi
 if [ ! -d "results/in" ]; then
-    echo "Error generating input data."
+    echo "No input data found. Please run the PartitionIntoGenotypes pipeline first."
     exit 1
 fi
 rm -rf results/out

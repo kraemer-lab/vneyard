@@ -1,6 +1,7 @@
 input_namespace: in
 output_namespace: out
 params:
-  "Pattern": "*.fasta"
+  "Input Pattern": "{sample}.fasta"
+  "Output Pattern": "subsampled_{sample}.fasta"
   "Triggers":
     "Parse inputs": "mark"
