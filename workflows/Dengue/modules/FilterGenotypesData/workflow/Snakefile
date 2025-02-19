@@ -53,5 +53,5 @@ try:
                     output("Unaligned_{serotype}_infoTbl.csv"),
                     serotype=param('Serotype targets'),
                 ),
-except NameError:
+except ValueError:
     pass
