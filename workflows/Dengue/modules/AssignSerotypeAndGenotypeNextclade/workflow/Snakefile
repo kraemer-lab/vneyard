@@ -17,11 +17,11 @@ file_list = [
 
 rule assign_serotype_and_genotype_nextclade:
     input:
-        expand(
-            resource(
+        map(resource,
+            expand(
                 "datasets/{{serotype}}/{file}",
+                file=file_list,
             ),
-            file=file_list,
         ),
         fasta=input("Unaligned_{serotype}.fasta"),
     output:
