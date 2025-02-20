@@ -86,7 +86,6 @@ rule collate_output:
             file=files_in_folder,
         ),
     output:
-        directory(output()),
         touch(output("mark")),
     params:
         outdir = output(),
