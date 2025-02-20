@@ -102,10 +102,6 @@ rule translation:
     input:
         mutations=input("subsampled_{serotype}_mutations.json", "mutations"),
         time_tree=input("timetree_{serotype}.tree", "treetime"),
-        ref_genomes=lambda wc: os.path.join(
-            resource_folder,
-            f"reference_genomes/reference_{serotype_map[wc.serotype]}.gb"
-        ),
         payload = map(resource, payload_files),
     output:
         amino=output("aa_muts_{serotype}.json"),
@@ -115,6 +111,10 @@ rule translation:
         log("translations_{serotype}.log")
     params:
         genes="E",
+        ref_genomes=lambda wc: os.path.join(
+            resource_folder,
+            f"reference_genomes/reference_{serotype_map[wc.serotype]}.gb"
+        ),
     message:
         "Translate sequences"
     shell:
@@ -122,7 +122,7 @@ rule translation:
         augur translate \
             --tree {input.time_tree} \
             --ancestral-sequences {input.mutations} \
-            --reference-sequence {input.ref_genomes} \
+            --reference-sequence {params.ref_genomes} \
             --genes {params.genes} \
             --output {output.amino} \
             2>&1 | tee {log}
