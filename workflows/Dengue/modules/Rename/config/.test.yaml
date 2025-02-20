@@ -2,6 +2,6 @@ input_namespace: in
 output_namespace: out
 params:
   "Input Pattern": "pre_{sample}.fasta"
-  "Output Pattern": "{sample}.csv"
+  "Output Pattern": "{sample}.fasta"
   "Triggers":
     "Parse inputs": "mark"

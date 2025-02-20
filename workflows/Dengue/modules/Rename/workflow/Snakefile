@@ -37,10 +37,7 @@ checkpoint:
         # evaluated according to the first rule in the 'entire' workflow.
         input_mark = touch(input(f".{unique_cp_name}.mark")),
 
-def get_folder_list(wc, returnInputs=False, wrapper=None):
-    if not wrapper:
-        wrapper = lambda x: x
-
+def get_folder_list(wc):
     trigger_file = getattr(checkpoints, unique_cp_name).get().output.trigger 
     output_folder = os.path.dirname(trigger_file)
     input_mark = getattr(checkpoints, unique_cp_name).get().output.input_mark
@@ -55,43 +52,35 @@ def get_folder_list(wc, returnInputs=False, wrapper=None):
     regex_pattern = re.sub(r"\\\{(\w+)\\\}", r"(?P<\1>.+?)", regex_pattern)
 
     # Prepare results
-    matched_files = []
+    matched_file = None
     filelist = os.listdir(input_folder)
     for filename in filelist:
         match = re.match(regex_pattern, filename)
         if match:
             # Generate new filename based on the output pattern
             new_filename = output_pattern.format(**match.groupdict())
-            matched_files.append((filename, new_filename))
+            if new_filename == wc.filename:
+                matched_file = (filename, new_filename)
 
-    # Wildcard match
-    files_in = [
-        wrapper(orig)
-        for orig, mapped in matched_files
-        if mapped == wc.filename
-    ]
-    files_out = [
-        os.path.join(output_folder, mapped)
-        for orig, mapped in matched_files
-        if mapped == wc.filename
-    ]
-    if returnInputs:
-        return files_in
-    return files_out
+    if not matched_file:
+        raise NameError
+
+    orig, mapped = matched_file
+    orig_path = os.path.join(input_folder, orig)
+    mapped_path = os.path.join(output_folder, mapped)
+    Path(output_folder).mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(orig_path, mapped_path)
+    return orig_path
+    
 
 # Preserve module-specific wrapper function
 input_wrapper = input
 
 rule rename:
     input:
-        lambda wc: get_folder_list(wc, returnInputs=True, wrapper=input_wrapper),
+        get_folder_list,
     output:
         output("{filename}"),
-    params:
-        outdir = output(),
-    run:
-        Path(params.outdir).mkdir(parents=True, exist_ok=True)
-        shutil.copyfile(input[0], output[0])
 
 # Test rule
 
