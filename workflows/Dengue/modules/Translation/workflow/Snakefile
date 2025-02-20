@@ -106,9 +106,7 @@ rule translation:
             resource_folder,
             f"reference_genomes/reference_{serotype_map[wc.serotype]}.gb"
         ),
-        payload = map(resource,
-            expand("{file}", file=payload_files)
-        ),
+        payload = map(resource, payload_files),
     output:
         amino=output("aa_muts_{serotype}.json"),
     conda:
