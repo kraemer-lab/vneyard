@@ -8,8 +8,8 @@ globals().update(vars(grapevne))
 
 rule mutations:
     input:
-        aln=input("subsampled_{serotype}.fasta", "metadata"),
-        time_tree=input("timetree_{serotype}.tree", "fasta"),
+        aln=input("subsampled_{serotype}.fasta", "fasta"),
+        time_tree=input("timetree_{serotype}.tree", "metadata"),
     output:
         mutations=output("subsampled_{serotype}_mutations.json"),
     conda:

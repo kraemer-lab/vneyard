@@ -68,6 +68,31 @@ serotype_map = {
     '4I_B': 'Dengue_4',
 }
 
+payload_files = [
+    'reference_genomes/aligned_root_dengue_3.csv',
+    'reference_genomes/aligned_root_dengue_3.fasta',
+    'reference_genomes/aligned_root_denv2.csv',
+    'reference_genomes/aligned_root_denv2.fasta',
+    'reference_genomes/reference_Dengue_1_E_gene.gb',
+    'reference_genomes/reference_Dengue_1.gb',
+    'reference_genomes/reference_Dengue_2_E_gene.gb',
+    'reference_genomes/reference_Dengue_2.gb',
+    'reference_genomes/reference_Dengue_3_E_gene.gb',
+    'reference_genomes/reference_Dengue_3.gb',
+    'reference_genomes/reference_Dengue_4_E_gene.gb',
+    'reference_genomes/reference_Dengue_4.gb',
+    'reference_genomes/reference_denv1.fasta',
+    'reference_genomes/reference_denv2.fasta',
+    'reference_genomes/reference_denv3.fasta',
+    'reference_genomes/reference_denv4.fasta',
+    'reference_genomes/rooting_genotype_4_dengue3.fasta',
+    'reference_genomes/sylvatic_dengue1.csv',
+    'reference_genomes/sylvatic_dengue1.fasta',
+    'reference_genomes/sylvatic_dengue2.fasta',
+    'reference_genomes/sylvatic_dengue4.csv',
+    'reference_genomes/sylvatic_dengue4.fasta',
+]
+
 # Store a local copy of the resource folder for use in the lambda function, below.
 # Note: The resource() function will redirect to the wrong location when run within a
 #       lambda or regular function evaluated at runtime.
@@ -80,6 +105,9 @@ rule translation:
         ref_genomes=lambda wc: os.path.join(
             resource_folder,
             f"reference_genomes/reference_{serotype_map[wc.serotype]}.gb"
+        ),
+        payload = map(resource,
+            expand("{file}", file=payload_files)
         ),
     output:
         amino=output("aa_muts_{serotype}.json"),

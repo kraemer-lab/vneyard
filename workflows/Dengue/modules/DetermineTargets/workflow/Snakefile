@@ -32,7 +32,7 @@ checkpoint:
         # Places a marker in the input folder. This is required to carry the input
         # namespace into the get_folder_list() function; otherwise, input() is
         # evaluated according to the first rule in the 'entire' workflow.
-        input_mark = touch(input(".mark", "generator")),
+        input_mark = touch(input(f".{unique_cp_name}.mark", "generator")),
 
 def get_folder_list(wc):
     input_mark = getattr(checkpoints, unique_cp_name).get().output.input_mark
