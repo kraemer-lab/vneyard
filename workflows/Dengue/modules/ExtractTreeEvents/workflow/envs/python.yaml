@@ -2,9 +2,9 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - python=3.10  # Use a more compatible version originally 3.11
-  - baltic        # Add this line if 'baltic' is available on Conda
+  - python=3.10
   - pip
   - pip:
     - seaborn==0.13.2
     - argparse==1.4.0
+    - baltic==0.3.0
