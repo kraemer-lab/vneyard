@@ -17,11 +17,11 @@ def workspace(path=None, workspace=None):
 rule run_beast:
     input:
         xml = input("{major_lineages}.xml"),
+        beast_jar = resource("beast.jar"),
     output:
         log = output("lineage_{major_lineages}.log"),
         trees = output("lineage_{major_lineages}.trees"),
     params:
-        beast_jar = resource("beast.jar"),
         workdir = workspace(),
     conda:
         env("beast_env.yml")
@@ -31,23 +31,20 @@ rule run_beast:
         """
         ROOT_DIR=$(pwd)
         mkdir -p {params.workdir}
+        cp {input.beast_jar} {params.workdir}
         pushd {params.workdir}
-        CONDA_PREFIX=$(conda info --base)/envs/beast_env java \
-            -Djava.library.path=$CONDA_PREFIX/lib \
-            -jar {params.beast_jar} \
+        java \
+            -jar beast.jar \
             -overwrite \
-            ${{ROOT_DIR}}/{input.xml} > ${{ROOT_DIR}}/{log} 2>&1
+            ${{ROOT_DIR}}/{input.xml} 2>&1 | tee ${{ROOT_DIR}}/{log}
         popd
         mv {params.workdir}/lineage_{wildcards.major_lineages}.log {output.log}
         mv {params.workdir}/lineage_{wildcards.major_lineages}.trees {output.trees}
+        rm -rf {params.workdir}
         """
 
 
 rule _test:
     input:
-        output("lineage_Dengue_1.log"),
-        output("lineage_Dengue_1.trees"),
-        output("lineage_Dengue_2.log"),
-        output("lineage_Dengue_2.trees"),
-        output("lineage_Dengue_4.log"),
-        output("lineage_Dengue_4.trees"),
+        output("lineage_1I_K.log"),
+        output("lineage_1I_K.trees"),
