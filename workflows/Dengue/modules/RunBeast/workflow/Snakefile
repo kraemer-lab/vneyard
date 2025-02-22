@@ -40,7 +40,6 @@ rule run_beast:
         popd
         mv {params.workdir}/lineage_{wildcards.major_lineages}.log {output.log}
         mv {params.workdir}/lineage_{wildcards.major_lineages}.trees {output.trees}
-        rm -rf {params.workdir}
         """
 
 
