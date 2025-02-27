@@ -1,8 +1,16 @@
 # Dengue pipeline
 
-To run this pipeline load one of the following two scenes into GRAPEVNE and build the workflow. Note that, due to the size of the workflow we do not recommend running them through the `Test Build` facility, but rather build as a workflow and run from the command line using the build scripts (see [GRAPEVNE](https://github.com/kraemer-lab/GRAPEVNE) for documentation).
-- `Dengue_DTA.json` provides the mainline workflow, up to and including visualisation of the DTA analysis (see figure below)
-- `Dengue_HyPhy.json` provides the full workflow, including HyPhy components for evolutionary hypothesis testing
+To run this pipeline load one of the following two scenes into GRAPEVNE and build the workflow. 
+- `Dengue_DTA.json` provides the mainline workflow, up to and including visualisation of the DTA analysis (see figure below). This provides a much shorter pipeline that should complete within 30-60 mins.
+- `Dengue_HyPhy.json` provides the full workflow, including HyPhy components for evolutionary hypothesis testing. This will take significantly longer to run (typically overnight).
+
+You will need to set the (absolute) path to the following files, which should be retrieved from GISAID. You can do this by modifying the `folder` parameter of the `LinkLocalFolder` module, which will be visible in GRAPEVNE as one of the first modules in the workflow.
+- `gisaid_arbo_2024_11_18_17.fasta`
+- `gisaid_arbo_2024_11_18_17.tsv`
+
+Note that, due to the size of the workflow we do not recommend running them through the `Test Build` facility, but rather `Build As A Workflow` and then run using the `run.sh` scripts (see [GRAPEVNE](https://github.com/kraemer-lab/GRAPEVNE) for documentation).
+
+_Note: The pipelines must currently be run using only a single core due to rule dependencies. We are working to resolve this._
 
 ## Method
 
