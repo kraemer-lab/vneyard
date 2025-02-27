@@ -1,0 +1,4050 @@
+{
+  "nodes": [
+    {
+      "id": "n0",
+      "type": "standard",
+      "data": {
+        "color": "#44aa44",
+        "config": {
+          "name": "DownloadGenbank",
+          "type": "source",
+          "org": "Dengue",
+          "repo": {
+            "type": "github",
+            "listing_type": "DirectoryListing",
+            "url": "kraemer-lab/vneyard"
+          },
+          "config": {
+            "snakefile": {
+              "function": "github",
+              "args": [
+                "kraemer-lab/vneyard"
+              ],
+              "kwargs": {
+                "path": "workflows/Dengue/sources/DownloadGenbank/workflow/Snakefile",
+                "commit": "1d833acb2586f17518d2f73d5fbcaf1400a60a52"
+              }
+            },
+            "config": {
+              "params": {
+                "Sequence": "virus genome taxon \"Dengue Virus\"",
+                "Data format": "virus-genome",
+                "Date": "01/01/2010",
+                "Command line arguments": []
+              },
+              "namespace": "out",
+              "ports": []
+            },
+            "docstring": "Acquisition of Genomic Data and Metadata from GenBank\n\nGenBank is the NIH genetic sequence database, an annotated collection of all publicly available DNA sequences (https://www.ncbi.nlm.nih.gov/genbank/).\n\nParams:\n    Sequence (str): The taxon of the virus genome to be acquired\n    Data format (str): The format of the data to be acquired\n    Date (str): The date after which the data was released (e.g. '01/01/2010')\n    Command line arguments (list): Additional command line arguments to be passed to the NCBI datasets command"
+          }
+        }
+      },
+      "position": {
+        "x": 20,
+        "y": 630
+      },
+      "width": 135,
+      "height": 44,
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "n1",
+      "type": "standard",
+      "data": {
+        "color": "#44aa44",
+        "config": {
+          "name": "LinkLocalFolder",
+          "type": "source",
+          "org": "Utility",
+          "repo": {
+            "type": "github",
+            "listing_type": "DirectoryListing",
+            "url": "kraemer-lab/vneyard"
+          },
+          "config": {
+            "snakefile": {
+              "function": "github",
+              "args": [
+                "kraemer-lab/vneyard"
+              ],
+              "kwargs": {
+                "path": "workflows/Utility/sources/LinkLocalFolder/workflow/Snakefile",
+                "commit": "1d833acb2586f17518d2f73d5fbcaf1400a60a52"
+              }
+            },
+            "config": {
+              "params": {
+                "folder": "/data",
+                ":folder": {
+                  "type": "Folder"
+                }
+              },
+              "namespace": "out",
+              "ports": []
+            },
+            "docstring": "Create a link to a local folder, making that folder available to the workflow\n\nLink a local folder (and sub-folders) and provides the linked folder as output.\n\nTags: utility, copy, files, folders\n\nParams:\n    folder (string): Path to folder to copy"
+          }
+        }
+      },
+      "position": {
+        "x": 20,
+        "y": 710
+      },
+      "width": 120,
+      "height": 44,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 195,
+        "y": 240
+      },
+      "dragging": false
+    },
+    {
+      "id": "n2",
+      "type": "standard",
+      "data": {
+        "color": "#006daa",
+        "config": {
+          "name": "ProcessGisaidData",
+          "type": "module",
+          "org": "Dengue",
+          "repo": {
+            "type": "github",
+            "listing_type": "DirectoryListing",
+            "url": "kraemer-lab/vneyard"
+          },
+          "config": {
+            "snakefile": {
+              "function": "github",
+              "args": [
+                "kraemer-lab/vneyard"
+              ],
+              "kwargs": {
+                "path": "workflows/Dengue/modules/ProcessGisaidData/workflow/Snakefile",
+                "commit": "1d833acb2586f17518d2f73d5fbcaf1400a60a52"
+              }
+            },
+            "config": {
+              "params": {
+                "Filename": "gisaid_arbo_2024_11_18_17",
+                "Start date": "2000-01-01",
+                "End date": "2024-11-18",
+                "Host": "Human"
+              },
+              "namespace": "out",
+              "ports": [
+                {
+                  "ref": "in",
+                  "label": "In",
+                  "namespace": "in"
+                }
+              ]
+            },
+            "docstring": "Process data from GISAID\n\nParams:\n"
+          }
+        }
+      },
+      "position": {
+        "x": 220,
+        "y": 710
+      },
+      "width": 137,
+      "height": 52,
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "n3",
+      "type": "standard",
+      "data": {
+        "color": "#006daa",
+        "config": {
+          "name": "ProcessDengueData",
+          "type": "module",
+          "org": "Dengue",
+          "repo": {
+            "type": "github",
+            "listing_type": "DirectoryListing",
+            "url": "kraemer-lab/vneyard"
+          },
+          "config": {
+            "snakefile": {
+              "function": "github",
+              "args": [
+                "kraemer-lab/vneyard"
+              ],
+              "kwargs": {
+                "path": "workflows/Dengue/modules/ProcessDengueData/workflow/Snakefile",
+                "commit": "1d833acb2586f17518d2f73d5fbcaf1400a60a52"
+              }
+            },
+            "config": {
+              "namespace": "out",
+              "ports": [
+                {
+                  "ref": "in",
+                  "label": "In",
+                  "namespace": "in"
+                }
+              ]
+            },
+            "docstring": "Split input data into Dengue serotypes, add serotypes to sequence name and generate\nsequence specific metadata."
+          }
+        }
+      },
+      "position": {
+        "x": 620,
+        "y": 670
+      },
+      "width": 144,
+      "height": 52,
+      "selected": false,
+      "dragging": false,
+      "positionAbsolute": {
+        "x": 720,
+        "y": 180
+      }
+    },
+    {
+      "id": "n4",
+      "type": "standard",
+      "data": {
+        "color": "#006daa",
+        "config": {
+          "name": "MergeGenbankGISAID",
+          "type": "module",
+          "org": "Dengue",
+          "repo": {
+            "type": "github",
+            "listing_type": "DirectoryListing",
+            "url": "kraemer-lab/vneyard"
+          },
+          "config": {
+            "snakefile": {
+              "function": "github",
+              "args": [
+                "kraemer-lab/vneyard"
+              ],
+              "kwargs": {
+                "path": "workflows/Dengue/modules/MergeGenbankGISAID/workflow/Snakefile",
+                "commit": "1d833acb2586f17518d2f73d5fbcaf1400a60a52"
+              }
+            },
+            "config": {
+              "namespace": "out",
+              "ports": [
+                {
+                  "ref": "genbank",
+                  "label": "genbank",
+                  "namespace": "genbank"
+                },
+                {
+                  "ref": "gisaid",
+                  "label": "gisaid",
+                  "namespace": "gisaid"
+                }
+              ]
+            },
+            "docstring": "Merge GenBank and GISAID data and remove duplicates"
+          }
+        }
+      },
+      "position": {
+        "x": 420,
+        "y": 670
+      },
+      "width": 155,
+      "height": 70,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 525,
+        "y": 165
+      },
+      "dragging": false
+    },
+    {
+      "id": "n5",
+      "type": "standard",
+      "data": {
+        "color": "#006daa",
+        "config": {
+          "name": "ProcessGenbankData",
+          "type": "module",
+          "org": "Dengue",
+          "repo": {
+            "type": "github",
+            "listing_type": "DirectoryListing",
+            "url": "kraemer-lab/vneyard"
+          },
+          "config": {
+            "snakefile": {
+              "function": "github",
+              "args": [
+                "kraemer-lab/vneyard"
+              ],
+              "kwargs": {
+                "path": "workflows/Dengue/modules/ProcessGenbankData/workflow/Snakefile",
+                "commit": "1d833acb2586f17518d2f73d5fbcaf1400a60a52"
+              }
+            },
+            "config": {
+              "params": {
+                "Start date": "2000-01-01T00:00:00.000Z",
+                "End date": "2023-12-24T00:00:00.000Z",
+                "Host": "Homo sapiens"
+              },
+              "namespace": "out",
+              "ports": [
+                {
+                  "ref": "in",
+                  "label": "In",
+                  "namespace": "in"
+                }
+              ]
+            },
+            "docstring": "Process data from Genbank\n\nParams:\n    Start date (str): Start date for the data to be processed (e.g. \"2000-01-01\")\n    End date (str): End date for the data to be processed (e.g. \"2023-12-24\")\n    Host (str): Host for the data to be processed (e.g. \"Homo sapiens\")"
+          }
+        }
+      },
+      "position": {
+        "x": 220,
+        "y": 630
+      },
+      "width": 151,
+      "height": 52,
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "n6",
+      "type": "standard",
+      "data": {
+        "color": "#006daa",
+        "config": {
+          "name": "SequenceAlignment",
+          "type": "module",
+          "org": "Dengue",
+          "repo": {
+            "type": "github",
+            "listing_type": "DirectoryListing",
+            "url": "kraemer-lab/vneyard"
+          },
+          "config": {
+            "snakefile": {
+              "function": "github",
+              "args": [
+                "kraemer-lab/vneyard"
+              ],
+              "kwargs": {
+                "path": "workflows/Dengue/modules/SequenceAlignment/workflow/Snakefile",
+                "commit": "1d833acb2586f17518d2f73d5fbcaf1400a60a52"
+              }
+            },
+            "config": {
+              "namespace": "out",
+              "ports": [
+                {
+                  "ref": "in",
+                  "label": "In",
+                  "namespace": "in"
+                }
+              ]
+            },
+            "docstring": "Sequence alignment for Dengue serotypes\nconfigfile: \"config/config.yaml\"\nfrom grapevne_helper import import_grapevne\n\ngrapevne = import_grapevne(workflow)\nglobals().update(vars(grapevne))\n\n\n# Set up a rule if concrete targets are specified\ntry:\n    if param('targets'):\n        rule target:\n            input:\n                expand(\n                    output(\"Aligned_{target}/nextalign.aligned.fasta\"),\n                    target=param('targets')\n                ),\nexcept ValueError:\n    pass\n\n\nrule sequence_alignment:\n    input:\n        sequences=input(\"Unaligned_{serotype}.fasta\"),\n        reference=resource(\"reference_genomes/reference_{serotype}.fasta\"),\n        genemap=resource(\"genemap/genemap_{serotype}.gff\"),\n    output:\n        fasta=output(\"Aligned_{serotype}/nextalign.aligned.fasta\"),\n    log:\n        log(\"sequence_alignment_{serotype}.log\"),\n    conda:\n        env(\"alignment.yaml\")\n    message:\n        \"Running sequence alignment for Dengue serotypes\"\n    params:\n        output_serotype=output(\"Aligned_{serotype}\"),\n        resources_dir=resource(''),\n    shell:\n        \"\"\"\n        mkdir -p {params.output_serotype}\n        nextalign run \\\n            {input.sequences} \\\n            --reference={input.reference} \\\n            --genemap={input.genemap} \\\n            --output-fasta={output.fasta} > {log} 2>&1\n        \"\"\"\n\n\nrule _test:\n    input:\n        output(\"Aligned_Dengue_1/nextalign.aligned.fasta\"),\n        output(\"Aligned_Dengue_2/nextalign.aligned.fasta\"),\n        output(\"Aligned_Dengue_3/nextalign.aligned.fasta\"),\n        output(\"Aligned_Dengue_4/nextalign.aligned.fasta\"),\n"
+          }
+        }
+      },
+      "position": {
+        "x": 820,
+        "y": 735
+      },
+      "width": 144,
+      "height": 52,
+      "selected": false,
+      "dragging": false,
+      "positionAbsolute": {
+        "x": 525,
+        "y": 0
+      }
+    },
+    {
+      "id": "n7",
+      "type": "standard",
+      "data": {
+        "color": "#006daa",
+        "config": {
+          "name": "AssignSerotypeAndGenotypeNextclade",
+          "type": "module",
+          "org": "Dengue",
+          "repo": {
+            "type": "github",
+            "listing_type": "DirectoryListing",
+            "url": "kraemer-lab/vneyard"
+          },
+          "config": {
+            "snakefile": {
+              "function": "github",
+              "args": [
+                "kraemer-lab/vneyard"
+              ],
+              "kwargs": {
+                "path": "workflows/Dengue/modules/AssignSerotypeAndGenotypeNextclade/workflow/Snakefile",
+                "commit": "1d833acb2586f17518d2f73d5fbcaf1400a60a52"
+              }
+            },
+            "config": {
+              "namespace": "out",
+              "ports": [
+                {
+                  "ref": "in",
+                  "label": "In",
+                  "namespace": "in"
+                }
+              ]
+            },
+            "docstring": "Assign Genotype Using Nextclade"
+          }
+        }
+      },
+      "position": {
+        "x": 820,
+        "y": 620
+      },
+      "width": 249,
+      "height": 52,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 615,
+        "y": 315
+      },
+      "dragging": false
+    },
+    {
+      "id": "n8",
+      "type": "standard",
+      "data": {
+        "color": "#006daa",
+        "config": {
+          "name": "SplitGenomeAndQC",
+          "type": "module",
+          "org": "Dengue",
+          "repo": {
+            "type": "github",
+            "listing_type": "DirectoryListing",
+            "url": "kraemer-lab/vneyard"
+          },
+          "config": {
+            "snakefile": {
+              "function": "github",
+              "args": [
+                "kraemer-lab/vneyard"
+              ],
+              "kwargs": {
+                "path": "workflows/Dengue/modules/SplitGenomeAndQC/workflow/Snakefile",
+                "commit": "1d833acb2586f17518d2f73d5fbcaf1400a60a52"
+              }
+            },
+            "config": {
+              "params": {
+                "WG Threshold": "0.31",
+                "EG Threshold": "0.31",
+                "Serotypes": [
+                  "Dengue_1",
+                  "Dengue_2",
+                  "Dengue_3",
+                  "Dengue_4"
+                ]
+              },
+              "namespace": "out",
+              "ports": [
+                {
+                  "ref": "in",
+                  "label": "In",
+                  "namespace": "in"
+                }
+              ]
+            },
+            "docstring": "Segregating E gene and Whole Genomes and performing quaility control\n\nThis module takes aligned virus sequences and segregates the envelope gene (EG) and whole genomes (WG). It then performs quality control on the sequences.\n\nParams:\n  WG Threshold (number): Whole Genome Threshold\n  EG Threshold (number): Envelope Gene Threshold\n  Serotypes (list of str): List of serotype names (e.g. Dengue_1, etc.)"
+          }
+        }
+      },
+      "position": {
+        "x": 1020,
+        "y": 735
+      },
+      "width": 141,
+      "height": 52,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 735,
+        "y": 0
+      },
+      "dragging": false
+    },
+    {
+      "id": "n9",
+      "type": "standard",
+      "data": {
+        "color": "#006daa",
+        "config": {
+          "name": "AddGenotypeInformation",
+          "type": "module",
+          "org": "Dengue",
+          "repo": {
+            "type": "github",
+            "listing_type": "DirectoryListing",
+            "url": "kraemer-lab/vneyard"
+          },
+          "config": {
+            "snakefile": {
+              "function": "github",
+              "args": [
+                "kraemer-lab/vneyard"
+              ],
+              "kwargs": {
+                "path": "workflows/Dengue/modules/AddGenotypeInformation/workflow/Snakefile",
+                "commit": "1d833acb2586f17518d2f73d5fbcaf1400a60a52"
+              }
+            },
+            "config": {
+              "namespace": "out",
+              "ports": [
+                {
+                  "ref": "genotype",
+                  "label": "genotype",
+                  "namespace": "genotype"
+                },
+                {
+                  "ref": "metadata",
+                  "label": "metadata",
+                  "namespace": "metadata"
+                }
+              ]
+            },
+            "docstring": "Add genotype and lineage information to metadata"
+          }
+        }
+      },
+      "position": {
+        "x": 1020,
+        "y": 645
+      },
+      "width": 172,
+      "height": 70,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 855,
+        "y": 240
+      },
+      "dragging": false
+    },
+    {
+      "id": "n10",
+      "type": "standard",
+      "data": {
+        "color": "#006daa",
+        "config": {
+          "name": "FilterGenotypesData",
+          "type": "module",
+          "org": "Dengue",
+          "repo": {
+            "type": "github",
+            "listing_type": "DirectoryListing",
+            "url": "kraemer-lab/vneyard"
+          },
+          "config": {
+            "snakefile": {
+              "function": "github",
+              "args": [
+                "kraemer-lab/vneyard"
+              ],
+              "kwargs": {
+                "path": "workflows/Dengue/modules/FilterGenotypesData/workflow/Snakefile",
+                "commit": "1d833acb2586f17518d2f73d5fbcaf1400a60a52"
+              }
+            },
+            "config": {
+              "params": {
+                "Min count": 100,
+                "Target": "Africa",
+                "Classification": "Major_Lineage"
+              },
+              "namespace": "out",
+              "ports": [
+                {
+                  "ref": "fasta",
+                  "label": "fasta",
+                  "namespace": "fasta"
+                },
+                {
+                  "ref": "metadata",
+                  "label": "metadata",
+                  "namespace": "metadata"
+                }
+              ]
+            },
+            "docstring": "Remove small serotypes, genotypes, major or minor lineages based on target country"
+          }
+        }
+      },
+      "position": {
+        "x": 1220,
+        "y": 685
+      },
+      "width": 145,
+      "height": 70,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 1380,
+        "y": 240
+      },
+      "dragging": false
+    },
+    {
+      "id": "n11",
+      "type": "standard",
+      "data": {
+        "color": "#006daa",
+        "config": {
+          "name": "PartitionIntoGenotypes",
+          "type": "module",
+          "org": "Dengue",
+          "repo": {
+            "type": "github",
+            "listing_type": "DirectoryListing",
+            "url": "kraemer-lab/vneyard"
+          },
+          "config": {
+            "snakefile": {
+              "function": "github",
+              "args": [
+                "kraemer-lab/vneyard"
+              ],
+              "kwargs": {
+                "path": "workflows/Dengue/modules/PartitionIntoGenotypes/workflow/Snakefile",
+                "commit": "1d833acb2586f17518d2f73d5fbcaf1400a60a52"
+              }
+            },
+            "config": {
+              "params": {
+                "Serotypes": [
+                  "Dengue_1",
+                  "Dengue_2",
+                  "Dengue_3",
+                  "Dengue_4"
+                ]
+              },
+              "namespace": "out",
+              "ports": [
+                {
+                  "ref": "fasta",
+                  "label": "fasta",
+                  "namespace": "fasta"
+                },
+                {
+                  "ref": "metadata",
+                  "label": "metadata",
+                  "namespace": "metadata"
+                }
+              ]
+            },
+            "docstring": "Partition into Genotypes"
+          }
+        }
+      },
+      "position": {
+        "x": 1420,
+        "y": 685
+      },
+      "width": 161,
+      "height": 70,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 2745,
+        "y": 1305
+      },
+      "dragging": false
+    },
+    {
+      "id": "n12",
+      "type": "standard",
+      "data": {
+        "color": "#006daa",
+        "config": {
+          "name": "SubsampleLineages",
+          "type": "module",
+          "org": "Dengue",
+          "repo": {
+            "type": "github",
+            "listing_type": "DirectoryListing",
+            "url": "kraemer-lab/vneyard"
+          },
+          "config": {
+            "snakefile": {
+              "function": "github",
+              "args": [
+                "kraemer-lab/vneyard"
+              ],
+              "kwargs": {
+                "path": "workflows/Dengue/modules/SubsampleLineages/workflow/Snakefile",
+                "commit": "1d833acb2586f17518d2f73d5fbcaf1400a60a52"
+              }
+            },
+            "config": {
+              "params": {
+                "Number sequences (local)": "all",
+                "Number sequences (background)": 0.3,
+                "Time interval": "Year",
+                "Sampling method": "Even",
+                "Triggers": {
+                  "Parse inputs": "mark"
+                }
+              },
+              "namespace": "out",
+              "ports": [
+                {
+                  "ref": "in",
+                  "label": "In",
+                  "namespace": "in"
+                }
+              ]
+            },
+            "docstring": "Sampling (Background)"
+          }
+        }
+      },
+      "position": {
+        "x": 1620,
+        "y": 600
+      },
+      "width": 144,
+      "height": 52,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 1575,
+        "y": 30
+      },
+      "dragging": false
+    },
+    {
+      "id": "n13",
+      "type": "standard",
+      "data": {
+        "color": "#006daa",
+        "config": {
+          "name": "Reformatting",
+          "type": "module",
+          "org": "Dengue",
+          "repo": {
+            "type": "github",
+            "listing_type": "DirectoryListing",
+            "url": "kraemer-lab/vneyard"
+          },
+          "config": {
+            "snakefile": {
+              "function": "github",
+              "args": [
+                "kraemer-lab/vneyard"
+              ],
+              "kwargs": {
+                "path": "workflows/Dengue/modules/Reformatting/workflow/Snakefile",
+                "commit": "1d833acb2586f17518d2f73d5fbcaf1400a60a52"
+              }
+            },
+            "config": {
+              "namespace": "out",
+              "ports": [
+                {
+                  "ref": "in",
+                  "label": "In",
+                  "namespace": "in"
+                }
+              ]
+            },
+            "docstring": ""
+          }
+        }
+      },
+      "position": {
+        "x": 1820,
+        "y": 600
+      },
+      "width": 105,
+      "height": 52,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 2475,
+        "y": 150
+      },
+      "dragging": false
+    },
+    {
+      "id": "n14",
+      "type": "standard",
+      "data": {
+        "color": "#006daa",
+        "config": {
+          "name": "DetermineTargets",
+          "type": "module",
+          "org": "Dengue",
+          "repo": {
+            "type": "github",
+            "listing_type": "DirectoryListing",
+            "url": "kraemer-lab/vneyard"
+          },
+          "config": {
+            "snakefile": {
+              "function": "github",
+              "args": [
+                "kraemer-lab/vneyard"
+              ],
+              "kwargs": {
+                "path": "workflows/Dengue/modules/DetermineTargets/workflow/Snakefile",
+                "commit": "1d833acb2586f17518d2f73d5fbcaf1400a60a52"
+              }
+            },
+            "config": {
+              "params": {
+                "Input Pattern": "{sample}.fasta",
+                "Output Pattern": "dengue_{sample}.json",
+                "Triggers": {
+                  "Parse inputs": "mark"
+                }
+              },
+              "namespace": "out",
+              "ports": [
+                {
+                  "ref": "generator",
+                  "label": "generator",
+                  "namespace": "generator"
+                },
+                {
+                  "ref": "target",
+                  "label": "target",
+                  "namespace": "target"
+                }
+              ]
+            },
+            "docstring": "Sampling (Background)"
+          }
+        }
+      },
+      "position": {
+        "x": 3020,
+        "y": 50
+      },
+      "width": 131,
+      "height": 70,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 1755,
+        "y": 255
+      },
+      "dragging": false
+    },
+    {
+      "id": "n15",
+      "type": "standard",
+      "data": {
+        "color": "#006daa",
+        "config": {
+          "name": "Export",
+          "type": "module",
+          "org": "Dengue",
+          "repo": {
+            "type": "github",
+            "listing_type": "DirectoryListing",
+            "url": "kraemer-lab/vneyard"
+          },
+          "config": {
+            "snakefile": {
+              "function": "github",
+              "args": [
+                "kraemer-lab/vneyard"
+              ],
+              "kwargs": {
+                "path": "workflows/Dengue/modules/Export/workflow/Snakefile",
+                "commit": "1d833acb2586f17518d2f73d5fbcaf1400a60a52"
+              }
+            },
+            "config": {
+              "namespace": "out",
+              "ports": [
+                {
+                  "ref": "treetime",
+                  "label": "treetime",
+                  "namespace": "treetime"
+                },
+                {
+                  "ref": "translation",
+                  "label": "translation",
+                  "namespace": "translation"
+                },
+                {
+                  "ref": "subsample",
+                  "label": "subsample",
+                  "namespace": "reformatting"
+                },
+                {
+                  "ref": "mutations",
+                  "label": "mutations",
+                  "namespace": "mutations"
+                },
+                {
+                  "ref": "mugrations",
+                  "label": "mugrations",
+                  "namespace": "mugration"
+                }
+              ]
+            },
+            "docstring": ""
+          }
+        }
+      },
+      "position": {
+        "x": 2820,
+        "y": 150
+      },
+      "width": 100,
+      "height": 124,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 3195,
+        "y": 90
+      },
+      "dragging": false
+    },
+    {
+      "id": "n16",
+      "type": "standard",
+      "data": {
+        "color": "#006daa",
+        "config": {
+          "name": "TreeTime",
+          "type": "module",
+          "org": "Dengue",
+          "repo": {
+            "type": "github",
+            "listing_type": "DirectoryListing",
+            "url": "kraemer-lab/vneyard"
+          },
+          "config": {
+            "snakefile": {
+              "function": "github",
+              "args": [
+                "kraemer-lab/vneyard"
+              ],
+              "kwargs": {
+                "path": "workflows/Dengue/modules/TreeTime/workflow/Snakefile",
+                "commit": "1d833acb2586f17518d2f73d5fbcaf1400a60a52"
+              }
+            },
+            "config": {
+              "params": {
+                "Clock filter IQD": 3
+              },
+              "namespace": "out",
+              "ports": [
+                {
+                  "ref": "fasta",
+                  "label": "fasta",
+                  "namespace": "treebuilding"
+                },
+                {
+                  "ref": "metadata",
+                  "label": "metadata",
+                  "namespace": "reformatting"
+                }
+              ]
+            },
+            "docstring": "Inferring time-calibrated trees for each Dengue virus serotype\n\nParams:\n    Clock filter IQD (number): Interquartile range for clock filter"
+          }
+        }
+      },
+      "position": {
+        "x": 2220,
+        "y": 295
+      },
+      "width": 100,
+      "height": 70,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 2730,
+        "y": 330
+      },
+      "dragging": false
+    },
+    {
+      "id": "n17",
+      "type": "standard",
+      "data": {
+        "color": "#006daa",
+        "config": {
+          "name": "Translation",
+          "type": "module",
+          "org": "Dengue",
+          "repo": {
+            "type": "github",
+            "listing_type": "DirectoryListing",
+            "url": "kraemer-lab/vneyard"
+          },
+          "config": {
+            "snakefile": {
+              "function": "github",
+              "args": [
+                "kraemer-lab/vneyard"
+              ],
+              "kwargs": {
+                "path": "workflows/Dengue/modules/Translation/workflow/Snakefile",
+                "commit": "1d833acb2586f17518d2f73d5fbcaf1400a60a52"
+              }
+            },
+            "config": {
+              "namespace": "out",
+              "ports": [
+                {
+                  "ref": "treetime",
+                  "label": "treetime",
+                  "namespace": "treetime"
+                },
+                {
+                  "ref": "mutations",
+                  "label": "mutations",
+                  "namespace": "mutations"
+                }
+              ]
+            },
+            "docstring": ""
+          }
+        }
+      },
+      "position": {
+        "x": 2620,
+        "y": 295
+      },
+      "width": 100,
+      "height": 70,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 2730,
+        "y": 255
+      },
+      "dragging": false
+    },
+    {
+      "id": "n18",
+      "type": "standard",
+      "data": {
+        "color": "#006daa",
+        "config": {
+          "name": "Mutations",
+          "type": "module",
+          "org": "Dengue",
+          "repo": {
+            "type": "github",
+            "listing_type": "DirectoryListing",
+            "url": "kraemer-lab/vneyard"
+          },
+          "config": {
+            "snakefile": {
+              "function": "github",
+              "args": [
+                "kraemer-lab/vneyard"
+              ],
+              "kwargs": {
+                "path": "workflows/Dengue/modules/Mutations/workflow/Snakefile",
+                "commit": "1d833acb2586f17518d2f73d5fbcaf1400a60a52"
+              }
+            },
+            "config": {
+              "namespace": "out",
+              "ports": [
+                {
+                  "ref": "fasta",
+                  "label": "fasta",
+                  "namespace": "treetime"
+                },
+                {
+                  "ref": "metadata",
+                  "label": "metadata",
+                  "namespace": "reformatting"
+                }
+              ]
+            },
+            "docstring": ""
+          }
+        }
+      },
+      "position": {
+        "x": 2420,
+        "y": 210
+      },
+      "width": 100,
+      "height": 70,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 2895,
+        "y": 510
+      },
+      "dragging": false
+    },
+    {
+      "id": "n19",
+      "type": "standard",
+      "data": {
+        "color": "#006daa",
+        "config": {
+          "name": "Mugration",
+          "type": "module",
+          "org": "Dengue",
+          "repo": {
+            "type": "github",
+            "listing_type": "DirectoryListing",
+            "url": "kraemer-lab/vneyard"
+          },
+          "config": {
+            "snakefile": {
+              "function": "github",
+              "args": [
+                "kraemer-lab/vneyard"
+              ],
+              "kwargs": {
+                "path": "workflows/Dengue/modules/Mugration/workflow/Snakefile",
+                "commit": "1d833acb2586f17518d2f73d5fbcaf1400a60a52"
+              }
+            },
+            "config": {
+              "namespace": "out",
+              "ports": [
+                {
+                  "ref": "treetime",
+                  "label": "treetime",
+                  "namespace": "treetime"
+                },
+                {
+                  "ref": "subsample",
+                  "label": "subsample",
+                  "namespace": "reformatting"
+                }
+              ]
+            },
+            "docstring": ""
+          }
+        }
+      },
+      "position": {
+        "x": 2420,
+        "y": 100
+      },
+      "width": 100,
+      "height": 70,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 2610,
+        "y": 240
+      },
+      "dragging": false
+    },
+    {
+      "id": "n20",
+      "type": "standard",
+      "data": {
+        "color": "#006daa",
+        "config": {
+          "name": "TreeBuilding",
+          "type": "module",
+          "org": "Dengue",
+          "repo": {
+            "type": "github",
+            "listing_type": "DirectoryListing",
+            "url": "kraemer-lab/vneyard"
+          },
+          "config": {
+            "snakefile": {
+              "function": "github",
+              "args": [
+                "kraemer-lab/vneyard"
+              ],
+              "kwargs": {
+                "path": "workflows/Dengue/modules/TreeBuilding/workflow/Snakefile",
+                "commit": "1d833acb2586f17518d2f73d5fbcaf1400a60a52"
+              }
+            },
+            "config": {
+              "params": {
+                "Model": "HKY+F+I",
+                "Command line arguments": ""
+              },
+              "namespace": "out",
+              "ports": [
+                {
+                  "ref": "in",
+                  "label": "In",
+                  "namespace": "in"
+                }
+              ]
+            },
+            "docstring": "Tree building with IQ-TREE\n\nUses IQ-TREE multicore version 2.2.6 COVID-edition [https://github.com/iqtree/iqtree2]\n\nParams:\n    Model (str) - Model of nucleotide substitution (e.g. )\n    Command line arguments (str): Additional command line arguments for IQ-TREE\n        For example: \"-nt AUTO\" to use all available cores"
+          }
+        }
+      },
+      "position": {
+        "x": 2020,
+        "y": 735
+      },
+      "width": 102,
+      "height": 52,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 2520,
+        "y": -30
+      },
+      "dragging": false
+    },
+    {
+      "id": "n21",
+      "type": "standard",
+      "data": {
+        "color": "#006daa",
+        "config": {
+          "name": "Rename",
+          "type": "module",
+          "org": "Dengue",
+          "repo": {
+            "type": "github",
+            "listing_type": "DirectoryListing",
+            "url": "kraemer-lab/vneyard"
+          },
+          "config": {
+            "snakefile": {
+              "function": "github",
+              "args": [
+                "kraemer-lab/vneyard"
+              ],
+              "kwargs": {
+                "path": "workflows/Dengue/modules/Rename/workflow/Snakefile",
+                "commit": "1d833acb2586f17518d2f73d5fbcaf1400a60a52"
+              }
+            },
+            "config": {
+              "params": {
+                "Input Pattern": "{sample}.fasta",
+                "Output Pattern": "subsampled_{sample}.fasta",
+                "Triggers": {
+                  "Parse inputs": "mark"
+                }
+              },
+              "namespace": "out",
+              "ports": [
+                {
+                  "ref": "in",
+                  "label": "In",
+                  "namespace": "in"
+                }
+              ]
+            },
+            "docstring": "Sampling (Background)"
+          }
+        }
+      },
+      "position": {
+        "x": 2220,
+        "y": 200
+      },
+      "width": 100,
+      "height": 52,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 2160,
+        "y": 450
+      },
+      "dragging": false
+    },
+    {
+      "id": "n22",
+      "type": "standard",
+      "data": {
+        "color": "#006daa",
+        "config": {
+          "name": "TreeTimeBioconda",
+          "type": "module",
+          "org": "Dengue",
+          "repo": {
+            "type": "github",
+            "listing_type": "DirectoryListing",
+            "url": "kraemer-lab/vneyard"
+          },
+          "config": {
+            "snakefile": {
+              "function": "github",
+              "args": [
+                "kraemer-lab/vneyard"
+              ],
+              "kwargs": {
+                "path": "workflows/Dengue/modules/TreeTimeBioconda/workflow/Snakefile",
+                "commit": "1d833acb2586f17518d2f73d5fbcaf1400a60a52"
+              }
+            },
+            "config": {
+              "params": {
+                "Clock rate": 0.0008,
+                "Clock rate (SD)": 0.0004
+              },
+              "namespace": "out",
+              "ports": [
+                {
+                  "ref": "fasta",
+                  "label": "fasta",
+                  "namespace": "fasta"
+                },
+                {
+                  "ref": "metadata",
+                  "label": "metadata",
+                  "namespace": "metadata"
+                }
+              ]
+            },
+            "docstring": ""
+          }
+        }
+      },
+      "position": {
+        "x": 2220,
+        "y": 1130
+      },
+      "width": 137,
+      "height": 70,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 3270,
+        "y": -210
+      },
+      "dragging": false
+    },
+    {
+      "id": "n23",
+      "type": "standard",
+      "data": {
+        "color": "#006daa",
+        "config": {
+          "name": "PruneTree",
+          "type": "module",
+          "org": "Dengue",
+          "repo": {
+            "type": "github",
+            "listing_type": "DirectoryListing",
+            "url": "kraemer-lab/vneyard"
+          },
+          "config": {
+            "snakefile": {
+              "function": "github",
+              "args": [
+                "kraemer-lab/vneyard"
+              ],
+              "kwargs": {
+                "path": "workflows/Dengue/modules/PruneTree/workflow/Snakefile",
+                "commit": "1d833acb2586f17518d2f73d5fbcaf1400a60a52"
+              }
+            },
+            "config": {
+              "namespace": "out",
+              "ports": [
+                {
+                  "ref": "in",
+                  "label": "In",
+                  "namespace": "in"
+                }
+              ]
+            },
+            "docstring": ""
+          }
+        }
+      },
+      "position": {
+        "x": 2420,
+        "y": 600
+      },
+      "width": 100,
+      "height": 52,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 2445,
+        "y": -195
+      },
+      "dragging": false
+    },
+    {
+      "id": "n24",
+      "type": "standard",
+      "data": {
+        "color": "#006daa",
+        "config": {
+          "name": "RemoveIncongruentSequences",
+          "type": "module",
+          "org": "Dengue",
+          "repo": {
+            "type": "github",
+            "listing_type": "DirectoryListing",
+            "url": "kraemer-lab/vneyard"
+          },
+          "config": {
+            "snakefile": {
+              "function": "github",
+              "args": [
+                "kraemer-lab/vneyard"
+              ],
+              "kwargs": {
+                "path": "workflows/Dengue/modules/RemoveIncongruentSequences/workflow/Snakefile",
+                "commit": "1d833acb2586f17518d2f73d5fbcaf1400a60a52"
+              }
+            },
+            "config": {
+              "namespace": "out",
+              "ports": [
+                {
+                  "ref": "fasta",
+                  "label": "fasta",
+                  "namespace": "fasta"
+                },
+                {
+                  "ref": "metadata",
+                  "label": "metadata",
+                  "namespace": "metadata"
+                }
+              ]
+            },
+            "docstring": ""
+          }
+        }
+      },
+      "position": {
+        "x": 2620,
+        "y": 50
+      },
+      "width": 204,
+      "height": 70,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 2580,
+        "y": -135
+      },
+      "dragging": false
+    },
+    {
+      "id": "n25",
+      "type": "standard",
+      "data": {
+        "color": "#006daa",
+        "config": {
+          "name": "DetermineTargets_1",
+          "type": "module",
+          "org": "Dengue",
+          "repo": {
+            "type": "github",
+            "listing_type": "DirectoryListing",
+            "url": "kraemer-lab/vneyard"
+          },
+          "config": {
+            "snakefile": {
+              "function": "github",
+              "args": [
+                "kraemer-lab/vneyard"
+              ],
+              "kwargs": {
+                "path": "workflows/Dengue/modules/DetermineTargets/workflow/Snakefile",
+                "commit": "1d833acb2586f17518d2f73d5fbcaf1400a60a52"
+              }
+            },
+            "config": {
+              "params": {
+                "Input Pattern": "{sample}.fasta",
+                "Output Pattern": "subsampled_{sample}.fasta",
+                "Triggers": {
+                  "Parse inputs": "mark"
+                }
+              },
+              "namespace": "out",
+              "ports": [
+                {
+                  "ref": "generator",
+                  "label": "generator",
+                  "namespace": "generator"
+                },
+                {
+                  "ref": "target",
+                  "label": "target",
+                  "namespace": "target"
+                }
+              ]
+            },
+            "docstring": "Sampling (Background)"
+          }
+        }
+      },
+      "position": {
+        "x": 2820,
+        "y": 20
+      },
+      "width": 144,
+      "height": 70,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 2745,
+        "y": -270
+      },
+      "dragging": false
+    },
+    {
+      "id": "n26",
+      "type": "standard",
+      "data": {
+        "color": "#006daa",
+        "config": {
+          "name": "TreeTimeMugration_Country",
+          "type": "module",
+          "org": "Dengue",
+          "repo": {
+            "type": "github",
+            "listing_type": "DirectoryListing",
+            "url": "kraemer-lab/vneyard"
+          },
+          "config": {
+            "snakefile": {
+              "function": "github",
+              "args": [
+                "kraemer-lab/vneyard"
+              ],
+              "kwargs": {
+                "path": "workflows/Dengue/modules/TreeTimeMugration/workflow/Snakefile",
+                "commit": "1d833acb2586f17518d2f73d5fbcaf1400a60a52"
+              }
+            },
+            "config": {
+              "params": {
+                "Attribute": "Country"
+              },
+              "namespace": "out",
+              "ports": [
+                {
+                  "ref": "nexus",
+                  "label": "nexus",
+                  "namespace": "nexus"
+                },
+                {
+                  "ref": "metadata",
+                  "label": "metadata",
+                  "namespace": "metadata"
+                }
+              ]
+            },
+            "docstring": ""
+          }
+        }
+      },
+      "position": {
+        "x": 2620,
+        "y": 625
+      },
+      "width": 191,
+      "height": 70,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 3105,
+        "y": -105
+      },
+      "dragging": false
+    },
+    {
+      "id": "n27",
+      "type": "standard",
+      "data": {
+        "color": "#006daa",
+        "config": {
+          "name": "ExtractTreeEvents",
+          "type": "module",
+          "org": "Dengue",
+          "repo": {
+            "type": "github",
+            "listing_type": "DirectoryListing",
+            "url": "kraemer-lab/vneyard"
+          },
+          "config": {
+            "snakefile": {
+              "function": "github",
+              "args": [
+                "kraemer-lab/vneyard"
+              ],
+              "kwargs": {
+                "path": "workflows/Dengue/modules/ExtractTreeEvents/workflow/Snakefile",
+                "commit": "1d833acb2586f17518d2f73d5fbcaf1400a60a52"
+              }
+            },
+            "config": {
+              "params": {
+                "Trait": "Country"
+              },
+              "namespace": "out",
+              "ports": [
+                {
+                  "ref": "nexus",
+                  "label": "nexus",
+                  "namespace": "nexus"
+                },
+                {
+                  "ref": "metadata",
+                  "label": "metadata",
+                  "namespace": "metadata"
+                }
+              ]
+            },
+            "docstring": ""
+          }
+        }
+      },
+      "position": {
+        "x": 2820,
+        "y": 600
+      },
+      "width": 133,
+      "height": 70,
+      "selected": false,
+      "dragging": false,
+      "positionAbsolute": {
+        "x": 3345,
+        "y": -180
+      }
+    },
+    {
+      "id": "n28",
+      "type": "standard",
+      "data": {
+        "color": "#006daa",
+        "config": {
+          "name": "PlotViralMovements",
+          "type": "module",
+          "org": "Dengue",
+          "repo": {
+            "type": "github",
+            "listing_type": "DirectoryListing",
+            "url": "kraemer-lab/vneyard"
+          },
+          "config": {
+            "snakefile": {
+              "function": "github",
+              "args": [
+                "kraemer-lab/vneyard"
+              ],
+              "kwargs": {
+                "path": "workflows/Dengue/modules/PlotViralMovements/workflow/Snakefile",
+                "commit": "1d833acb2586f17518d2f73d5fbcaf1400a60a52"
+              }
+            },
+            "config": {
+              "namespace": "out",
+              "ports": [
+                {
+                  "ref": "in",
+                  "label": "In",
+                  "namespace": "in"
+                }
+              ]
+            },
+            "docstring": ""
+          }
+        }
+      },
+      "position": {
+        "x": 3020,
+        "y": 600
+      },
+      "width": 145,
+      "height": 52,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 3600,
+        "y": -195
+      },
+      "dragging": false
+    },
+    {
+      "id": "n29",
+      "type": "standard",
+      "data": {
+        "color": "#006daa",
+        "config": {
+          "name": "DetermineTargets_2",
+          "type": "module",
+          "org": "Dengue",
+          "repo": {
+            "type": "github",
+            "listing_type": "DirectoryListing",
+            "url": "kraemer-lab/vneyard"
+          },
+          "config": {
+            "snakefile": {
+              "function": "github",
+              "args": [
+                "kraemer-lab/vneyard"
+              ],
+              "kwargs": {
+                "path": "workflows/Dengue/modules/DetermineTargets/workflow/Snakefile",
+                "commit": "1d833acb2586f17518d2f73d5fbcaf1400a60a52"
+              }
+            },
+            "config": {
+              "params": {
+                "Input Pattern": "{sample}.fasta",
+                "Output Pattern": "{sample}.png",
+                "Triggers": {
+                  "Parse inputs": "mark"
+                }
+              },
+              "namespace": "out",
+              "ports": [
+                {
+                  "ref": "generator",
+                  "label": "generator",
+                  "namespace": "generator"
+                },
+                {
+                  "ref": "target",
+                  "label": "target",
+                  "namespace": "target"
+                }
+              ]
+            },
+            "docstring": "Sampling (Background)"
+          }
+        }
+      },
+      "position": {
+        "x": 3220,
+        "y": 500
+      },
+      "width": 144,
+      "height": 70,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 3825,
+        "y": -315
+      },
+      "dragging": false
+    },
+    {
+      "id": "n30",
+      "type": "standard",
+      "data": {
+        "color": "#006daa",
+        "config": {
+          "name": "TreeTimeMugration_Continent",
+          "type": "module",
+          "org": "Dengue",
+          "repo": {
+            "type": "github",
+            "listing_type": "DirectoryListing",
+            "url": "kraemer-lab/vneyard"
+          },
+          "config": {
+            "snakefile": {
+              "function": "github",
+              "args": [
+                "kraemer-lab/vneyard"
+              ],
+              "kwargs": {
+                "path": "workflows/Dengue/modules/TreeTimeMugration/workflow/Snakefile",
+                "commit": "1d833acb2586f17518d2f73d5fbcaf1400a60a52"
+              }
+            },
+            "config": {
+              "params": {
+                "Attribute": "Continent"
+              },
+              "namespace": "out",
+              "ports": [
+                {
+                  "ref": "nexus",
+                  "label": "nexus",
+                  "namespace": "nexus"
+                },
+                {
+                  "ref": "metadata",
+                  "label": "metadata",
+                  "namespace": "metadata"
+                }
+              ]
+            },
+            "docstring": ""
+          }
+        }
+      },
+      "position": {
+        "x": 2620,
+        "y": 500
+      },
+      "width": 201,
+      "height": 70,
+      "selected": false,
+      "dragging": false,
+      "positionAbsolute": {
+        "x": 3195,
+        "y": 285
+      }
+    },
+    {
+      "id": "n31",
+      "type": "standard",
+      "data": {
+        "color": "#006daa",
+        "config": {
+          "name": "Fertree",
+          "type": "module",
+          "org": "Dengue",
+          "repo": {
+            "type": "github",
+            "listing_type": "DirectoryListing",
+            "url": "kraemer-lab/vneyard"
+          },
+          "config": {
+            "snakefile": {
+              "function": "github",
+              "args": [
+                "kraemer-lab/vneyard"
+              ],
+              "kwargs": {
+                "path": "workflows/Dengue/modules/Fertree/workflow/Snakefile",
+                "commit": "1d833acb2586f17518d2f73d5fbcaf1400a60a52"
+              }
+            },
+            "config": {
+              "params": {
+                "Spatial scale": "Continent",
+                "Location": "Africa"
+              },
+              "namespace": "out",
+              "ports": [
+                {
+                  "ref": "nexus",
+                  "label": "nexus",
+                  "namespace": "nexus"
+                },
+                {
+                  "ref": "metadata",
+                  "label": "metadata",
+                  "namespace": "metadata"
+                }
+              ]
+            },
+            "docstring": ""
+          }
+        }
+      },
+      "position": {
+        "x": 2820,
+        "y": 475
+      },
+      "width": 100,
+      "height": 70,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 3465,
+        "y": 285
+      },
+      "dragging": false
+    },
+    {
+      "id": "n32",
+      "type": "standard",
+      "data": {
+        "color": "#006daa",
+        "config": {
+          "name": "DetermineTargets_3",
+          "type": "module",
+          "org": "Dengue",
+          "repo": {
+            "type": "github",
+            "listing_type": "DirectoryListing",
+            "url": "kraemer-lab/vneyard"
+          },
+          "config": {
+            "snakefile": {
+              "function": "github",
+              "args": [
+                "kraemer-lab/vneyard"
+              ],
+              "kwargs": {
+                "path": "workflows/Dengue/modules/DetermineTargets/workflow/Snakefile",
+                "commit": "1d833acb2586f17518d2f73d5fbcaf1400a60a52"
+              }
+            },
+            "config": {
+              "params": {
+                "Input Pattern": "{sample}.fasta",
+                "Output Pattern": "{sample}.png",
+                "Triggers": {
+                  "Parse inputs": "mark"
+                }
+              },
+              "namespace": "out",
+              "ports": [
+                {
+                  "ref": "generator",
+                  "label": "generator",
+                  "namespace": "generator"
+                },
+                {
+                  "ref": "target",
+                  "label": "target",
+                  "namespace": "target"
+                }
+              ]
+            },
+            "docstring": "Sampling (Background)"
+          }
+        }
+      },
+      "position": {
+        "x": 3220,
+        "y": 1550
+      },
+      "width": 144,
+      "height": 70,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 1665,
+        "y": 765
+      },
+      "dragging": false
+    },
+    {
+      "id": "n33",
+      "type": "standard",
+      "data": {
+        "color": "#006daa",
+        "config": {
+          "name": "DetermineTargets_4",
+          "type": "module",
+          "org": "Dengue",
+          "repo": {
+            "type": "github",
+            "listing_type": "DirectoryListing",
+            "url": "kraemer-lab/vneyard"
+          },
+          "config": {
+            "snakefile": {
+              "function": "github",
+              "args": [
+                "kraemer-lab/vneyard"
+              ],
+              "kwargs": {
+                "path": "workflows/Dengue/modules/DetermineTargets/workflow/Snakefile",
+                "commit": "1d833acb2586f17518d2f73d5fbcaf1400a60a52"
+              }
+            },
+            "config": {
+              "params": {
+                "Input Pattern": "{sample}.fasta",
+                "Output Pattern": "transmission_lineages_{sample}.csv",
+                "Triggers": {
+                  "Parse inputs": "mark"
+                }
+              },
+              "namespace": "out",
+              "ports": [
+                {
+                  "ref": "generator",
+                  "label": "generator",
+                  "namespace": "generator"
+                },
+                {
+                  "ref": "target",
+                  "label": "target",
+                  "namespace": "target"
+                }
+              ]
+            },
+            "docstring": "Sampling (Background)"
+          }
+        }
+      },
+      "position": {
+        "x": 3020,
+        "y": 450
+      },
+      "width": 144,
+      "height": 70,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 3645,
+        "y": 210
+      },
+      "dragging": false
+    },
+    {
+      "id": "n34",
+      "type": "standard",
+      "data": {
+        "color": "#006daa",
+        "config": {
+          "name": "PlotViralMovements_1",
+          "type": "module",
+          "org": "Dengue",
+          "repo": {
+            "type": "github",
+            "listing_type": "DirectoryListing",
+            "url": "kraemer-lab/vneyard"
+          },
+          "config": {
+            "snakefile": {
+              "function": "github",
+              "args": [
+                "kraemer-lab/vneyard"
+              ],
+              "kwargs": {
+                "path": "workflows/Dengue/modules/PlotViralMovements/workflow/Snakefile",
+                "commit": "1d833acb2586f17518d2f73d5fbcaf1400a60a52"
+              }
+            },
+            "config": {
+              "namespace": "out",
+              "ports": [
+                {
+                  "ref": "in",
+                  "label": "In",
+                  "namespace": "in"
+                }
+              ]
+            },
+            "docstring": ""
+          }
+        }
+      },
+      "position": {
+        "x": 3020,
+        "y": 1575
+      },
+      "width": 157,
+      "height": 52,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 3615,
+        "y": -15
+      },
+      "dragging": false
+    },
+    {
+      "id": "n35",
+      "type": "standard",
+      "data": {
+        "color": "#006daa",
+        "config": {
+          "name": "ExtractTreeEvents_State",
+          "type": "module",
+          "org": "Dengue",
+          "repo": {
+            "type": "github",
+            "listing_type": "DirectoryListing",
+            "url": "kraemer-lab/vneyard"
+          },
+          "config": {
+            "snakefile": {
+              "function": "github",
+              "args": [
+                "kraemer-lab/vneyard"
+              ],
+              "kwargs": {
+                "path": "workflows/Dengue/modules/ExtractTreeEvents/workflow/Snakefile",
+                "commit": "1d833acb2586f17518d2f73d5fbcaf1400a60a52"
+              }
+            },
+            "config": {
+              "params": {
+                "Trait": "State"
+              },
+              "namespace": "out",
+              "ports": [
+                {
+                  "ref": "nexus",
+                  "label": "nexus",
+                  "namespace": "nexus"
+                },
+                {
+                  "ref": "metadata",
+                  "label": "metadata",
+                  "namespace": "metadata"
+                }
+              ]
+            },
+            "docstring": ""
+          }
+        }
+      },
+      "position": {
+        "x": 2820,
+        "y": 1575
+      },
+      "width": 167,
+      "height": 70,
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "n36",
+      "type": "standard",
+      "data": {
+        "color": "#006daa",
+        "config": {
+          "name": "TreeTimeMugration_State",
+          "type": "module",
+          "org": "Dengue",
+          "repo": {
+            "type": "github",
+            "listing_type": "DirectoryListing",
+            "url": "kraemer-lab/vneyard"
+          },
+          "config": {
+            "snakefile": {
+              "function": "github",
+              "args": [
+                "kraemer-lab/vneyard"
+              ],
+              "kwargs": {
+                "path": "workflows/Dengue/modules/TreeTimeMugration/workflow/Snakefile",
+                "commit": "1d833acb2586f17518d2f73d5fbcaf1400a60a52"
+              }
+            },
+            "config": {
+              "params": {
+                "Attribute": "State"
+              },
+              "namespace": "out",
+              "ports": [
+                {
+                  "ref": "nexus",
+                  "label": "nexus",
+                  "namespace": "nexus"
+                },
+                {
+                  "ref": "metadata",
+                  "label": "metadata",
+                  "namespace": "metadata"
+                }
+              ]
+            },
+            "docstring": ""
+          }
+        }
+      },
+      "position": {
+        "x": 2620,
+        "y": 1600
+      },
+      "width": 176,
+      "height": 70,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 3135,
+        "y": 135
+      },
+      "dragging": false
+    },
+    {
+      "id": "n37",
+      "type": "standard",
+      "data": {
+        "color": "#006daa",
+        "config": {
+          "name": "HyphyCln",
+          "type": "module",
+          "org": "Dengue",
+          "repo": {
+            "type": "github",
+            "listing_type": "DirectoryListing",
+            "url": "kraemer-lab/vneyard"
+          },
+          "config": {
+            "snakefile": {
+              "function": "github",
+              "args": [
+                "kraemer-lab/vneyard"
+              ],
+              "kwargs": {
+                "path": "workflows/Dengue/modules/HyphyCln/workflow/Snakefile",
+                "commit": "1d833acb2586f17518d2f73d5fbcaf1400a60a52"
+              }
+            },
+            "config": {
+              "ports": [
+                {
+                  "ref": "in",
+                  "label": "fasta",
+                  "namespace": "in"
+                }
+              ],
+              "namespace": "out"
+            },
+            "docstring": ""
+          }
+        }
+      },
+      "position": {
+        "x": 2020,
+        "y": 965
+      },
+      "width": 100,
+      "height": 52
+    },
+    {
+      "id": "n38",
+      "type": "standard",
+      "data": {
+        "color": "#006daa",
+        "config": {
+          "name": "TreeBuildingNoStopCodons",
+          "type": "module",
+          "org": "Dengue",
+          "repo": {
+            "type": "github",
+            "listing_type": "DirectoryListing",
+            "url": "kraemer-lab/vneyard"
+          },
+          "config": {
+            "snakefile": {
+              "function": "github",
+              "args": [
+                "kraemer-lab/vneyard"
+              ],
+              "kwargs": {
+                "path": "workflows/Dengue/modules/TreeBuildingNoStopCodons/workflow/Snakefile",
+                "commit": "1d833acb2586f17518d2f73d5fbcaf1400a60a52"
+              }
+            },
+            "config": {
+              "ports": [
+                {
+                  "ref": "in",
+                  "label": "aln",
+                  "namespace": "in"
+                }
+              ],
+              "namespace": "out",
+              "params": {
+                "model": "HKY+F+I"
+              }
+            },
+            "docstring": "Tree-building (no stop codons)"
+          }
+        }
+      },
+      "position": {
+        "x": 2220,
+        "y": 935
+      },
+      "width": 185,
+      "height": 52,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 2250,
+        "y": 930
+      },
+      "dragging": false
+    },
+    {
+      "id": "n39",
+      "type": "standard",
+      "data": {
+        "color": "#006daa",
+        "config": {
+          "name": "RemoveDupesFromMetaData",
+          "type": "module",
+          "org": "Dengue",
+          "repo": {
+            "type": "github",
+            "listing_type": "DirectoryListing",
+            "url": "kraemer-lab/vneyard"
+          },
+          "config": {
+            "snakefile": {
+              "function": "github",
+              "args": [
+                "kraemer-lab/vneyard"
+              ],
+              "kwargs": {
+                "path": "workflows/Dengue/modules/RemoveDupesFromMetaData/workflow/Snakefile",
+                "commit": "1d833acb2586f17518d2f73d5fbcaf1400a60a52"
+              }
+            },
+            "config": {
+              "ports": [
+                {
+                  "ref": "csv",
+                  "label": "csv",
+                  "namespace": "csv"
+                },
+                {
+                  "ref": "fasta",
+                  "label": "fasta",
+                  "namespace": "fasta"
+                }
+              ],
+              "namespace": "out"
+            },
+            "docstring": "Filter to remove duplicates from metadata"
+          }
+        }
+      },
+      "position": {
+        "x": 2220,
+        "y": 1050
+      },
+      "width": 193,
+      "height": 70,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 2250,
+        "y": 1035
+      },
+      "dragging": false
+    },
+    {
+      "id": "n40",
+      "type": "standard",
+      "data": {
+        "color": "#006daa",
+        "config": {
+          "name": "FilterAfricaStrains",
+          "type": "module",
+          "org": "Dengue",
+          "repo": {
+            "type": "github",
+            "listing_type": "DirectoryListing",
+            "url": "kraemer-lab/vneyard"
+          },
+          "config": {
+            "snakefile": {
+              "function": "github",
+              "args": [
+                "kraemer-lab/vneyard"
+              ],
+              "kwargs": {
+                "path": "workflows/Dengue/modules/FilterAfricaStrains/workflow/Snakefile",
+                "commit": "1d833acb2586f17518d2f73d5fbcaf1400a60a52"
+              }
+            },
+            "config": {
+              "ports": [
+                {
+                  "ref": "in",
+                  "label": "in",
+                  "namespace": "in"
+                }
+              ],
+              "namespace": "out",
+              "params": {
+                "Continent": "Africa"
+              }
+            },
+            "docstring": "Filter strains from Africa only"
+          }
+        }
+      },
+      "position": {
+        "x": 2420,
+        "y": 1050
+      },
+      "width": 133,
+      "height": 52,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 2565,
+        "y": 1080
+      },
+      "dragging": false
+    },
+    {
+      "id": "n41",
+      "type": "standard",
+      "data": {
+        "color": "#006daa",
+        "config": {
+          "name": "HyphyLabelTrees",
+          "type": "module",
+          "org": "Dengue",
+          "repo": {
+            "type": "github",
+            "listing_type": "DirectoryListing",
+            "url": "kraemer-lab/vneyard"
+          },
+          "config": {
+            "snakefile": {
+              "function": "github",
+              "args": [
+                "kraemer-lab/vneyard"
+              ],
+              "kwargs": {
+                "path": "workflows/Dengue/modules/HyphyLabelTrees/workflow/Snakefile",
+                "commit": "1d833acb2586f17518d2f73d5fbcaf1400a60a52"
+              }
+            },
+            "config": {
+              "ports": [
+                {
+                  "ref": "tree",
+                  "label": "tree",
+                  "namespace": "tree"
+                },
+                {
+                  "ref": "strains",
+                  "label": "strains",
+                  "namespace": "strains"
+                }
+              ],
+              "namespace": "out",
+              "params": {
+                "Continent": "Africa"
+              }
+            },
+            "docstring": "Label tree with Hyphy analysis"
+          }
+        }
+      },
+      "position": {
+        "x": 2620,
+        "y": 1000
+      },
+      "width": 128,
+      "height": 70,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 2790,
+        "y": 1020
+      },
+      "dragging": false
+    },
+    {
+      "id": "n42",
+      "type": "standard",
+      "data": {
+        "color": "#006daa",
+        "config": {
+          "name": "HyphyRemoveDupes",
+          "type": "module",
+          "org": "Dengue",
+          "repo": {
+            "type": "github",
+            "listing_type": "DirectoryListing",
+            "url": "kraemer-lab/vneyard"
+          },
+          "config": {
+            "snakefile": {
+              "function": "github",
+              "args": [
+                "kraemer-lab/vneyard"
+              ],
+              "kwargs": {
+                "path": "workflows/Dengue/modules/HyphyRemoveDupes/workflow/Snakefile",
+                "commit": "1d833acb2586f17518d2f73d5fbcaf1400a60a52"
+              }
+            },
+            "config": {
+              "ports": [
+                {
+                  "ref": "fasta",
+                  "label": "fasta",
+                  "namespace": "fasta"
+                },
+                {
+                  "ref": "tree",
+                  "label": "tree",
+                  "namespace": "tree"
+                }
+              ],
+              "namespace": "out"
+            },
+            "docstring": "Remove duplicates with hyphy analysis"
+          }
+        }
+      },
+      "position": {
+        "x": 2420,
+        "y": 960
+      },
+      "width": 146,
+      "height": 70,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 2580,
+        "y": 885
+      },
+      "dragging": false
+    },
+    {
+      "id": "n43",
+      "type": "standard",
+      "data": {
+        "color": "#006daa",
+        "config": {
+          "name": "HyphyMeme",
+          "type": "module",
+          "org": "Dengue",
+          "repo": {
+            "type": "github",
+            "listing_type": "DirectoryListing",
+            "url": "kraemer-lab/vneyard"
+          },
+          "config": {
+            "snakefile": {
+              "function": "github",
+              "args": [
+                "kraemer-lab/vneyard"
+              ],
+              "kwargs": {
+                "path": "workflows/Dengue/modules/HyphyMeme/workflow/Snakefile",
+                "commit": "1d833acb2586f17518d2f73d5fbcaf1400a60a52"
+              }
+            },
+            "config": {
+              "ports": [
+                {
+                  "ref": "in",
+                  "label": "in",
+                  "namespace": "in"
+                }
+              ],
+              "namespace": "out",
+              "params": {
+                "Branches": "Foreground",
+                "threads": 1
+              }
+            },
+            "docstring": "HyPhy selection pressure w/ MEME"
+          }
+        }
+      },
+      "position": {
+        "x": 2820,
+        "y": 735
+      },
+      "width": 101,
+      "height": 52
+    },
+    {
+      "id": "n44",
+      "type": "standard",
+      "data": {
+        "color": "#006daa",
+        "config": {
+          "name": "HyphyFubar",
+          "type": "module",
+          "org": "Dengue",
+          "repo": {
+            "type": "github",
+            "listing_type": "DirectoryListing",
+            "url": "kraemer-lab/vneyard"
+          },
+          "config": {
+            "snakefile": {
+              "function": "github",
+              "args": [
+                "kraemer-lab/vneyard"
+              ],
+              "kwargs": {
+                "path": "workflows/Dengue/modules/HyphyFubar/workflow/Snakefile",
+                "commit": "1d833acb2586f17518d2f73d5fbcaf1400a60a52"
+              }
+            },
+            "config": {
+              "ports": [
+                {
+                  "ref": "in",
+                  "label": "in",
+                  "namespace": "in"
+                }
+              ],
+              "namespace": "out",
+              "params": {
+                "threads": 1
+              }
+            },
+            "docstring": "HyPhy selection pressure w/ FUBAR"
+          }
+        }
+      },
+      "position": {
+        "x": 2820,
+        "y": 835
+      },
+      "width": 100,
+      "height": 52
+    },
+    {
+      "id": "n45",
+      "type": "standard",
+      "data": {
+        "color": "#006daa",
+        "config": {
+          "name": "HyphySlac",
+          "type": "module",
+          "org": "Dengue",
+          "repo": {
+            "type": "github",
+            "listing_type": "DirectoryListing",
+            "url": "kraemer-lab/vneyard"
+          },
+          "config": {
+            "snakefile": {
+              "function": "github",
+              "args": [
+                "kraemer-lab/vneyard"
+              ],
+              "kwargs": {
+                "path": "workflows/Dengue/modules/HyphySlac/workflow/Snakefile",
+                "commit": "1d833acb2586f17518d2f73d5fbcaf1400a60a52"
+              }
+            },
+            "config": {
+              "ports": [
+                {
+                  "ref": "in",
+                  "label": "in",
+                  "namespace": "in"
+                }
+              ],
+              "namespace": "out",
+              "params": {
+                "branches": "Foreground",
+                "threads": 1
+              }
+            },
+            "docstring": "HyPhy selection pressure w/ SLAC"
+          }
+        }
+      },
+      "position": {
+        "x": 2820,
+        "y": 1000
+      },
+      "width": 100,
+      "height": 52
+    },
+    {
+      "id": "n46",
+      "type": "standard",
+      "data": {
+        "color": "#006daa",
+        "config": {
+          "name": "HyphyFel",
+          "type": "module",
+          "org": "Dengue",
+          "repo": {
+            "type": "github",
+            "listing_type": "DirectoryListing",
+            "url": "kraemer-lab/vneyard"
+          },
+          "config": {
+            "snakefile": {
+              "function": "github",
+              "args": [
+                "kraemer-lab/vneyard"
+              ],
+              "kwargs": {
+                "path": "workflows/Dengue/modules/HyphyFel/workflow/Snakefile",
+                "commit": "1d833acb2586f17518d2f73d5fbcaf1400a60a52"
+              }
+            },
+            "config": {
+              "ports": [
+                {
+                  "ref": "in",
+                  "label": "in",
+                  "namespace": "in"
+                }
+              ],
+              "namespace": "out",
+              "params": {
+                "branches": "Foreground",
+                "threads": 1
+              }
+            },
+            "docstring": "HyPhy selection pressure w/ FEL"
+          }
+        }
+      },
+      "position": {
+        "x": 2820,
+        "y": 1230
+      },
+      "width": 100,
+      "height": 52
+    },
+    {
+      "id": "n47",
+      "type": "standard",
+      "data": {
+        "color": "#006daa",
+        "config": {
+          "name": "HyphyContrastFel",
+          "type": "module",
+          "org": "Dengue",
+          "repo": {
+            "type": "github",
+            "listing_type": "DirectoryListing",
+            "url": "kraemer-lab/vneyard"
+          },
+          "config": {
+            "snakefile": {
+              "function": "github",
+              "args": [
+                "kraemer-lab/vneyard"
+              ],
+              "kwargs": {
+                "path": "workflows/Dengue/modules/HyphyContrastFel/workflow/Snakefile",
+                "commit": "1d833acb2586f17518d2f73d5fbcaf1400a60a52"
+              }
+            },
+            "config": {
+              "ports": [
+                {
+                  "ref": "in",
+                  "label": "in",
+                  "namespace": "in"
+                }
+              ],
+              "namespace": "out",
+              "params": {
+                "Branch Set": "Foreground",
+                "threads": 1
+              }
+            },
+            "docstring": "HyPhy selection pressure w/ Contrast-FEL"
+          }
+        }
+      },
+      "position": {
+        "x": 2820,
+        "y": 1330
+      },
+      "width": 131,
+      "height": 52
+    },
+    {
+      "id": "n48",
+      "type": "standard",
+      "data": {
+        "color": "#006daa",
+        "config": {
+          "name": "DetermineTargets_5",
+          "type": "module",
+          "org": "Dengue",
+          "repo": {
+            "type": "github",
+            "listing_type": "DirectoryListing",
+            "url": "kraemer-lab/vneyard"
+          },
+          "config": {
+            "snakefile": {
+              "function": "github",
+              "args": [
+                "kraemer-lab/vneyard"
+              ],
+              "kwargs": {
+                "path": "workflows/Dengue/modules/DetermineTargets/workflow/Snakefile",
+                "commit": "1d833acb2586f17518d2f73d5fbcaf1400a60a52"
+              }
+            },
+            "config": {
+              "params": {
+                "Input Pattern": "{sample}.fasta",
+                "Output Pattern": "meme_{sample}.json",
+                "Triggers": {
+                  "Parse inputs": "mark"
+                }
+              },
+              "namespace": "out",
+              "ports": [
+                {
+                  "ref": "generator",
+                  "label": "generator",
+                  "namespace": "generator"
+                },
+                {
+                  "ref": "target",
+                  "label": "target",
+                  "namespace": "target"
+                }
+              ]
+            },
+            "docstring": "Sampling (Background)"
+          }
+        }
+      },
+      "position": {
+        "x": 3020,
+        "y": 710
+      },
+      "width": 144,
+      "height": 70,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 3360,
+        "y": 990
+      },
+      "dragging": false
+    },
+    {
+      "id": "n49",
+      "type": "standard",
+      "data": {
+        "color": "#006daa",
+        "config": {
+          "name": "DetermineTargets_6",
+          "type": "module",
+          "org": "Dengue",
+          "repo": {
+            "type": "github",
+            "listing_type": "DirectoryListing",
+            "url": "kraemer-lab/vneyard"
+          },
+          "config": {
+            "snakefile": {
+              "function": "github",
+              "args": [
+                "kraemer-lab/vneyard"
+              ],
+              "kwargs": {
+                "path": "workflows/Dengue/modules/DetermineTargets/workflow/Snakefile",
+                "commit": "1d833acb2586f17518d2f73d5fbcaf1400a60a52"
+              }
+            },
+            "config": {
+              "params": {
+                "Input Pattern": "{sample}.fasta",
+                "Output Pattern": "fubar_{sample}.json",
+                "Triggers": {
+                  "Parse inputs": "mark"
+                }
+              },
+              "namespace": "out",
+              "ports": [
+                {
+                  "ref": "generator",
+                  "label": "generator",
+                  "namespace": "generator"
+                },
+                {
+                  "ref": "target",
+                  "label": "target",
+                  "namespace": "target"
+                }
+              ]
+            },
+            "docstring": "Sampling (Background)"
+          }
+        }
+      },
+      "position": {
+        "x": 3020,
+        "y": 810
+      },
+      "width": 144,
+      "height": 70,
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "n50",
+      "type": "standard",
+      "data": {
+        "color": "#006daa",
+        "config": {
+          "name": "DetermineTargets_7",
+          "type": "module",
+          "org": "Dengue",
+          "repo": {
+            "type": "github",
+            "listing_type": "DirectoryListing",
+            "url": "kraemer-lab/vneyard"
+          },
+          "config": {
+            "snakefile": {
+              "function": "github",
+              "args": [
+                "kraemer-lab/vneyard"
+              ],
+              "kwargs": {
+                "path": "workflows/Dengue/modules/DetermineTargets/workflow/Snakefile",
+                "commit": "1d833acb2586f17518d2f73d5fbcaf1400a60a52"
+              }
+            },
+            "config": {
+              "params": {
+                "Input Pattern": "{sample}.fasta",
+                "Output Pattern": "slac_{sample}.json",
+                "Triggers": {
+                  "Parse inputs": "mark"
+                }
+              },
+              "namespace": "out",
+              "ports": [
+                {
+                  "ref": "generator",
+                  "label": "generator",
+                  "namespace": "generator"
+                },
+                {
+                  "ref": "target",
+                  "label": "target",
+                  "namespace": "target"
+                }
+              ]
+            },
+            "docstring": "Sampling (Background)"
+          }
+        }
+      },
+      "position": {
+        "x": 3020,
+        "y": 975
+      },
+      "width": 144,
+      "height": 70,
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "n51",
+      "type": "standard",
+      "data": {
+        "color": "#006daa",
+        "config": {
+          "name": "DetermineTargets_8",
+          "type": "module",
+          "org": "Dengue",
+          "repo": {
+            "type": "github",
+            "listing_type": "DirectoryListing",
+            "url": "kraemer-lab/vneyard"
+          },
+          "config": {
+            "snakefile": {
+              "function": "github",
+              "args": [
+                "kraemer-lab/vneyard"
+              ],
+              "kwargs": {
+                "path": "workflows/Dengue/modules/DetermineTargets/workflow/Snakefile",
+                "commit": "1d833acb2586f17518d2f73d5fbcaf1400a60a52"
+              }
+            },
+            "config": {
+              "params": {
+                "Input Pattern": "{sample}.fasta",
+                "Output Pattern": "fel_{sample}.json",
+                "Triggers": {
+                  "Parse inputs": "mark"
+                }
+              },
+              "namespace": "out",
+              "ports": [
+                {
+                  "ref": "generator",
+                  "label": "generator",
+                  "namespace": "generator"
+                },
+                {
+                  "ref": "target",
+                  "label": "target",
+                  "namespace": "target"
+                }
+              ]
+            },
+            "docstring": "Sampling (Background)"
+          }
+        }
+      },
+      "position": {
+        "x": 3020,
+        "y": 1205
+      },
+      "width": 144,
+      "height": 70,
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "n52",
+      "type": "standard",
+      "data": {
+        "color": "#006daa",
+        "config": {
+          "name": "DetermineTargets_9",
+          "type": "module",
+          "org": "Dengue",
+          "repo": {
+            "type": "github",
+            "listing_type": "DirectoryListing",
+            "url": "kraemer-lab/vneyard"
+          },
+          "config": {
+            "snakefile": {
+              "function": "github",
+              "args": [
+                "kraemer-lab/vneyard"
+              ],
+              "kwargs": {
+                "path": "workflows/Dengue/modules/DetermineTargets/workflow/Snakefile",
+                "commit": "1d833acb2586f17518d2f73d5fbcaf1400a60a52"
+              }
+            },
+            "config": {
+              "params": {
+                "Input Pattern": "{sample}.fasta",
+                "Output Pattern": "contrast_fel_{sample}.json",
+                "Triggers": {
+                  "Parse inputs": "mark"
+                }
+              },
+              "namespace": "out",
+              "ports": [
+                {
+                  "ref": "generator",
+                  "label": "generator",
+                  "namespace": "generator"
+                },
+                {
+                  "ref": "target",
+                  "label": "target",
+                  "namespace": "target"
+                }
+              ]
+            },
+            "docstring": "Sampling (Background)"
+          }
+        }
+      },
+      "position": {
+        "x": 3020,
+        "y": 1305
+      },
+      "width": 144,
+      "height": 70,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 3450,
+        "y": 1620
+      },
+      "dragging": false
+    },
+    {
+      "id": "n53",
+      "type": "standard",
+      "data": {
+        "color": "#006daa",
+        "config": {
+          "name": "RemoveAnnotations",
+          "type": "module",
+          "org": "Dengue",
+          "repo": {
+            "type": "github",
+            "listing_type": "DirectoryListing",
+            "url": "kraemer-lab/vneyard"
+          },
+          "config": {
+            "snakefile": {
+              "function": "github",
+              "args": [
+                "kraemer-lab/vneyard"
+              ],
+              "kwargs": {
+                "path": "workflows/Dengue/modules/RemoveAnnotations/workflow/Snakefile",
+                "commit": "1d833acb2586f17518d2f73d5fbcaf1400a60a52"
+              }
+            },
+            "config": {
+              "ports": [
+                {
+                  "ref": "in",
+                  "label": "in",
+                  "namespace": "in"
+                }
+              ],
+              "namespace": "out"
+            },
+            "docstring": "Remove annotations from a tree file"
+          }
+        }
+      },
+      "position": {
+        "x": 2420,
+        "y": 1465
+      },
+      "width": 144,
+      "height": 52,
+      "selected": false,
+      "dragging": false,
+      "positionAbsolute": {
+        "x": 3585,
+        "y": -120
+      }
+    },
+    {
+      "id": "n54",
+      "type": "standard",
+      "data": {
+        "color": "#006daa",
+        "config": {
+          "name": "CombineTaxaAndCleanedTrees",
+          "type": "module",
+          "org": "Dengue",
+          "repo": {
+            "type": "github",
+            "listing_type": "DirectoryListing",
+            "url": "kraemer-lab/vneyard"
+          },
+          "config": {
+            "snakefile": {
+              "function": "github",
+              "args": [
+                "kraemer-lab/vneyard"
+              ],
+              "kwargs": {
+                "path": "workflows/Dengue/modules/CombineTaxaAndCleanedTrees/workflow/Snakefile",
+                "commit": "1d833acb2586f17518d2f73d5fbcaf1400a60a52"
+              }
+            },
+            "config": {
+              "ports": [
+                {
+                  "ref": "original",
+                  "label": "original",
+                  "namespace": "original"
+                },
+                {
+                  "ref": "cleaned",
+                  "label": "cleaned",
+                  "namespace": "cleaned"
+                }
+              ],
+              "namespace": "out"
+            },
+            "docstring": "Remove annotations from a tree file"
+          }
+        }
+      },
+      "position": {
+        "x": 2620,
+        "y": 1440
+      },
+      "width": 205,
+      "height": 70,
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "n55",
+      "type": "standard",
+      "data": {
+        "color": "#006daa",
+        "config": {
+          "name": "FillBeastXMLCustom",
+          "type": "module",
+          "org": "Dengue",
+          "repo": {
+            "type": "github",
+            "listing_type": "DirectoryListing",
+            "url": "kraemer-lab/vneyard"
+          },
+          "config": {
+            "snakefile": {
+              "function": "github",
+              "args": [
+                "kraemer-lab/vneyard"
+              ],
+              "kwargs": {
+                "path": "workflows/Dengue/modules/FillBeastXMLCustom/workflow/Snakefile",
+                "commit": "1d833acb2586f17518d2f73d5fbcaf1400a60a52"
+              }
+            },
+            "config": {
+              "ports": [
+                {
+                  "ref": "in",
+                  "label": "in",
+                  "namespace": "in"
+                }
+              ],
+              "namespace": "out",
+              "params": {
+                "Chain length": 10000000
+              }
+            },
+            "docstring": "Generates a BEAST-compatible XML file with a completely variable name."
+          }
+        }
+      },
+      "position": {
+        "x": 2865,
+        "y": 1500
+      },
+      "width": 148,
+      "height": 52,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 2865,
+        "y": 1500
+      },
+      "dragging": false
+    },
+    {
+      "id": "n56",
+      "type": "standard",
+      "data": {
+        "color": "#006daa",
+        "config": {
+          "name": "RunBeast",
+          "type": "module",
+          "org": "Dengue",
+          "repo": {
+            "type": "github",
+            "listing_type": "DirectoryListing",
+            "url": "kraemer-lab/vneyard"
+          },
+          "config": {
+            "snakefile": {
+              "function": "github",
+              "args": [
+                "kraemer-lab/vneyard"
+              ],
+              "kwargs": {
+                "path": "workflows/Dengue/modules/RunBeast/workflow/Snakefile",
+                "commit": "1d833acb2586f17518d2f73d5fbcaf1400a60a52"
+              }
+            },
+            "config": {
+              "ports": [
+                {
+                  "ref": "in",
+                  "label": "in",
+                  "namespace": "in"
+                }
+              ],
+              "namespace": "out",
+              "params": {
+                "Chain length": 10000000
+              }
+            },
+            "docstring": "Thorney BEAST"
+          }
+        }
+      },
+      "position": {
+        "x": 3060,
+        "y": 1440
+      },
+      "width": 100,
+      "height": 52,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 3060,
+        "y": 1440
+      },
+      "dragging": false
+    },
+    {
+      "id": "n57",
+      "type": "standard",
+      "data": {
+        "color": "#006daa",
+        "config": {
+          "name": "DetermineTargets_10",
+          "type": "module",
+          "org": "Dengue",
+          "repo": {
+            "type": "github",
+            "listing_type": "DirectoryListing",
+            "url": "kraemer-lab/vneyard"
+          },
+          "config": {
+            "snakefile": {
+              "function": "github",
+              "args": [
+                "kraemer-lab/vneyard"
+              ],
+              "kwargs": {
+                "path": "workflows/Dengue/modules/DetermineTargets/workflow/Snakefile",
+                "commit": "1d833acb2586f17518d2f73d5fbcaf1400a60a52"
+              }
+            },
+            "config": {
+              "params": {
+                "Input Pattern": "{sample}.fasta",
+                "Output Pattern": "lineage_{sample}.trees",
+                "Triggers": {
+                  "Parse inputs": "mark"
+                }
+              },
+              "namespace": "out",
+              "ports": [
+                {
+                  "ref": "generator",
+                  "label": "generator",
+                  "namespace": "generator"
+                },
+                {
+                  "ref": "target",
+                  "label": "target",
+                  "namespace": "target"
+                }
+              ]
+            },
+            "docstring": "Sampling (Background)"
+          }
+        }
+      },
+      "position": {
+        "x": 3220,
+        "y": 1415
+      },
+      "width": 151,
+      "height": 70,
+      "selected": true,
+      "positionAbsolute": {
+        "x": 1710,
+        "y": 705
+      },
+      "dragging": false
+    }
+  ],
+  "edges": [
+    {
+      "source": "n0",
+      "sourceHandle": "out",
+      "target": "n5",
+      "targetHandle": "in",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n0out-n5in"
+    },
+    {
+      "source": "n1",
+      "sourceHandle": "out",
+      "target": "n2",
+      "targetHandle": "in",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n1out-n2in"
+    },
+    {
+      "source": "n2",
+      "sourceHandle": "out",
+      "target": "n4",
+      "targetHandle": "gisaid",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n2out-n4gisaid"
+    },
+    {
+      "source": "n5",
+      "sourceHandle": "out",
+      "target": "n4",
+      "targetHandle": "genbank",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n5out-n4genbank"
+    },
+    {
+      "source": "n4",
+      "sourceHandle": "out",
+      "target": "n3",
+      "targetHandle": "in",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n4out-n3in"
+    },
+    {
+      "source": "n3",
+      "sourceHandle": "out",
+      "target": "n6",
+      "targetHandle": "in",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n3out-n6in"
+    },
+    {
+      "source": "n3",
+      "sourceHandle": "out",
+      "target": "n7",
+      "targetHandle": "in",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n3out-n7in"
+    },
+    {
+      "source": "n6",
+      "sourceHandle": "out",
+      "target": "n8",
+      "targetHandle": "in",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n6out-n8in"
+    },
+    {
+      "source": "n3",
+      "sourceHandle": "out",
+      "target": "n9",
+      "targetHandle": "metadata",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n3out-n9metadata"
+    },
+    {
+      "source": "n7",
+      "sourceHandle": "out",
+      "target": "n9",
+      "targetHandle": "genotype",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n7out-n9genotype"
+    },
+    {
+      "source": "n8",
+      "sourceHandle": "out",
+      "target": "n10",
+      "targetHandle": "fasta",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n8out-n10fasta"
+    },
+    {
+      "source": "n9",
+      "sourceHandle": "out",
+      "target": "n10",
+      "targetHandle": "metadata",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n9out-n10metadata"
+    },
+    {
+      "source": "n10",
+      "sourceHandle": "out",
+      "target": "n11",
+      "targetHandle": "fasta",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n10out-n11fasta"
+    },
+    {
+      "source": "n10",
+      "sourceHandle": "out",
+      "target": "n11",
+      "targetHandle": "metadata",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n10out-n11metadata"
+    },
+    {
+      "source": "n12",
+      "sourceHandle": "out",
+      "target": "n13",
+      "targetHandle": "in",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n12out-n13in"
+    },
+    {
+      "source": "n11",
+      "sourceHandle": "out",
+      "target": "n12",
+      "targetHandle": "in",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n11out-n12in"
+    },
+    {
+      "source": "n15",
+      "sourceHandle": "out",
+      "target": "n14",
+      "targetHandle": "target",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n15out-n14target"
+    },
+    {
+      "source": "n16",
+      "sourceHandle": "out",
+      "target": "n15",
+      "targetHandle": "treetime",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n16out-n15treetime"
+    },
+    {
+      "source": "n17",
+      "sourceHandle": "out",
+      "target": "n15",
+      "targetHandle": "translation",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n17out-n15translation"
+    },
+    {
+      "source": "n13",
+      "sourceHandle": "out",
+      "target": "n15",
+      "targetHandle": "subsample",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n13out-n15subsample"
+    },
+    {
+      "source": "n18",
+      "sourceHandle": "out",
+      "target": "n15",
+      "targetHandle": "mutations",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n18out-n15mutations"
+    },
+    {
+      "source": "n19",
+      "sourceHandle": "out",
+      "target": "n15",
+      "targetHandle": "mugrations",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n19out-n15mugrations"
+    },
+    {
+      "source": "n20",
+      "sourceHandle": "out",
+      "target": "n16",
+      "targetHandle": "fasta",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n20out-n16fasta"
+    },
+    {
+      "source": "n13",
+      "sourceHandle": "out",
+      "target": "n16",
+      "targetHandle": "metadata",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n13out-n16metadata"
+    },
+    {
+      "source": "n13",
+      "sourceHandle": "out",
+      "target": "n20",
+      "targetHandle": "in",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n13out-n20in"
+    },
+    {
+      "source": "n11",
+      "sourceHandle": "out",
+      "target": "n21",
+      "targetHandle": "in",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n11out-n21in"
+    },
+    {
+      "source": "n16",
+      "sourceHandle": "out",
+      "target": "n19",
+      "targetHandle": "treetime",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n16out-n19treetime"
+    },
+    {
+      "source": "n13",
+      "sourceHandle": "out",
+      "target": "n19",
+      "targetHandle": "subsample",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n13out-n19subsample"
+    },
+    {
+      "source": "n18",
+      "sourceHandle": "out",
+      "target": "n17",
+      "targetHandle": "mutations",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n18out-n17mutations"
+    },
+    {
+      "source": "n11",
+      "sourceHandle": "out",
+      "target": "n14",
+      "targetHandle": "generator",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n11out-n14generator"
+    },
+    {
+      "source": "n16",
+      "sourceHandle": "out",
+      "target": "n18",
+      "targetHandle": "metadata",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n16out-n18metadata"
+    },
+    {
+      "source": "n21",
+      "sourceHandle": "out",
+      "target": "n18",
+      "targetHandle": "fasta",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n21out-n18fasta"
+    },
+    {
+      "source": "n16",
+      "sourceHandle": "out",
+      "target": "n17",
+      "targetHandle": "treetime",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n16out-n17treetime"
+    },
+    {
+      "source": "n20",
+      "sourceHandle": "out",
+      "target": "n22",
+      "targetHandle": "fasta",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n20out-n22fasta"
+    },
+    {
+      "source": "n13",
+      "sourceHandle": "out",
+      "target": "n22",
+      "targetHandle": "metadata",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n13out-n22metadata"
+    },
+    {
+      "source": "n22",
+      "sourceHandle": "out",
+      "target": "n23",
+      "targetHandle": "in",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n22out-n23in"
+    },
+    {
+      "source": "n23",
+      "sourceHandle": "out",
+      "target": "n24",
+      "targetHandle": "fasta",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n23out-n24fasta"
+    },
+    {
+      "source": "n13",
+      "sourceHandle": "out",
+      "target": "n24",
+      "targetHandle": "metadata",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n13out-n24metadata",
+      "selected": false
+    },
+    {
+      "source": "n24",
+      "sourceHandle": "out",
+      "target": "n25",
+      "targetHandle": "target",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n24out-n25target"
+    },
+    {
+      "source": "n11",
+      "sourceHandle": "out",
+      "target": "n25",
+      "targetHandle": "generator",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n11out-n25generator",
+      "selected": false
+    },
+    {
+      "source": "n13",
+      "sourceHandle": "out",
+      "target": "n26",
+      "targetHandle": "metadata",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n13out-n26metadata"
+    },
+    {
+      "source": "n23",
+      "sourceHandle": "out",
+      "target": "n26",
+      "targetHandle": "nexus",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n23out-n26nexus"
+    },
+    {
+      "source": "n26",
+      "sourceHandle": "out",
+      "target": "n27",
+      "targetHandle": "nexus",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n26out-n27nexus"
+    },
+    {
+      "source": "n13",
+      "sourceHandle": "out",
+      "target": "n27",
+      "targetHandle": "metadata",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n13out-n27metadata"
+    },
+    {
+      "source": "n27",
+      "sourceHandle": "out",
+      "target": "n28",
+      "targetHandle": "in",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n27out-n28in"
+    },
+    {
+      "source": "n28",
+      "sourceHandle": "out",
+      "target": "n29",
+      "targetHandle": "target",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n28out-n29target"
+    },
+    {
+      "source": "n11",
+      "sourceHandle": "out",
+      "target": "n29",
+      "targetHandle": "generator",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n11out-n29generator"
+    },
+    {
+      "source": "n23",
+      "sourceHandle": "out",
+      "target": "n30",
+      "targetHandle": "nexus",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n23out-n30nexus"
+    },
+    {
+      "source": "n13",
+      "sourceHandle": "out",
+      "target": "n30",
+      "targetHandle": "metadata",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n13out-n30metadata"
+    },
+    {
+      "source": "n30",
+      "sourceHandle": "out",
+      "target": "n31",
+      "targetHandle": "nexus",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n30out-n31nexus"
+    },
+    {
+      "source": "n13",
+      "sourceHandle": "out",
+      "target": "n31",
+      "targetHandle": "metadata",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n13out-n31metadata"
+    },
+    {
+      "source": "n31",
+      "sourceHandle": "out",
+      "target": "n33",
+      "targetHandle": "target",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n31out-n33target"
+    },
+    {
+      "source": "n11",
+      "sourceHandle": "out",
+      "target": "n33",
+      "targetHandle": "generator",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n11out-n33generator"
+    },
+    {
+      "source": "n34",
+      "sourceHandle": "out",
+      "target": "n32",
+      "targetHandle": "target",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n34out-n32target"
+    },
+    {
+      "source": "n35",
+      "sourceHandle": "out",
+      "target": "n34",
+      "targetHandle": "in",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n35out-n34in"
+    },
+    {
+      "source": "n36",
+      "sourceHandle": "out",
+      "target": "n35",
+      "targetHandle": "nexus",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n36out-n35nexus"
+    },
+    {
+      "source": "n13",
+      "sourceHandle": "out",
+      "target": "n35",
+      "targetHandle": "metadata",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n13out-n35metadata"
+    },
+    {
+      "source": "n13",
+      "sourceHandle": "out",
+      "target": "n36",
+      "targetHandle": "metadata",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n13out-n36metadata"
+    },
+    {
+      "source": "n23",
+      "sourceHandle": "out",
+      "target": "n36",
+      "targetHandle": "nexus",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n23out-n36nexus"
+    },
+    {
+      "source": "n13",
+      "sourceHandle": "out",
+      "target": "n37",
+      "targetHandle": "in",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n13out-n37in"
+    },
+    {
+      "source": "n37",
+      "sourceHandle": "out",
+      "target": "n38",
+      "targetHandle": "in",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n37out-n38in"
+    },
+    {
+      "source": "n37",
+      "sourceHandle": "out",
+      "target": "n39",
+      "targetHandle": "fasta",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n37out-n39fasta"
+    },
+    {
+      "source": "n13",
+      "sourceHandle": "out",
+      "target": "n39",
+      "targetHandle": "csv",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n13out-n39csv"
+    },
+    {
+      "source": "n39",
+      "sourceHandle": "out",
+      "target": "n40",
+      "targetHandle": "in",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n39out-n40in"
+    },
+    {
+      "source": "n40",
+      "sourceHandle": "out",
+      "target": "n41",
+      "targetHandle": "strains",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n40out-n41strains"
+    },
+    {
+      "source": "n42",
+      "sourceHandle": "out",
+      "target": "n41",
+      "targetHandle": "tree",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n42out-n41tree"
+    },
+    {
+      "source": "n37",
+      "sourceHandle": "out",
+      "target": "n42",
+      "targetHandle": "fasta",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n37out-n42fasta"
+    },
+    {
+      "source": "n38",
+      "sourceHandle": "out",
+      "target": "n42",
+      "targetHandle": "tree",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n38out-n42tree"
+    },
+    {
+      "source": "n41",
+      "sourceHandle": "out",
+      "target": "n43",
+      "targetHandle": "in",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n41out-n43in"
+    },
+    {
+      "source": "n41",
+      "sourceHandle": "out",
+      "target": "n44",
+      "targetHandle": "in",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n41out-n44in"
+    },
+    {
+      "source": "n41",
+      "sourceHandle": "out",
+      "target": "n45",
+      "targetHandle": "in",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n41out-n45in"
+    },
+    {
+      "source": "n41",
+      "sourceHandle": "out",
+      "target": "n46",
+      "targetHandle": "in",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n41out-n46in"
+    },
+    {
+      "source": "n41",
+      "sourceHandle": "out",
+      "target": "n47",
+      "targetHandle": "in",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n41out-n47in"
+    },
+    {
+      "source": "n43",
+      "sourceHandle": "out",
+      "target": "n48",
+      "targetHandle": "target",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n43out-n48target"
+    },
+    {
+      "source": "n44",
+      "sourceHandle": "out",
+      "target": "n49",
+      "targetHandle": "target",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n44out-n49target"
+    },
+    {
+      "source": "n45",
+      "sourceHandle": "out",
+      "target": "n50",
+      "targetHandle": "target",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n45out-n50target"
+    },
+    {
+      "source": "n46",
+      "sourceHandle": "out",
+      "target": "n51",
+      "targetHandle": "target",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n46out-n51target"
+    },
+    {
+      "source": "n47",
+      "sourceHandle": "out",
+      "target": "n52",
+      "targetHandle": "target",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n47out-n52target"
+    },
+    {
+      "source": "n11",
+      "sourceHandle": "out",
+      "target": "n48",
+      "targetHandle": "generator",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n11out-n48generator"
+    },
+    {
+      "source": "n11",
+      "sourceHandle": "out",
+      "target": "n49",
+      "targetHandle": "generator",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n11out-n49generator"
+    },
+    {
+      "source": "n11",
+      "sourceHandle": "out",
+      "target": "n50",
+      "targetHandle": "generator",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n11out-n50generator"
+    },
+    {
+      "source": "n11",
+      "sourceHandle": "out",
+      "target": "n51",
+      "targetHandle": "generator",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n11out-n51generator"
+    },
+    {
+      "source": "n11",
+      "sourceHandle": "out",
+      "target": "n52",
+      "targetHandle": "generator",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n11out-n52generator"
+    },
+    {
+      "source": "n22",
+      "sourceHandle": "out",
+      "target": "n53",
+      "targetHandle": "in",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n22out-n53in"
+    },
+    {
+      "source": "n53",
+      "sourceHandle": "out",
+      "target": "n54",
+      "targetHandle": "cleaned",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n53out-n54cleaned"
+    },
+    {
+      "source": "n22",
+      "sourceHandle": "out",
+      "target": "n54",
+      "targetHandle": "original",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n22out-n54original"
+    },
+    {
+      "source": "n54",
+      "sourceHandle": "out",
+      "target": "n55",
+      "targetHandle": "in",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n54out-n55in"
+    },
+    {
+      "source": "n55",
+      "sourceHandle": "out",
+      "target": "n56",
+      "targetHandle": "in",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n55out-n56in"
+    },
+    {
+      "source": "n56",
+      "sourceHandle": "out",
+      "target": "n57",
+      "targetHandle": "target",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n56out-n57target"
+    },
+    {
+      "source": "n11",
+      "sourceHandle": "out",
+      "target": "n57",
+      "targetHandle": "generator",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n11out-n57generator"
+    },
+    {
+      "source": "n11",
+      "sourceHandle": "out",
+      "target": "n32",
+      "targetHandle": "generator",
+      "type": "smoothstep",
+      "id": "reactflow__edge-n11out-n32generator"
+    }
+  ]
+}
